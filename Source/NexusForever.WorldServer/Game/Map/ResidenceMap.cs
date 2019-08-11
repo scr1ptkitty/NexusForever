@@ -310,7 +310,9 @@ namespace NexusForever.WorldServer.Game.Map
             if (decor == null)
                 throw new InvalidPacketValueException();
 
+            bool locControl = false;
             // TODO: research 0.835f
+            // Added +0.01 to Z for test
             if (decor.Type == DecorType.Crate)
             {
                 if (decor.Entry.Creature2IdActiveProp != 0u)
@@ -318,9 +320,30 @@ namespace NexusForever.WorldServer.Game.Map
                     // TODO: used for decor that have an associated entity
                 }
 
+
                 // crate->world
-                var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z);
-                decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                //check for plots
+                foreach (Plot plot in residence.GetPlots())
+                {
+                    if (plot.PlugEntry != null && plot.PlugEntry.Id == 531)
+                    {
+                        var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                        locControl = true;
+                    }
+                    else
+                    {
+                        var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
+                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                        locControl = true;
+                    }
+                }
+                if (locControl == false)
+                {
+                    var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
+                    decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                }
+
             }
             else
             {
@@ -329,12 +352,32 @@ namespace NexusForever.WorldServer.Game.Map
                 else
                 {
                     // world->world
-                    var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z);
-                    decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                    //check for plots
+                    foreach (Plot plot in residence.GetPlots())
+                    {
+                        if (plot.PlugEntry != null && plot.PlugEntry.Id == 531)
+                        {
+                            var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                            decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                            locControl = true;
+                        }
+                        else
+                        {
+                            var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
+                            decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                            locControl = true;
+                        }
+                    }
+                    if (locControl == false)
+                    {
+                        var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
+                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                    }
+
                 }
             }
 
-            EnqueueToAll(new ServerHousingResidenceDecor
+                EnqueueToAll(new ServerHousingResidenceDecor
             {
                 Operation = 0,
                 DecorData = new List<ServerHousingResidenceDecor.Decor>
@@ -406,6 +449,16 @@ namespace NexusForever.WorldServer.Game.Map
                 throw new InvalidPacketValueException();
 
             // TODO
+
+            if (housingRemodel.GroundWallpaperId != 0)
+            {
+                residence.Ground = (ushort)housingRemodel.GroundWallpaperId;
+            }
+            if (housingRemodel.SkyWallpaperId != 0)
+            {
+                residence.Sky = (ushort)housingRemodel.SkyWallpaperId;
+            }
+            SendHousingProperties();
         }
     }
 }
