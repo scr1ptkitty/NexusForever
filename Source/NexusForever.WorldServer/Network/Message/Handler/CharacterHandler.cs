@@ -122,6 +122,11 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                         },
                         new ServerAccountEntitlements.AccountEntitlementInfo
                         {
+                            Entitlement = Entitlement.AdditionalCostumeUnlocks,
+                            Count       = 2000 //not sure if this is the correct #. Check tbl file later
+                        },
+                        new ServerAccountEntitlements.AccountEntitlementInfo
+                        {
                             Entitlement = Entitlement.ExtraDecorSlots,
                             Count       = 2000
                         },
