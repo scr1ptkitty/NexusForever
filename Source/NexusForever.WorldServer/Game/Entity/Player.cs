@@ -455,6 +455,7 @@ namespace NexusForever.WorldServer.Game.Entity
             ZoneMapManager.SendInitialPackets();
             Session.AccountCurrencyManager.SendInitialPackets();
             QuestManager.SendInitialPackets();
+            SocialManager.JoinChatChannels(Session);
             Session.EnqueueMessageEncrypted(new ServerPlayerInnate
             {
                 InnateIndex = InnateIndex
@@ -596,6 +597,7 @@ namespace NexusForever.WorldServer.Game.Entity
                 Save(() =>
                 {
                     RemoveFromMap();
+                    SocialManager.LeaveChatChannels(Session);
                     Session.Player = null;
                 });
             }
