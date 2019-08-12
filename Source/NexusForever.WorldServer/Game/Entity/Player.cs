@@ -158,6 +158,8 @@ namespace NexusForever.WorldServer.Game.Entity
         private LogoutManager logoutManager;
         private PendingTeleport pendingTeleport;
 
+        private bool loggedIn = false;
+
         public ulong GuildId = 0;
         public List<ulong> GuildMemberships = new List<ulong>();
         public GuildInvite PendingGuildInvite;
@@ -397,6 +399,9 @@ namespace NexusForever.WorldServer.Game.Entity
             Session.EnqueueMessageEncrypted(new ServerPlayerEnteredWorld());
 
             IsLoading = false;
+
+            if (!loggedIn)
+                OnLogin();
         }
 
         public override void OnRelocate(Vector3 vector)
@@ -470,7 +475,7 @@ namespace NexusForever.WorldServer.Game.Entity
                     {
                         Id    = RewardProperty.ExtraDecorSlots,
                         Type  = 1,
-                        Value = 2000
+                        Value = 3000
                     },
                     new ServerRewardPropertySet.RewardProperty
                     {
@@ -695,6 +700,15 @@ namespace NexusForever.WorldServer.Game.Entity
             {
                 CleanupManager.Untrack(Session.Account);
             }
+        }
+
+        private void OnLogin()
+        {
+            loggedIn = true;
+
+            var motd = ConfigurationManager<WorldServerConfiguration>.Config.MessageOfTheDay;
+            if (motd.Length > 0)
+                SocialManager.SendMessage(Session, "MOTD: " + motd, channel: ChatChannel.Realm);
         }
 
         /// <summary>
