@@ -24,6 +24,8 @@ using NexusForever.WorldServer.Game.Social;
 using NexusForever.WorldServer.Game.Spell;
 using NexusForever.WorldServer.Game.Storefront;
 using NexusForever.WorldServer.Network;
+using NexusForever.WorldServer.Game.Guild;
+using NexusForever.WorldServer.Game.CharacterCache;
 using NexusForever.WorldServer.Game.Contact;
 
 namespace NexusForever.WorldServer
@@ -59,6 +61,7 @@ namespace NexusForever.WorldServer
             EntityCommandManager.Initialise();
             GlobalMovementManager.Initialise();
 
+            CharacterManager.Initialise();
             AssetManager.Initialise();
             PrerequisiteManager.Initialise();
             GlobalSpellManager.Initialise();
@@ -67,6 +70,7 @@ namespace NexusForever.WorldServer
 
             ContactManager.Initialise();
             ResidenceManager.Initialise();
+            GlobalGuildManager.Initialise();
             GlobalStorefrontManager.Initialise();
 
             // make sure the assigned realm id in the configuration file exists in the database
@@ -85,6 +89,7 @@ namespace NexusForever.WorldServer
                 MapManager.Update(lastTick);
                 ResidenceManager.Update(lastTick);
                 BuybackManager.Update(lastTick);
+                GlobalGuildManager.Update(lastTick);
                 ContactManager.Update(lastTick);
                 GlobalQuestManager.Update(lastTick);
             });
