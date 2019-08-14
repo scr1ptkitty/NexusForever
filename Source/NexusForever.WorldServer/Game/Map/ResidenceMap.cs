@@ -6,20 +6,24 @@ using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.Network;
 using NexusForever.WorldServer.Game.Entity;
+using NexusForever.WorldServer.Game.Entity.Network.Command;
 using NexusForever.WorldServer.Game.Housing;
 using NexusForever.WorldServer.Game.Housing.Static;
 using NexusForever.WorldServer.Game.Spell.Static;
 using NexusForever.WorldServer.Network.Message.Model;
+using ResidenceEntity = NexusForever.WorldServer.Game.Entity.Residence;
+using NLog;
 
 namespace NexusForever.WorldServer.Game.Map
 {
     public class ResidenceMap : BaseMap
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         public ulong Id => residence?.Id ?? 0ul;
         // housing maps have unlimited vision range.
         public override float VisionRange { get; protected set; } = -1f;
 
-        private Residence residence;
+        private Housing.Residence residence;
 
         public override void Initialise(MapInfo info, Player player)
         {
@@ -38,6 +42,13 @@ namespace NexusForever.WorldServer.Game.Map
             foreach (Plot plot in residence.GetPlots().Where(p => p.PlugEntry != null))
             {
                 var plug = new Plug(plot.PlotEntry, plot.PlugEntry);
+                if (plot.Index == 0)
+                    plug.SetPosition(new Vector3
+                    {
+                        X = 1472f,
+                        Y = -715.0843505859375f, //change position up? 0.835f
+                        Z = 1440f,
+                    });
                 EnqueueAdd(plug, Vector3.Zero);
             }
         }
@@ -70,6 +81,9 @@ namespace NexusForever.WorldServer.Game.Map
 
             player.Session.EnqueueMessageEncrypted(housingPlots);
 
+            ResidenceEntity residenceEntity = new ResidenceEntity();
+            player.Map.EnqueueAdd(residenceEntity, residenceEntity.Position);
+
             // this shows the housing toolbar, might need to move this to a more generic place in the future
             player.Session.EnqueueMessageEncrypted(new ServerShowActionBar
             {
@@ -79,6 +93,37 @@ namespace NexusForever.WorldServer.Game.Map
             });
 
             SendResidenceDecor(player);
+            Simple door1 = new Simple
+            {
+                CreatureId = 72338,
+                QuestChecklistIdx = 255,
+                CreateFlags = Entity.Static.EntityCreateFlag.SpawnAnimation,
+                DisplayInfo = 32614,
+                Position = new Vector3
+                {
+                    X = 1487.921875f,
+                    Y = -711.7042236328125f,
+                    Z = 1440.810546875f,
+                }
+            };
+            door1.SetPropData(84255740, 1159);
+            Simple door2 = new Simple
+            {
+                CreatureId = 72338,
+                QuestChecklistIdx = 255,
+                CreateFlags = Entity.Static.EntityCreateFlag.SpawnAnimation,
+                DisplayInfo = 32614,
+                Position = new Vector3
+                {
+                    X = 1482.39453125f,
+                    Y = -811.41650390625f,
+                    Z = 1444.5390625f
+                }
+            };
+            door2.SetPropData(0, 1159);
+
+            player.Map.EnqueueAdd(door1, door1.Position);
+            player.Map.EnqueueAdd(door2, door2.Position);
         }
 
         private void SendHousingPrivacy(Player player = null)
@@ -110,6 +155,7 @@ namespace NexusForever.WorldServer.Game.Map
                         CharacterIdOwner  = residence.OwnerId,
                         Name              = residence.Name,
                         PropertyInfoId    = residence.PropertyInfoId,
+                        ResidenceInfoId   = 22,
                         WallpaperExterior = residence.Wallpaper,
                         Entryway          = residence.Entryway,
                         Roof              = residence.Roof,
@@ -310,7 +356,6 @@ namespace NexusForever.WorldServer.Game.Map
             if (decor == null)
                 throw new InvalidPacketValueException();
 
-            bool locControl = false;
             // TODO: research 0.835f
             // Added +0.01 to Z for test
             if (decor.Type == DecorType.Crate)
@@ -320,30 +365,19 @@ namespace NexusForever.WorldServer.Game.Map
                     // TODO: used for decor that have an associated entity
                 }
 
-
                 // crate->world
-                //check for plots
-                foreach (Plot plot in residence.GetPlots())
+                if (update.PlotIndex == 0)
                 {
-                    if (plot.PlugEntry != null && plot.PlugEntry.Id == 531)
-                    {
-                        var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
-                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
-                        locControl = true;
-                    }
-                    else
-                    {
-                        var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
-                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
-                        locControl = true;
-                    }
+                    var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                    decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                 }
-                if (locControl == false)
+                else
                 {
                     var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
                     decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                 }
-
+                
+                
             }
             else
             {
@@ -351,33 +385,20 @@ namespace NexusForever.WorldServer.Game.Map
                     decor.Crate();
                 else
                 {
-                    // world->world
-                    //check for plots
-                    foreach (Plot plot in residence.GetPlots())
+                    if (update.PlotIndex == 0)
                     {
-                        if (plot.PlugEntry != null && plot.PlugEntry.Id == 531)
-                        {
-                            var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
-                            decor.Move(update.DecorType, position, update.Rotation, update.Scale);
-                            locControl = true;
-                        }
-                        else
-                        {
-                            var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
-                            decor.Move(update.DecorType, position, update.Rotation, update.Scale);
-                            locControl = true;
-                        }
+                        var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                     }
-                    if (locControl == false)
+                    else
                     {
                         var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
                         decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                     }
-
                 }
             }
 
-                EnqueueToAll(new ServerHousingResidenceDecor
+            EnqueueToAll(new ServerHousingResidenceDecor
             {
                 Operation = 0,
                 DecorData = new List<ServerHousingResidenceDecor.Decor>
