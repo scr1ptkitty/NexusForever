@@ -161,6 +161,7 @@ namespace NexusForever.WorldServer.Game.Map
                         Roof              = residence.Roof,
                         Door              = residence.Door,
                         Ground            = residence.Ground,
+                        Music             = residence.Music,
                         Sky               = residence.Sky,
                         Flags             = residence.Flags,
                         ResourceSharing   = residence.ResourceSharing,
@@ -199,7 +200,8 @@ namespace NexusForever.WorldServer.Game.Map
                     Scale       = decor.Scale,
                     Position    = decor.Position,
                     Rotation    = decor.Rotation,
-                    DecorInfoId = decor.Entry.Id
+                    DecorInfoId = decor.Entry.Id,
+                    ParentDecorId = decor.DecorParentId
                 });
 
                 if (i == decors.Length - 1)
@@ -314,6 +316,7 @@ namespace NexusForever.WorldServer.Game.Map
                     throw new InvalidPacketValueException();
 
                 // TODO: colour shift
+                
             }
 
             Decor decor = residence.DecorCreate(entry);
@@ -325,7 +328,16 @@ namespace NexusForever.WorldServer.Game.Map
                     throw new InvalidPacketValueException();
 
                 // new decor is being placed directly in the world
-                decor.Position = update.Position;
+                
+                var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                if (update.PlotIndex != 0)
+                {
+                    position.Y += 0.835f;
+                    position.Z += 0.01f;
+                    position.X = update.Position.X;
+                }
+                log.Warn("DecorCreate offset");
+                decor.Position = position;
                 decor.Rotation = update.Rotation;
                 decor.Scale    = update.Scale;
             }
@@ -355,6 +367,7 @@ namespace NexusForever.WorldServer.Game.Map
             Decor decor = residence.GetDecor(update.DecorId);
             if (decor == null)
                 throw new InvalidPacketValueException();
+            
 
             // TODO: research 0.835f
             // Added +0.01 to Z for test
@@ -365,35 +378,75 @@ namespace NexusForever.WorldServer.Game.Map
                     // TODO: used for decor that have an associated entity
                 }
 
-                // crate->world
-                if (update.PlotIndex == 0)
+                //try check for only link change
+                if (decor.DecorParentId != update.ParentDecorId)
                 {
-                    var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
-                    decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                    log.Warn("Just linking offset. crate->world");
+                    log.Warn($"update location {update.Position.X} {update.Position.Y} {update.Position.Z}");
+                    log.Warn($"start location {decor.Position.X} {decor.Position.Y} {decor.Position.Z}");
+                    log.Warn($"decor/update parentIds: {decor.DecorParentId} {update.ParentDecorId}");
+                    decor.DecorParentId = update.ParentDecorId;
                 }
                 else
                 {
-                    var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
-                    decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                    // crate->world
+                    if (update.PlotIndex == 0)
+                    {
+                        log.Warn("Crate->world while plot index = 0");
+                        var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                        decor.DecorParentId = update.ParentDecorId;
+                    }
+                    else
+                    {
+                        log.Warn("Crate->world not over main plug");
+                        log.Warn($"update location {update.Position.X} {update.Position.Y} {update.Position.Z}");
+                        log.Warn($"start location {decor.Position.X} {decor.Position.Y} {decor.Position.Z}");
+                        log.Warn($"decor/update parentIds: {decor.DecorParentId} {update.ParentDecorId}");
+                        var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
+                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                        decor.DecorParentId = update.ParentDecorId;
+                    }
                 }
                 
-                
+
             }
+            //world->world
             else
             {
                 if (update.DecorType == DecorType.Crate)
                     decor.Crate();
                 else
                 {
-                    if (update.PlotIndex == 0)
+                    //try check for only link change
+                    if (decor.DecorParentId != update.ParentDecorId)
                     {
-                        var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
-                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                        log.Warn("Just linking offset but world->world");
+                        log.Warn($"update location {update.Position.X} {update.Position.Y} {update.Position.Z}");
+                        log.Warn($"start location {decor.Position.X} {decor.Position.Y} {decor.Position.Z}");
+                        log.Warn($"decor/update parentIds: {decor.DecorParentId} {update.ParentDecorId}");
+                        decor.DecorParentId = update.ParentDecorId;
                     }
                     else
                     {
-                        var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
-                        decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                        // world->world
+                        if (update.PlotIndex == 0)
+                        {
+                            log.Warn("world->world over main plug");
+                            var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
+                            decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                            decor.DecorParentId = update.ParentDecorId;
+                        }
+                        else
+                        {
+                            log.Warn("world->world not main plug");
+                            log.Warn($"update location {update.Position.X} {update.Position.Y} {update.Position.Z}");
+                            log.Warn($"start location {decor.Position.X} {decor.Position.Y} {decor.Position.Z}");
+                            log.Warn($"decor/update parentIds: {decor.DecorParentId} {update.ParentDecorId}");
+                            var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
+                            decor.Move(update.DecorType, position, update.Rotation, update.Scale);
+                            decor.DecorParentId = update.ParentDecorId;
+                        }
                     }
                 }
             }
@@ -412,7 +465,8 @@ namespace NexusForever.WorldServer.Game.Map
                         Scale       = decor.Scale,
                         Position    = decor.Position,
                         Rotation    = decor.Rotation,
-                        DecorInfoId = decor.Entry.Id
+                        DecorInfoId = decor.Entry.Id,
+                        ParentDecorId = decor.DecorParentId
                     }
                 }
             });
@@ -478,6 +532,10 @@ namespace NexusForever.WorldServer.Game.Map
             if (housingRemodel.SkyWallpaperId != 0)
             {
                 residence.Sky = (ushort)housingRemodel.SkyWallpaperId;
+            }
+            if (housingRemodel.MusicId != 0u)
+            {
+                residence.Music = (ushort)housingRemodel.MusicId;
             }
             SendHousingProperties();
         }

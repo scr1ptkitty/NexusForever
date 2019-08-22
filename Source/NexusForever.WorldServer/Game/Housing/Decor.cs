@@ -9,6 +9,7 @@ using NexusForever.WorldServer.Game.Housing.Static;
 
 namespace NexusForever.WorldServer.Game.Housing
 {
+
     public class Decor : ISaveCharacter
     {
         public ulong Id { get; }
@@ -63,6 +64,17 @@ namespace NexusForever.WorldServer.Game.Housing
 
         private float scale;
 
+        public ulong DecorParentId
+        {
+            get => decorParentId;
+            set
+            {
+                decorParentId = value;
+                saveMask |= DecorSaveMask.DecorParentId;
+            }
+        }
+        private ulong decorParentId;
+
         private DecorSaveMask saveMask;
 
         /// <summary>
@@ -77,6 +89,7 @@ namespace NexusForever.WorldServer.Game.Housing
             position = new Vector3(model.X, model.Y, model.Z);
             rotation = new Quaternion(model.Qx, model.Qy, model.Qz, model.Qw);
             scale    = model.Scale;
+            decorParentId = model.DecorParentId;
 
             saveMask = DecorSaveMask.None;
         }
@@ -125,7 +138,8 @@ namespace NexusForever.WorldServer.Game.Housing
                     Qy          = Rotation.Y,
                     Qz          = Rotation.Z,
                     Qw          = Rotation.W,
-                    Scale       = Scale
+                    Scale       = Scale,
+                    DecorParentId = DecorParentId
                 });
             }
             else if ((saveMask & DecorSaveMask.Delete) != 0)
@@ -178,6 +192,11 @@ namespace NexusForever.WorldServer.Game.Housing
                 {
                     model.Scale = Scale;
                     entity.Property(p => p.Scale).IsModified = true;
+                }
+                if ((saveMask & DecorSaveMask.DecorParentId) != 0)
+                {
+                    model.DecorParentId = DecorParentId;
+                    entity.Property(p => p.DecorParentId).IsModified = true;
                 }
             }
 
