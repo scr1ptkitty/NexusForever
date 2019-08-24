@@ -5,10 +5,11 @@ using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
+using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Teleport")]
+    [Name("Teleport", Permission.CommandTeleport)]
     public class TeleportCommandHandler : CommandCategory
     {
         public TeleportCommandHandler()

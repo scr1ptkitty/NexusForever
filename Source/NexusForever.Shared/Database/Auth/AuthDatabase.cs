@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NexusForever.Shared.Configuration;
 using NexusForever.Shared.Cryptography;
 using NexusForever.Shared.Database.Auth.Model;
 
@@ -55,38 +56,54 @@ namespace NexusForever.Shared.Database.Auth
                     .Include(a => a.AccountCurrency)
                     .Include(a => a.AccountGenericUnlock)
                     .Include(a => a.AccountKeybinding)
+                    .Include(a => a.AccountPermission)
+                    .Include(a => a.AccountRole)
                     .SingleOrDefaultAsync(a => a.Email == email && a.SessionKey == sessionKey);
         }
 
         /// <summary>
         /// Create a new account with the supplied email and password, the password will have a verifier generated that is inserted into the database.
         /// </summary>
-        public static async Task<Account> CreateAccount(string email, string password)
+        public static void CreateAccount(string email, string password, ulong defaultRole, ulong[] extraRoles = null)
         {
             email = email.ToLower();
             using (var context = new AuthContext())
             {
                 // Ensure account doesn't already exist with the same email
-                if (context.Account.FirstOrDefault(a => a.Email == email) != null)
-                    return null;
-
                 // Ensure only allowed symbols are used in the email - https://en.wikipedia.org/wiki/Email_address#Local-part
-                if (Regex.IsMatch(email, @"[^A-Za-z0-9@.!#$%&'*+-/=?^_`{|}~]"))
-                    return null;
-
-                byte[] s = RandomProvider.GetBytes(16u);
-                byte[] v = Srp6Provider.GenerateVerifier(s, email, password);
-
-                context.Account.Add(new Account
+                if (!(context.Account.FirstOrDefault(a => a.Email == email) != null || Regex.IsMatch(email, @"[^A-Za-z0-9@.!#$%&'*+-/=?^_`{|}~]")))
                 {
-                    Email = email,
-                    S     = s.ToHexString(),
-                    V     = v.ToHexString()
-                });
+                    byte[] s = RandomProvider.GetBytes(16u);
+                    byte[] v = Srp6Provider.GenerateVerifier(s, email, password);
 
-                context.SaveChanges();
+                    Account newAccount = new Account
+                    {
+                        Email = email,
+                        S = s.ToHexString(),
+                        V = v.ToHexString()
+                    };
 
-                return await context.Account.FirstOrDefaultAsync(a => a.Email == email);
+                    // Add default role
+                    newAccount.AccountRole.Add(new AccountRole
+                    {
+                        RoleId = defaultRole
+                    });
+
+                    if (extraRoles != null)
+                    {
+                        foreach (ulong role in extraRoles)
+                            newAccount.AccountRole.Add(new AccountRole
+                            {
+                                RoleId = role
+                            });
+                    }
+
+                    context.Account.Add(newAccount);
+
+                    context.SaveChanges();
+                }
+
+                //return await context.Account.FirstOrDefaultAsync(a => a.Email == email);
             }
         }
 
@@ -142,6 +159,17 @@ namespace NexusForever.Shared.Database.Auth
                 return context.Server
                     .AsNoTracking()
                     .ToImmutableList();
+        }
+
+        public static ImmutableList<Role> GetRoles()
+        {
+            using (var context = new AuthContext())
+            {
+                return context.Role
+                    .Include(a => a.RolePermission)
+                    .AsNoTracking()
+                    .ToImmutableList();
+            }
         }
 
         public static ImmutableList<ServerMessage> GetServerMessages()

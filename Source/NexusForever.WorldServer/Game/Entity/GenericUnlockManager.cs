@@ -19,7 +19,7 @@ namespace NexusForever.WorldServer.Game.Entity
         private readonly Dictionary<uint, GenericUnlock> unlocks = new Dictionary<uint, GenericUnlock>();
 
         /// <summary>
-        /// Create a new <see cref="GenericUnlockManager"/> from <see cref="Account"/> database model.
+        /// Create a new <see cref="GenericUnlockManager"/> from <see cref="AccountModel"/> database model.
         /// </summary>
         public GenericUnlockManager(WorldSession session, AccountModel model)
         {

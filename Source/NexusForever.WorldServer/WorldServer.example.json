@@ -5,15 +5,15 @@
   },
   "Database": {
     "Auth": {
-      "ConnectionString": "server=127.0.0.1;port=3306;user=nexusforever;password=nexusforever;database=nexus_forever_auth",
+      "ConnectionString": "server=127.0.0.1;port=3306;user=root;password=;database=nexus_forever_auth",
       "Provider": "MySql"
     },
     "Character": {
-      "ConnectionString": "server=127.0.0.1;port=3306;user=nexusforever;password=nexusforever;database=nexus_forever_character",
+      "ConnectionString": "server=127.0.0.1;port=3306;user=root;password=;database=nexus_forever_character",
       "Provider": "MySql"
     },
     "World": {
-      "ConnectionString": "server=127.0.0.1;port=3306;user=nexusforever;password=nexusforever;database=nexus_forever_world",
+      "ConnectionString": "server=127.0.0.1;port=3306;user=root;password=;database=nexus_forever_world",
       "Provider": "MySql"
     }
   },
@@ -21,7 +21,8 @@
     "MapPath": "map"
   },
   "RealmId": 1,
+  "DefaultRole": 4,
   "LengthOfInGameDay": 12600,
   "CrossFactionChat": true,
-  "MessageOfTheDay": ""
+  "MessageOfTheDay": "Welcome to Genesis Prime, the official NexusForever build for WSRP!"
 }
