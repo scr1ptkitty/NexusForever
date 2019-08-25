@@ -2,6 +2,7 @@
 using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 using NexusForever.WorldServer.Game.Entity.Static;
+using NexusForever.WorldServer.Game.Account.Static;
 
 
 
@@ -9,7 +10,7 @@ using NexusForever.WorldServer.Game.Entity.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Character Boosts and Unlocks")]
+    [Name("Character Boosts and Unlocks", Permission.None)]
     public class BoostCommandHandler : CommandCategory
     {
         public BoostCommandHandler()
@@ -41,7 +42,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("all", "Level boost, currencies and unlock all dyes")]
+        [SubCommandHandler("all", "Level boost, currencies and unlock all dyes", Permission.CommandBoostAll)]
         public Task AllSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             //Unlocks all dyes on account

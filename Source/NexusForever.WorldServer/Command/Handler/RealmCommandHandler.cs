@@ -6,10 +6,11 @@ using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 using NexusForever.WorldServer.Game.Social;
 using NexusForever.WorldServer.Network;
+using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Realm Management")]
+    [Name("Realm Management", Permission.None)]
     public class RealmCommandHandler : CommandCategory
     {
         public RealmCommandHandler()

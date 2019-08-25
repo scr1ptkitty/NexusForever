@@ -3,10 +3,11 @@ using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 using NLog;
 using NexusForever.WorldServer.Game.Entity;
+using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Summon")]
+    [Name("Summon", Permission.None)]
     public class SummonCommandHandler : CommandCategory
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
@@ -15,7 +16,7 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        [SubCommandHandler("entity", "creature2Id - summons entity to the player's location")]
+        [SubCommandHandler("entity", "creature2Id - summons entity to the player's location", Permission.CommandSummonEntity)]
         public Task EntitySubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)

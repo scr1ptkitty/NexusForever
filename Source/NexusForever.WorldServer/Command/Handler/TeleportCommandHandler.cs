@@ -9,7 +9,7 @@ using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Teleport", Permission.CommandTeleport)]
+    [Name("Teleport", Permission.None)]
     public class TeleportCommandHandler : CommandCategory
     {
         public TeleportCommandHandler()
@@ -17,7 +17,7 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        [SubCommandHandler("coordinates", "x, y, z, [worldId] - Teleport to the specified coordinates optionally specifying the world.")]
+        [SubCommandHandler("coordinates", "x, y, z, [worldId] - Teleport to the specified coordinates optionally specifying the world.", Permission.CommandTeleportCoords)]
         public async Task TeleportCoordinatesSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length < 3 || parameters.Length > 4
@@ -44,7 +44,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 context.Session.Player.TeleportTo((ushort)context.Session.Player.Map.Entry.Id, x, y, z);
         }
 
-        [SubCommandHandler("location", "worldLocation2Id - Teleport to the specified world location.")]
+        [SubCommandHandler("location", "worldLocation2Id - Teleport to the specified world location.", Permission.CommandTeleportLoc)]
         public async Task TeleportLocationSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1 || !uint.TryParse(parameters[0], out uint worldLocation2Id))

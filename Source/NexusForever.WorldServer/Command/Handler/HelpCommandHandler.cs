@@ -10,9 +10,10 @@ using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
+    [Name("Help", Permission.CommandHelp)]
     public class HelpCommandHandler : NamedCommand
     {
-        [Name("Help", Permission.None)]
+        
         public HelpCommandHandler()
             : base(false, "help", "h", "?")
         {

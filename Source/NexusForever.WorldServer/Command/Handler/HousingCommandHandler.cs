@@ -14,9 +14,9 @@ using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
+    [Name("Housing", Permission.None)]
     public class HousingCommandHandler : CommandCategory
     {
-        [Name("Housing", Permission.None)]
         public HousingCommandHandler()
             : base(true, "house")
         {

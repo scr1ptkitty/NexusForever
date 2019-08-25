@@ -3,10 +3,11 @@ using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 using NexusForever.WorldServer.Game.Quest;
 using NexusForever.WorldServer.Game.Quest.Static;
+using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Quest")]
+    [Name("Quest", Permission.None)]
     public class QuestCommandHandler : CommandCategory
     {
         public QuestCommandHandler()
