@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NexusForever.WorldServer.Command.Attributes;
 using NexusForever.WorldServer.Command.Contexts;
 using NexusForever.WorldServer.Game.Entity;
+using NexusForever.WorldServer.Game.Entity.Movement.Generator;
 using NexusForever.WorldServer.Game.Entity.Movement.Spline.Static;
 using NexusForever.WorldServer.Game.Account.Static;
 
@@ -19,7 +20,50 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        [SubCommandHandler("splineadd", "", Permission.CommandMovementSplineAdd)]
+
+        
+        [SubCommandHandler("direct", "")]
+        public async Task DebugDirectGenerator(CommandContext context, string command, string[] parameters)
+        {
+            WorldEntity entity = context.Session.Player.GetVisible<WorldEntity>(context.Session.Player.TargetGuid);
+            if (entity == null)
+            {
+                await context.SendMessageAsync("Select a valid target entity!");
+                return;
+            }
+
+            var generator = new DirectMovementGenerator
+            {
+                Begin = entity.Position,
+                Final = context.Session.Player.Position,
+                Map   = entity.Map
+            };
+
+            entity.MovementManager.LaunchGenerator(generator, 3f);
+        }
+
+        [SubCommandHandler("random", "")]
+        public async Task DebugRandomGenerator(CommandContext context, string command, string[] parameters)
+        {
+            WorldEntity entity = context.Session.Player.GetVisible<WorldEntity>(context.Session.Player.TargetGuid);
+            if (entity == null)
+            {
+                await context.SendMessageAsync("Select a valid target entity!");
+                return;
+            }
+
+            var generator = new RandomMovementGenerator
+            {
+                Begin = entity.Position,
+                Leash = entity.LeashPosition,
+                Range = entity.LeashRange,
+                Map   = entity.Map
+            };
+
+            entity.MovementManager.LaunchGenerator(generator, 3f);
+        }
+
+        [SubCommandHandler("splineadd", "")]
         public async Task DebugSplineAddCommandHandler(CommandContext context, string command, string[] parameters)
         {
             WorldEntity entity = context.Session.Player.GetVisible<WorldEntity>(context.Session.Player.TargetGuid);

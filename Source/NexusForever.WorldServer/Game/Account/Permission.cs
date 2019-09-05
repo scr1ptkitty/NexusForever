@@ -53,6 +53,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandSpellCast = 19,
         CommandSpellResetCooldowns = 20,
         //
+        CommandSummonClear = 39,
+        CommandSummonDisguise = 38,
         CommandSummonEntity = 37,
         //
         CommandTeleportCoords = 21,

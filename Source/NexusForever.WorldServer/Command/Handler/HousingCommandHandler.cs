@@ -45,6 +45,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
+
         
         [SubCommandHandler("teleportinside", "[name] - Teleport to a residence, optionally specifying a character", Permission.CommandHouseTeleportInside)]
         public Task TeleportInsideSubCommandHandler(CommandContext context, string command, string[] parameters)

@@ -38,6 +38,7 @@ namespace NexusForever.WorldServer.Command.Handler
             await context.SendMessageAsync($"Account {parameters[0]} created successfully").ConfigureAwait(false);
         }
 
+
         [SubCommandHandler("delete", "email - Delete an account", Permission.CommandAccountDelete)]
         public async Task HandleAccountDeleteAsync(CommandContext context, string subCommand, string[] parameters)
         {

@@ -10,6 +10,7 @@ using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
+
     [Name("Realm Management", Permission.None)]
     public class RealmCommandHandler : CommandCategory
     {

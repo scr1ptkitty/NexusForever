@@ -5,9 +5,6 @@ using NexusForever.WorldServer.Game.Entity.Static;
 using NexusForever.WorldServer.Game.Account.Static;
 
 
-
-
-
 namespace NexusForever.WorldServer.Command.Handler
 {
     [Name("Character Boosts and Unlocks", Permission.None)]
@@ -24,6 +21,7 @@ namespace NexusForever.WorldServer.Command.Handler
             // Bump chracter level to 50
             // Later: Use levelup and exp to boost rather than directly changing the Player.Level
             context.Session.Player.Level = 50;
+            context.Session.Player.SpellManager.GrantSpells();
             return Task.CompletedTask;
         }
 
@@ -49,6 +47,7 @@ namespace NexusForever.WorldServer.Command.Handler
             context.Session.GenericUnlockManager.UnlockAll(GenericUnlockType.Dye);
 
             context.Session.Player.Level = 50;
+            context.Session.Player.SpellManager.GrantSpells();
 
             context.Session.Player.CurrencyManager.CurrencyAddAmount(CurrencyType.Credits, 500000000);
             context.Session.Player.CurrencyManager.CurrencyAddAmount(CurrencyType.Renown, 500000);
