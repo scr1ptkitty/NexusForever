@@ -10,7 +10,6 @@ using NexusForever.WorldServer.Network.Message.Model.Shared;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-
     [Name("Broadcast", Permission.CommandBroadcast)]
     public class BroadcastHandler : NamedCommand
     {

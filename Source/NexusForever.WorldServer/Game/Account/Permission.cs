@@ -49,6 +49,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandPetUnlockFlair = 17,
         //
+        CommandRealmMotd = 41,
+        //
         CommandSave = 35,
         //
         CommandSpellAdd = 18,
