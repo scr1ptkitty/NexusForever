@@ -37,6 +37,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandLocation = 29,
         //
+        CommandMorph = 40,
+        //
         CommandMovementSplineAdd = 9,
         CommandMovementSplineClear = 10,
         CommandMovementSplineLaunch = 11,
