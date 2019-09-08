@@ -201,6 +201,7 @@ namespace NexusForever.WorldServer.Game.Map
                     Position    = decor.Position,
                     Rotation    = decor.Rotation,
                     DecorInfoId = decor.Entry.Id,
+                    ColourShift = decor.ColourShiftId,
                     ParentDecorId = decor.DecorParentId
                 });
 
@@ -231,7 +232,8 @@ namespace NexusForever.WorldServer.Game.Map
                     Scale       = decor.Scale,
                     Position    = decor.Position,
                     Rotation    = decor.Rotation,
-                    DecorInfoId = decor.Entry.Id
+                    DecorInfoId = decor.Entry.Id,
+                    ColourShift = decor.ColourShiftId
                 });
             }
 
@@ -309,18 +311,19 @@ namespace NexusForever.WorldServer.Game.Map
                 player.CurrencyManager.CurrencySubtractAmount((byte)entry.CostCurrencyTypeId, entry.Cost);*/
             }
 
-            if (update.ColourShiftId != 0u)
-            {
-                ColorShiftEntry colourEntry = GameTableManager.ColorShift.GetEntry(update.ColourShiftId);
-                if (colourEntry == null)
-                    throw new InvalidPacketValueException();
-
-                // TODO: colour shift
-                
-            }
-
             Decor decor = residence.DecorCreate(entry);
             decor.Type = update.DecorType;
+
+            if (update.ColourShiftId != decor.ColourShiftId)
+            {
+                if (update.ColourShiftId != 0u)
+                {
+                    ColorShiftEntry colourEntry = GameTableManager.ColorShift.GetEntry(update.ColourShiftId);
+                    if (colourEntry == null)
+                        throw new InvalidPacketValueException();
+                }
+                decor.ColourShiftId = update.ColourShiftId;
+            }
 
             if (update.DecorType != DecorType.Crate)
             {
@@ -356,7 +359,8 @@ namespace NexusForever.WorldServer.Game.Map
                         Scale       = decor.Scale,
                         Position    = decor.Position,
                         Rotation    = decor.Rotation,
-                        DecorInfoId = decor.Entry.Id
+                        DecorInfoId = decor.Entry.Id,
+                        ColourShift = decor.ColourShiftId
                     }
                 }
             });
@@ -367,7 +371,6 @@ namespace NexusForever.WorldServer.Game.Map
             Decor decor = residence.GetDecor(update.DecorId);
             if (decor == null)
                 throw new InvalidPacketValueException();
-            
 
             // TODO: research 0.835f
             // Added +0.01 to Z for test
@@ -387,6 +390,16 @@ namespace NexusForever.WorldServer.Game.Map
                     log.Warn($"decor/update parentIds: {decor.DecorParentId} {update.ParentDecorId}");
                     decor.DecorParentId = update.ParentDecorId;
                 }
+                else if (update.ColourShiftId != decor.ColourShiftId)
+                {
+                    if (update.ColourShiftId != 0u)
+                    {
+                        ColorShiftEntry colourEntry = GameTableManager.ColorShift.GetEntry(update.ColourShiftId);
+                        if (colourEntry == null)
+                            throw new InvalidPacketValueException();
+                    }
+                    decor.ColourShiftId = update.ColourShiftId;
+                }
                 else
                 {
                     // crate->world
@@ -396,6 +409,7 @@ namespace NexusForever.WorldServer.Game.Map
                         var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
                         decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                         decor.DecorParentId = update.ParentDecorId;
+                        decor.ColourShiftId = update.ColourShiftId;
                     }
                     else
                     {
@@ -406,6 +420,7 @@ namespace NexusForever.WorldServer.Game.Map
                         var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
                         decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                         decor.DecorParentId = update.ParentDecorId;
+                        decor.ColourShiftId = update.ColourShiftId;
                     }
                 }
                 
@@ -427,6 +442,16 @@ namespace NexusForever.WorldServer.Game.Map
                         log.Warn($"decor/update parentIds: {decor.DecorParentId} {update.ParentDecorId}");
                         decor.DecorParentId = update.ParentDecorId;
                     }
+                    else if (update.ColourShiftId != decor.ColourShiftId)
+                    {
+                        if (update.ColourShiftId != 0u)
+                        {
+                            ColorShiftEntry colourEntry = GameTableManager.ColorShift.GetEntry(update.ColourShiftId);
+                            if (colourEntry == null)
+                                throw new InvalidPacketValueException();
+                        }
+                        decor.ColourShiftId = update.ColourShiftId;
+                    }
                     else
                     {
                         // world->world
@@ -436,6 +461,7 @@ namespace NexusForever.WorldServer.Game.Map
                             var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
                             decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                             decor.DecorParentId = update.ParentDecorId;
+                            decor.ColourShiftId = update.ColourShiftId;
                         }
                         else
                         {
@@ -446,6 +472,7 @@ namespace NexusForever.WorldServer.Game.Map
                             var position = new Vector3(update.Position.X, update.Position.Y + 0.835f, update.Position.Z + 0.01f);
                             decor.Move(update.DecorType, position, update.Rotation, update.Scale);
                             decor.DecorParentId = update.ParentDecorId;
+                            decor.ColourShiftId = update.ColourShiftId;
                         }
                     }
                 }
@@ -466,7 +493,8 @@ namespace NexusForever.WorldServer.Game.Map
                         Position    = decor.Position,
                         Rotation    = decor.Rotation,
                         DecorInfoId = decor.Entry.Id,
-                        ParentDecorId = decor.DecorParentId
+                        ParentDecorId = decor.DecorParentId,
+                        ColourShift = decor.ColourShiftId
                     }
                 }
             });
