@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusForever.Shared", "NexusForever.Shared\NexusForever.Shared.csproj", "{4A47774E-518A-4243-8B0B-6B5F9808329D}"
 EndProject
@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusForever.ClientConnecto
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{96FBF6E9-0E5B-47B0-BEB0-05112E4A5BB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusForever.MapGenerator", "NexusForever.MapGenerator\NexusForever.MapGenerator.csproj", "{4E41CCCF-95AB-4BEC-91DF-03E6A4DB9EA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusForever.MapGenerator", "NexusForever.MapGenerator\NexusForever.MapGenerator.csproj", "{4E41CCCF-95AB-4BEC-91DF-03E6A4DB9EA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainSite", "MainSite\MainSite.csproj", "{C9FD14B6-9C21-4DDA-A731-F1EF766860F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{4E41CCCF-95AB-4BEC-91DF-03E6A4DB9EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E41CCCF-95AB-4BEC-91DF-03E6A4DB9EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E41CCCF-95AB-4BEC-91DF-03E6A4DB9EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FD14B6-9C21-4DDA-A731-F1EF766860F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FD14B6-9C21-4DDA-A731-F1EF766860F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FD14B6-9C21-4DDA-A731-F1EF766860F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FD14B6-9C21-4DDA-A731-F1EF766860F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
