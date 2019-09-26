@@ -72,7 +72,7 @@ namespace MainSite.Controllers
 
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 ViewBag.StatusSrc = "images/StatusOffline.png";
             }
@@ -87,7 +87,7 @@ namespace MainSite.Controllers
                     return true;
                 }
             }
-            catch (SocketException ex)
+            catch
             {
                 return false;
             }
