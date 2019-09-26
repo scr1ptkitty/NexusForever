@@ -36,7 +36,7 @@ namespace MainSite.Controllers
                 {
                     try
                     {
-                        AuthDatabase.CreateAccount(newUser.Email, newUser.Password, 4);
+                        AuthDatabase.CreateAccount(newUser.Email.ToLower(), newUser.Password, 4);
                         return View("RegisterSuccess");
                     }
                     catch
