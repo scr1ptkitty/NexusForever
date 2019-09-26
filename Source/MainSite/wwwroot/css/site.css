@@ -17,22 +17,6 @@ body {
     padding-right: 15px;
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
 
 #footer {
     position: absolute;
@@ -56,7 +40,7 @@ hr {
 
 #inputField {
     background-color: rgba(130, 251, 245, 0.4);
-    width: 200px;
+    width: 100%;
     border: dashed;
     border-width: thin;
     border-bottom: none;
@@ -65,7 +49,7 @@ hr {
 
 #inputFieldBottom {
     background-color: rgba(130, 251, 245, 0.4);
-    width: 200px;
+    width: 100%;
     border: dashed;
     border-width: thin;
     border-color: black;
@@ -76,6 +60,7 @@ hr {
     background: rgba(130, 251, 245, 0.4);
     border: solid;
     border-color: aqua;
+    position: relative;
 }
 
 #registrationDiv {
@@ -87,6 +72,7 @@ hr {
     background-attachment: fixed;
     background-position: center;
     background-size: auto;*/
+    position: center;
 }
 
 #textConsistency {
@@ -99,4 +85,12 @@ hr {
     .carousel-caption {
         display: none;
     }
+}
+
+#mainContainer {
+    background-color: rgba(130, 251, 245, 0.3);
+    border: dashed;
+    border-color: black;
+    height: 100%;
+    width: 100%;
 }

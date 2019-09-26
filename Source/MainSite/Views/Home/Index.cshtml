@@ -3,12 +3,9 @@
 }
 
 <body>
-    @*@using (@Html.BeginForm("Register", "Home", FormMethod.Post))
-    {
-    @model MainSite.Models.AccountBaseModel*@
-    <div id="registrationDiv">
-        <form asp-action="Register" method="post">
-            <div>
+    <div class="container" id="mainContainer">
+        <div id="registrationDiv">
+            <form asp-action="Register" method="post">
                 <table align="center">
                     <tr>
                         <th style="text-align:right">Email:</th>
@@ -22,7 +19,7 @@
                         <td>
                             <input type="password" name="Password" id="inputField" />
                         </td>
-                        <td style="padding:0px 0px 0px 5px">< --- For your personal belongings.</td>
+                        <th id="textConsistency" style="padding:0px 0px 0px 5px">< --- For your personal belongings.</th>
                     </tr>
                     <tr>
                         <th style="text-align:right">Confirm Password:</th>
@@ -37,8 +34,8 @@
                         </td>
                     </tr>
                 </table>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     @*}*@
 </body>
