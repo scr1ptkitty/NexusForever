@@ -25,7 +25,18 @@ namespace NexusForever.WorldServer.Command.Handler
         [SubCommandHandler("teleport", "[name] - Teleport to a residence, optionally specifying a character", Permission.CommandHouseTeleport)]
         public Task TeleportSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
-            string name = parameters.Length == 0 ? context.Session.Player.Name : string.Join(" ", parameters);
+            string name;
+
+            if (parameters.Length == 1)
+            {
+                name = parameters[0];
+            }
+            else
+            {
+                name = parameters.Length == 0 ? context.Session.Player.Name : string.Join(" ", parameters);
+            }
+
+            context.SendMessageAsync("Finding residence for " + name + "...");
 
             Residence residence = ResidenceManager.GetResidence(name).GetAwaiter().GetResult();
             if (residence == null)
