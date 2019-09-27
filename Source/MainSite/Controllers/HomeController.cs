@@ -64,17 +64,17 @@ namespace MainSite.Controllers
                 switch (isOnline)
                 {
                     case true:
-                        ViewBag.StatusSrc = "images/StatusOnline.png";
+                        ViewBag.StatusSrc = "statusOn.png";
                         break;
                     default:
-                        ViewBag.StatusSrc = "images/StatusOffline.png";
+                        ViewBag.StatusSrc = "statusOff.png";
                         break;
 
                 }
             }
             catch
             {
-                ViewBag.StatusSrc = "images/StatusOffline.png";
+                ViewBag.StatusSrc = "statusOff.png";
             }
         }
 
