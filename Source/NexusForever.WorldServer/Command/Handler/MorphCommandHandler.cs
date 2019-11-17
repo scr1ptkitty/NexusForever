@@ -309,25 +309,25 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "female":
                     creatureId = 32219;
                     break;
-                case "spaceFemale":
+                case "spacefemale":
                     creatureId = 29797;
                     break;
-                case "blueMale":
+                case "bluemale":
                     creatureId = 6520;
                     break;
-                case "greenMale":
+                case "greenmale":
                     creatureId = 45195;
                     break;
-                case "greenSpaceMale":
+                case "greenspacemale":
                     creatureId = 46921;
                     break;
-                case "redMale":
+                case "redmale":
                     creatureId = 1684;
                     break;
-                case "yellowMale":
+                case "yellowmale":
                     creatureId = 45009;
                     break;
-                case "redSpaceMale":
+                case "redSpacemale":
                     creatureId = 29798;
                     break;
             }
@@ -383,7 +383,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into x");
+            log.Info($"Morphing player into grumpel");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -489,49 +489,49 @@ namespace NexusForever.WorldServer.Command.Handler
             string variant = parameters[0].ToLower();
             switch (variant)
             {
-                case "blueFemale":
+                case "bluefemale":
                     creatureId = 24142;
                     break;
-                case "greenFemale":
+                case "greenfemale":
                     creatureId = 25285;
                     break;
-                case "greenSpaceFemale":
+                case "greenspacefemale":
                     creatureId = 29906;
                     break;
                 case "flower":
                     creatureId = 20810;
                     break;
-                case "redFemale":
+                case "redfemale":
                     creatureId = 24353;
                     break;
-                case "redSpaceFemale":
+                case "redspacefemale":
                     creatureId = 27915;
                     break;
                 case "marshal":
                     creatureId = 20809;
                     break;
-                case "greenMale":
+                case "greenmale":
                     creatureId = 24116;
                     break;
-                case "greenSpaceMale":
+                case "greenspacemale":
                     creatureId = 28348;
                     break;
-                case "redMale":
+                case "redmale":
                     creatureId = 25283;
                     break;
-                case "redSpaceMale":
+                case "redspacemale":
                     creatureId = 28346;
                     break;
-                case "yellowMale":
+                case "yellowmale":
                     creatureId = 24118;
                     break;
-                case "yellowSpaceMale":
+                case "yellowspacemale":
                     creatureId = 28347;
                     break;
-                case "snowFemale":
+                case "snowfemale":
                     creatureId = 24361;
                     break;
-                case "snowMale":
+                case "snowmale":
                     creatureId = 11010;
                     break;
             }
@@ -617,16 +617,16 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "brown4":
                     creatureId = 41703;
                     break;
-                case "brownArmored":
+                case "brownarmored":
                     creatureId = 70873;
                     break;
-                case "brownArmored2":
+                case "brownarmored2":
                     creatureId = 20706;
                     break;
-                case "brownArmored3":
+                case "brownarmored3":
                     creatureId = 20708;
                     break;
-                case "greyBase":
+                case "greybase":
                     creatureId = 30464;
                     break;
                 case "grey":
@@ -638,16 +638,16 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "grey3":
                     creatureId = 75458;
                     break;
-                case "greyArmored":
+                case "greyarmored":
                     creatureId = 30450;
                     break;
-                case "greyArmored2":
+                case "greyarmored2":
                     creatureId = 30462;
                     break;
-                case "greyArmored3":
+                case "greyarmored3":
                     creatureId = 49352;
                     break;
-                case "greyArmored4":
+                case "greyarmored4":
                     creatureId = 49346;
                     break;
             }
