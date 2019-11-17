@@ -625,6 +625,7 @@ namespace NexusForever.WorldServer.Game.Map
             //       Telling the client that the Plots were updated looks to be the only trigger for the building animation.
 
             // Update the Plot and queue necessary plug updates
+            log.Info($"plugItemEntry " + plugItemEntry);
             if (residence.SetHouse(plugItemEntry))
             {
                 HandleHouseChange(player, plot, housingPlugUpdate);
@@ -703,7 +704,10 @@ namespace NexusForever.WorldServer.Game.Map
             // TODO: Confirm that this plug is usable in said slot
 
             if (plot.Index == 0)
+            {
+                //log.Info($"plugItemEntry " + plugItemEntry.Id);
                 SetHousePlug(player, housingPlugUpdate, plugItemEntry);
+            }
             else
             {
                 // TODO: Figure out how the "Construction Yard" shows up. Appears to be related to time and not a specific packet. 

@@ -61,6 +61,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             switch (housingPlugUpdate.Operation)
             {
                 case PlugUpdateOperation.Place:
+                    //log.Info($"housingPlugUpdate " + housingPlugUpdate.PlotInfo);
                     residenceMap.SetPlug(session.Player, housingPlugUpdate);
                     break;
                 case PlugUpdateOperation.Remove:
