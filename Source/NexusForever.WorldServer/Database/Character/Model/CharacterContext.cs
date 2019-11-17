@@ -1128,6 +1128,10 @@ namespace NexusForever.WorldServer.Database.Character.Model
                     .HasColumnName("propertyInfoId")
                     .HasDefaultValueSql("'0'");
 
+                entity.Property(e => e.ResidenceInfoId)
+                    .HasColumnName("residenceInfoId")
+                    .HasDefaultValueSql("'0'");
+
                 entity.Property(e => e.ResourceSharing)
                     .HasColumnName("resourceSharing")
                     .HasDefaultValueSql("'0'");
@@ -1175,6 +1179,10 @@ namespace NexusForever.WorldServer.Database.Character.Model
                 entity.Property(e => e.DecorType)
                     .HasColumnName("decorType")
                     .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.PlotIndex)
+                    .HasColumnName("plotIndex")
+                    .HasDefaultValueSql("'2147483647'");
 
                 entity.Property(e => e.Qw)
                     .HasColumnName("qw")

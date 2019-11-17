@@ -9,6 +9,7 @@ namespace NexusForever.WorldServer.Database.Character.Model
         public ulong DecorId { get; set; }
         public uint DecorInfoId { get; set; }
         public uint DecorType { get; set; }
+        public uint PlotIndex { get; set; }
         public float Scale { get; set; }
         public ushort ColourShiftId { get; set; }
         public ulong DecorParentId { get; set; }
