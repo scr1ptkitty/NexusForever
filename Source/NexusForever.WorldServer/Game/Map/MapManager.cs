@@ -22,6 +22,11 @@ namespace NexusForever.WorldServer.Game.Map
             ValidateMapFiles();
         }
 
+        public static int GetMapCount()
+        {
+            return maps.Keys.Count;
+        }
+
         private static void ValidateMapFiles()
         {
             log.Info("Validating map files...");
@@ -83,7 +88,7 @@ namespace NexusForever.WorldServer.Game.Map
                     map = new BaseMap();
                     break;
             }
-            
+
             map.Initialise(info, null);
             maps.Add((ushort)info.Entry.Id, map);
             return map;

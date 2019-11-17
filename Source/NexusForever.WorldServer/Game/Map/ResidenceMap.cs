@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using NexusForever.Shared.Game.Map;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.Network;
@@ -10,7 +11,6 @@ using NexusForever.WorldServer.Game.Housing;
 using NexusForever.WorldServer.Game.Housing.Static;
 using NexusForever.WorldServer.Game.Spell.Static;
 using NexusForever.WorldServer.Network.Message.Model;
-using NexusForever.Shared.Game.Map;
 using NLog;
 
 namespace NexusForever.WorldServer.Game.Map
@@ -18,6 +18,7 @@ namespace NexusForever.WorldServer.Game.Map
     public class ResidenceMap : BaseMap
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         public ulong Id => residence?.Id ?? 0ul;
         // housing maps have unlimited vision range.
         public override float VisionRange { get; protected set; } = -1f;
@@ -41,13 +42,6 @@ namespace NexusForever.WorldServer.Game.Map
             foreach (Plot plot in residence.GetPlots().Where(p => p.PlugEntry != null))
             {
                 var plug = new Plug(plot.PlotEntry, plot.PlugEntry);
-                if (plot.Index == 0)
-                    plug.SetPosition(new Vector3
-                    {
-                        X = 1472f,
-                        Y = -715.0843505859375f, //change position up? 0.835f
-                        Z = 1440f,
-                    });
                 EnqueueAdd(plug, Vector3.Zero);
                 plot.SetPlugEntity(plug);
             }
@@ -62,62 +56,24 @@ namespace NexusForever.WorldServer.Game.Map
             SendHousingProperties(player);
             SendHousingPlots(player);
 
-            /*
-            ResidenceEntity residenceEntity = new ResidenceEntity();
-            player.Map.EnqueueAdd(residenceEntity, residenceEntity.Position);
-            */
-
             // this shows the housing toolbar, might need to move this to a more generic place in the future
             player.Session.EnqueueMessageEncrypted(new ServerShowActionBar
             {
-                ShortcutSet            = ShortcutSet.FloatingSpellBar,
+                ShortcutSet = ShortcutSet.FloatingSpellBar,
                 ActionBarShortcutSetId = 1553,
-                Guid                   = player.Guid
+                Guid = player.Guid
             });
 
             SendResidenceDecor(player);
-            /*
-            Simple door1 = new Simple
-            {
-                CreatureId = 72338,
-                QuestChecklistIdx = 255,
-                CreateFlags = Entity.Static.EntityCreateFlag.SpawnAnimation,
-                DisplayInfo = 32614,
-                Position = new Vector3
-                {
-                    X = 1487.921875f,
-                    Y = -711.7042236328125f,
-                    Z = 1440.810546875f,
-                }
-            };
-            door1.SetPropData(84255740, 1159);
-            Simple door2 = new Simple
-            {
-                CreatureId = 72338,
-                QuestChecklistIdx = 255,
-                CreateFlags = Entity.Static.EntityCreateFlag.SpawnAnimation,
-                DisplayInfo = 32614,
-                Position = new Vector3
-                {
-                    X = 1482.39453125f,
-                    Y = -811.41650390625f,
-                    Z = 1444.5390625f
-                }
-            };
-            door2.SetPropData(0, 1159);
-
-            player.Map.EnqueueAdd(door1, door1.Position);
-            player.Map.EnqueueAdd(door2, door2.Position);
-         */
         }
 
         private void SendHousingPrivacy(Player player = null)
         {
             var housingPrivacy = new ServerHousingPrivacy
             {
-                ResidenceId     = residence.Id,
+                ResidenceId = residence.Id,
                 NeighbourhoodId = 0x190000000000000A, // magic numbers are bad
-                PrivacyLevel    = ResidencePrivacyLevel.Public
+                PrivacyLevel = ResidencePrivacyLevel.Public
             };
 
             if (player != null)
@@ -140,7 +96,7 @@ namespace NexusForever.WorldServer.Game.Map
                         CharacterIdOwner  = residence.OwnerId,
                         Name              = residence.Name,
                         PropertyInfoId    = residence.PropertyInfoId,
-                        ResidenceInfoId   = 22,
+                        ResidenceInfoId   = residence.ResidenceInfoEntry?.Id ?? 0u,
                         WallpaperExterior = residence.Wallpaper,
                         Entryway          = residence.Entryway,
                         Roof              = residence.Roof,
@@ -175,23 +131,24 @@ namespace NexusForever.WorldServer.Game.Map
                         player.Session.EnqueueMessageEncrypted(residenceDecor);
                     else
                         EnqueueToAll(residenceDecor);
+
                     residenceDecor = new ServerHousingResidenceDecor();
                 }
 
                 Decor decor = decors[i];
                 residenceDecor.DecorData.Add(new ServerHousingResidenceDecor.Decor
                 {
-                    RealmId     = WorldServer.RealmId,
-                    DecorId     = decor.DecorId,
+                    RealmId = WorldServer.RealmId,
+                    DecorId = decor.DecorId,
                     ResidenceId = residence.Id,
-                    DecorType   = decor.Type,
-                    PlotIndex   = decor.PlotIndex,
-                    Scale       = decor.Scale,
-                    Position    = decor.Position,
-                    Rotation    = decor.Rotation,
+                    DecorType = decor.Type,
+                    PlotIndex = decor.PlotIndex,
+                    Scale = decor.Scale,
+                    Position = decor.Position,
+                    Rotation = decor.Rotation,
                     DecorInfoId = decor.Entry.Id,
-                    ColourShift = decor.ColourShiftId,
-                    ParentDecorId = decor.DecorParentId
+                    ParentDecorId = decor.DecorParentId,
+                    ColourShift = decor.ColourShiftId
                 });
 
                 if (i == decors.Length - 1)
@@ -219,16 +176,15 @@ namespace NexusForever.WorldServer.Game.Map
 
                 housingResidenceDecor.DecorData.Add(new ServerHousingResidenceDecor.Decor
                 {
-                    RealmId     = WorldServer.RealmId,
-                    DecorId     = decor.DecorId,
+                    RealmId = WorldServer.RealmId,
+                    DecorId = decor.DecorId,
                     ResidenceId = residence.Id,
-                    DecorType   = decor.Type,
-                    PlotIndex   = decor.PlotIndex,
-                    Scale       = decor.Scale,
-                    Position    = decor.Position,
-                    Rotation    = decor.Rotation,
-                    DecorInfoId = decor.Entry.Id,
-                    ColourShift = decor.ColourShiftId
+                    DecorType = decor.Type,
+                    PlotIndex = decor.PlotIndex,
+                    Scale = decor.Scale,
+                    Position = decor.Position,
+                    Rotation = decor.Rotation,
+                    DecorInfoId = decor.Entry.Id
                 });
             }
 
@@ -275,20 +231,19 @@ namespace NexusForever.WorldServer.Game.Map
 
                 residenceDecor.DecorData.Add(new ServerHousingResidenceDecor.Decor
                 {
-                    RealmId     = WorldServer.RealmId,
-                    DecorId     = decor.DecorId,
+                    RealmId = WorldServer.RealmId,
+                    DecorId = decor.DecorId,
                     ResidenceId = residence.Id,
-                    DecorType   = decor.Type,
+                    DecorType = decor.Type,
                     PlotIndex = decor.PlotIndex,
-                    Scale       = decor.Scale,
-                    Position    = decor.Position,
-                    Rotation    = decor.Rotation,
+                    Scale = decor.Scale,
+                    Position = decor.Position,
+                    Rotation = decor.Rotation,
                     DecorInfoId = decor.Entry.Id
                 });
             }
 
             EnqueueToAll(residenceDecor);
-
         }
 
         private Vector3 CalculateDecorPosition(ClientHousingDecorUpdate.DecorUpdate update)
@@ -324,6 +279,7 @@ namespace NexusForever.WorldServer.Game.Map
                     if (colourEntry == null)
                         throw new InvalidPacketValueException();
                 }
+
                 decor.ColourShiftId = update.ColourShiftId;
             }
 
@@ -333,18 +289,9 @@ namespace NexusForever.WorldServer.Game.Map
                     throw new InvalidPacketValueException();
 
                 // new decor is being placed directly in the world
-                
-                var position = new Vector3(update.Position.X, update.Position.Y, update.Position.Z);
-                if (update.PlotIndex != 0)
-                {
-                    position.Y += 0.835f;
-                    position.Z += 0.01f;
-                    position.X = update.Position.X;
-                }
-                log.Warn("DecorCreate offset");
-                decor.Position = position;
+                decor.Position = CalculateDecorPosition(update);
                 decor.Rotation = update.Rotation;
-                decor.Scale    = update.Scale;
+                decor.Scale = update.Scale;
             }
 
             EnqueueToAll(new ServerHousingResidenceDecor
@@ -377,8 +324,8 @@ namespace NexusForever.WorldServer.Game.Map
 
             HousingResult GetResult()
             {
-                if (!IsValidPlotForPosition(update))
-                    return HousingResult.Decor_InvalidPosition;
+                //if (!IsValidPlotForPosition(update))
+                //return HousingResult.Decor_InvalidPosition;
 
                 return HousingResult.Success;
             }
@@ -514,13 +461,13 @@ namespace NexusForever.WorldServer.Game.Map
             (uint globalCellX, uint globalCellZ) = (gridX * MapDefines.GridCellCount + localCellX, gridZ * MapDefines.GridCellCount + localCellZ);
 
             // TODO: Investigate need for offset.
-            // Offset added due to calculation being +/- 1 sometimes when placing very close to plots. They were valid placements in the client, though.
-            uint maxBound = worldSocketEntry.BoundIds.Max() + 1;
-            uint minBound = worldSocketEntry.BoundIds.Min() - 1;
+            // Offset added due to calculation being +/- 2 sometimes when placing very close to plots. They were valid placements in the client, though.
+            uint maxBound = worldSocketEntry.BoundIds.Max() + 2;
+            uint minBound = worldSocketEntry.BoundIds.Min() - 2;
 
             log.Debug($"IsValidPlotForPosition - PlotIndex: {update.PlotIndex}, Range: {minBound}-{maxBound}, Coords: {globalCellX}, {globalCellZ}");
 
-            return !(globalCellX >= minBound && globalCellX <= maxBound && globalCellZ >= minBound && globalCellZ <= maxBound);
+            return (globalCellX >= minBound && globalCellX <= maxBound && globalCellZ >= minBound && globalCellZ <= maxBound);
         }
 
         /// <summary>
@@ -560,22 +507,22 @@ namespace NexusForever.WorldServer.Game.Map
             if (!residence.CanModifyResidence(player.CharacterId))
                 throw new InvalidPacketValueException();
 
-            // TODO
-
-            if (housingRemodel.GroundWallpaperId != 0)
-            {
-                residence.Ground = (ushort)housingRemodel.GroundWallpaperId;
-            }
-            if (housingRemodel.SkyWallpaperId != 0)
-            {
+            if (housingRemodel.RoofDecorInfoId != 0u)
+                residence.Roof = (ushort)housingRemodel.RoofDecorInfoId;
+            if (housingRemodel.WallpaperId != 0u)
+                residence.Wallpaper = (ushort)housingRemodel.WallpaperId;
+            if (housingRemodel.EntrywayDecorInfoId != 0u)
+                residence.Entryway = (ushort)housingRemodel.EntrywayDecorInfoId;
+            if (housingRemodel.DoorDecorInfoId != 0u)
+                residence.Door = (ushort)housingRemodel.DoorDecorInfoId;
+            if (housingRemodel.SkyWallpaperId != 0u)
                 residence.Sky = (ushort)housingRemodel.SkyWallpaperId;
-            }
             if (housingRemodel.MusicId != 0u)
-            {
                 residence.Music = (ushort)housingRemodel.MusicId;
-            }
-            SendHousingProperties();
+            if (housingRemodel.GroundWallpaperId != 0u)
+                residence.Ground = (ushort)housingRemodel.GroundWallpaperId;
 
+            SendHousingProperties();
         }
 
         /// <summary>
@@ -625,7 +572,6 @@ namespace NexusForever.WorldServer.Game.Map
             //       Telling the client that the Plots were updated looks to be the only trigger for the building animation.
 
             // Update the Plot and queue necessary plug updates
-            log.Info($"plugItemEntry " + plugItemEntry);
             if (residence.SetHouse(plugItemEntry))
             {
                 HandleHouseChange(player, plot, housingPlugUpdate);
@@ -645,16 +591,12 @@ namespace NexusForever.WorldServer.Game.Map
         /// </summary>
         private void HandleHouseChange(Player player, Plot plot, ClientHousingPlugUpdate housingPlugUpdate = null)
         {
-            Vector3 houseLocation = new Vector3(1471f, -715f, 1443f);
             // TODO: Crate all decor stored inside the house?
 
-            UpdatePlot(player, plot, housingPlugUpdate, houseLocation);
+            UpdatePlot(player, plot, housingPlugUpdate);
 
             // Send updated Property data (informs residence, roof, door, etc.)
             SendHousingProperties();
-
-            // Send plots again after Property was updated
-            SendHousingPlots();
 
             // Resend the Action Bar because buttons may've been enabled after adding a house
             player.Session.EnqueueMessageEncrypted(new ServerShowActionBar
@@ -664,11 +606,11 @@ namespace NexusForever.WorldServer.Game.Map
                 Guid = player.Guid
             });
 
-            ResidenceEntity residenceEntity = new ResidenceEntity(6241, plot.PlotEntry);
-            EnqueueAdd(residenceEntity, houseLocation);
+            // Send plots again after Property was updated
+            SendHousingPlots();
 
             // Send residence decor after house change
-            //SendResidenceDecor();
+            SendResidenceDecor();
 
             // TODO: Run script(s) associated with PlugItem
 
@@ -704,10 +646,7 @@ namespace NexusForever.WorldServer.Game.Map
             // TODO: Confirm that this plug is usable in said slot
 
             if (plot.Index == 0)
-            {
-                //log.Info($"plugItemEntry " + plugItemEntry.Id);
                 SetHousePlug(player, housingPlugUpdate, plugItemEntry);
-            }
             else
             {
                 // TODO: Figure out how the "Construction Yard" shows up. Appears to be related to time and not a specific packet. 
@@ -739,11 +678,11 @@ namespace NexusForever.WorldServer.Game.Map
         /// <summary>
         /// Update supplied <see cref="Plot"/>; Should only be called by <see cref="ResidenceMap"/> when updating plot information
         /// </summary>
-        private void UpdatePlot(Player player, Plot plot, ClientHousingPlugUpdate housingPlugUpdate = null, Vector3 position = new Vector3())
+        private void UpdatePlot(Player player, Plot plot, ClientHousingPlugUpdate housingPlugUpdate = null)
         {
             // Set this Plot to use the correct Plug
             if (housingPlugUpdate != null)
-                plot.SetPlug(housingPlugUpdate.PlugItem); // TODO: Allow for rotation
+                plot.SetPlug(housingPlugUpdate.PlugItem, (HousingPlugFacing)housingPlugUpdate.PlugFacing == HousingPlugFacing.Default ? HousingPlugFacing.East : (HousingPlugFacing)housingPlugUpdate.PlugFacing);
 
             SendHousingPlots();
 
@@ -761,7 +700,7 @@ namespace NexusForever.WorldServer.Game.Map
             if (plot.PlugEntity != null)
                 plot.PlugEntity.EnqueueReplace(newPlug);
             else
-                EnqueueAdd(newPlug, position);
+                EnqueueAdd(newPlug, Vector3.Zero);
 
             // Update plot with PlugEntity reference
             plot.SetPlugEntity(newPlug);
@@ -811,14 +750,9 @@ namespace NexusForever.WorldServer.Game.Map
             residence.RemoveHouse();
 
             // Even when no house is being used, the plug must be set for the house otherwise clients will get stuck on load screen
-            plot.SetPlug(531); // Defaults to Starter Tent
+            plot.SetPlug(18); // Defaults to Starter Tent
 
             HandleHouseChange(player, plot);
-
-            player.Session.EnqueueMessageEncrypted(new ServerTutorial
-            {
-                TutorialId = 142
-            });
         }
     }
 }

@@ -11,7 +11,7 @@ namespace NexusForever.WorldServer.Game.Entity
     {
         public HousingPlotInfoEntry PlotEntry { get; }
         public HousingPlugItemEntry PlugEntry { get; }
-        public uint WorldPlugId { get; }
+
         private Plug ReplacementPlug { get; set; }
 
         public Plug(HousingPlotInfoEntry plotEntry, HousingPlugItemEntry plugEntry)
@@ -19,15 +19,14 @@ namespace NexusForever.WorldServer.Game.Entity
         {
             PlotEntry = plotEntry;
             PlugEntry = plugEntry;
-            SetProperty(Property.BaseHealth, 101f);
         }
 
         protected override IEntityModel BuildEntityModel()
         {
             return new PlugModel
             {
-                SocketId  = (ushort)PlotEntry.WorldSocketId,
-                PlugId    = (ushort)PlugEntry.WorldIdPlug02,
+                SocketId = (ushort)PlotEntry.WorldSocketId,
+                PlugId = (ushort)PlugEntry.WorldIdPlug02,
                 PlugFlags = 63
             };
         }
@@ -50,11 +49,6 @@ namespace NexusForever.WorldServer.Game.Entity
             }
 
             base.OnRemoveFromMap();
-        }
-
-        public void SetPosition(Vector3 position)
-        {
-            Position = position;
         }
     }
 }
