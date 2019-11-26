@@ -155,7 +155,7 @@ namespace NexusForever.WorldServer.Game
         /// </summary>
         public static IEnumerable<CharacterCustomizationEntry> GetCharacterCustomisation(Dictionary<uint, uint> customisations, uint race, uint sex, uint primaryLabel, uint primaryValue)
         {
-            ImmutableList<CharacterCustomizationEntry> entries = GetPrimaryCharacterCustomisation(race, sex, primaryLabel, primaryValue);
+            ImmutableList<CharacterCustomizationEntry> entries = Instance.GetPrimaryCharacterCustomisation(race, sex, primaryLabel, primaryValue);
             if (entries == null)
                 return Enumerable.Empty<CharacterCustomizationEntry>();
 

@@ -230,7 +230,7 @@ namespace NexusForever.WorldServer.Game.Housing
             gardenSharing = model.GardenSharing;
 
             if (model.ResidenceInfoId > 0)
-                ResidenceInfoEntry = GameTableManager.HousingResidenceInfo.GetEntry(model.ResidenceInfoId);
+                ResidenceInfoEntry = GameTableManager.Instance.HousingResidenceInfo.GetEntry(model.ResidenceInfoId);
 
             foreach (ResidenceDecor decorModel in model.ResidenceDecor)
             {
@@ -448,7 +448,7 @@ namespace NexusForever.WorldServer.Game.Housing
             uint residenceId = GetResidenceEntryForPlug(plugItemEntry.Id);
             if (residenceId > 0)
             {
-                HousingResidenceInfoEntry residenceInfoEntry = GameTableManager.HousingResidenceInfo.GetEntry(residenceId);
+                HousingResidenceInfoEntry residenceInfoEntry = GameTableManager.Instance.HousingResidenceInfo.GetEntry(residenceId);
                 if (residenceInfoEntry != null)
                 {
                     ResidenceInfoEntry = residenceInfoEntry;

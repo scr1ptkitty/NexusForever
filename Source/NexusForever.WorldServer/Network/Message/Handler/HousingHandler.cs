@@ -125,7 +125,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
         public static void HandleHousingRandomResidenceList(WorldSession session, ClientHousingRandomResidenceList housingRandomResidenceList)
         {
             var serverHousingRandomResidenceList = new ServerHousingRandomResidenceList();
-            foreach (PublicResidence residence in ResidenceManager.GetRandomVisitableResidences())
+            foreach (PublicResidence residence in ResidenceManager.Instance.GetRandomVisitableResidences())
             {
                 serverHousingRandomResidenceList.Residences.Add(new ServerHousingRandomResidenceList.Residence
                 {
@@ -147,9 +147,9 @@ namespace NexusForever.WorldServer.Network.Message.Handler
 
             Task<Residence> residenceTask;
             if (housingVisit.TargetResidenceName != "")
-                residenceTask = ResidenceManager.GetResidence(housingVisit.TargetResidenceName);
+                residenceTask = ResidenceManager.Instance.GetResidence(housingVisit.TargetResidenceName);
             else if (housingVisit.TargetResidence.ResidenceId != 0ul)
-                residenceTask = ResidenceManager.GetResidence(housingVisit.TargetResidence.ResidenceId);
+                residenceTask = ResidenceManager.Instance.GetResidence(housingVisit.TargetResidence.ResidenceId);
             else
                 throw new NotImplementedException();
 
@@ -177,7 +177,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 }
 
                 // teleport player to correct residence instance
-                ResidenceEntrance entrance = ResidenceManager.GetResidenceEntrance(residence);
+                ResidenceEntrance entrance = ResidenceManager.Instance.GetResidenceEntrance(residence);
                 session.Player.TeleportTo(entrance.Entry, entrance.Position, 0u, residence.Id);
             }));
         }

@@ -21,21 +21,18 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        [SubCommandHandler("create", "email password [extraRoles] - Create a new account", Permission.CommandAccountCreate)]
+        [SubCommandHandler("create", "email password - Create a new account", Permission.CommandAccountCreate)]
         public async Task HandleAccountCreate(CommandContext context, string subCommand, string[] parameters)
         {
-            if (parameters.Length != 2)
+            if (parameters.Length < 2)
             {
                 await SendHelpAsync(context).ConfigureAwait(false);
                 return;
             }
 
-            List<ulong> extraRoles = new List<ulong>();
-            for (int i = 2; i < parameters.Length; i++)
-                extraRoles.Add(ulong.Parse(parameters[i]));
-
-            AuthDatabase.CreateAccount(parameters[0], parameters[1], defaultRole: ConfigurationManager<WorldServerConfiguration>.Config.DefaultRole, extraRoles.ToArray());
-            await context.SendMessageAsync($"Account {parameters[0]} created successfully").ConfigureAwait(false);
+            AuthDatabase.CreateAccount(parameters[0], parameters[1], 4);
+            await context.SendMessageAsync($"Account {parameters[0]} created successfully")
+                .ConfigureAwait(false);
         }
 
 
@@ -56,7 +53,7 @@ namespace NexusForever.WorldServer.Command.Handler
                     .ConfigureAwait(false);
         }
 
-        [SubCommandHandler("currencyadd", "currencyId amount - Add the amount provided to the currencyId provided")]
+        [SubCommandHandler("currencyadd", "currencyId amount - Add the amount provided to the currencyId provided", Permission.CommandAccountCurrencyAdd)]
         public Task HandleAccountCurrencyAdd(CommandContext context, string command, string[] parameters)
         {
             if (context.Session.Account == null)
@@ -95,7 +92,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("currencylist", "List all account currencies")]
+        [SubCommandHandler("currencylist", "List all account currencies", Permission.CommandAccountCurrencyList)]
         public Task handleAccountCurrencyList(CommandContext context, string command, string[] parameters)
         {
             var tt = GameTableManager.Instance.GetTextTable(Language.English);

@@ -451,7 +451,7 @@ namespace NexusForever.WorldServer.Game.Map
             if (update.PlotIndex == int.MaxValue)
                 return true;
 
-            WorldSocketEntry worldSocketEntry = GameTableManager.WorldSocket.GetEntry(residence.GetPlot((byte)update.PlotIndex).PlotEntry.WorldSocketId);
+            WorldSocketEntry worldSocketEntry = GameTableManager.Instance.WorldSocket.GetEntry(residence.GetPlot((byte)update.PlotIndex).PlotEntry.WorldSocketId);
 
             // TODO: Calculate position based on individual maps on Community & Warplot residences
             Vector3 worldPosition = new Vector3(1472f + update.Position.X, update.Position.Y, 1440f + update.Position.Z);
@@ -639,7 +639,7 @@ namespace NexusForever.WorldServer.Game.Map
             if (plot == null)
                 throw new HousingException();
 
-            HousingPlugItemEntry plugItemEntry = GameTableManager.HousingPlugItem.GetEntry(housingPlugUpdate.PlugItem);
+            HousingPlugItemEntry plugItemEntry = GameTableManager.Instance.HousingPlugItem.GetEntry(housingPlugUpdate.PlugItem);
             if (plugItemEntry == null)
                 throw new InvalidPacketValueException();
 

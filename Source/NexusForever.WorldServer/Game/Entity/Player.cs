@@ -707,9 +707,9 @@ namespace NexusForever.WorldServer.Game.Entity
         {
             loggedIn = true;
 
-            var motd = ConfigurationManager<WorldServerConfiguration>.Config.MessageOfTheDay;
+            var motd = ConfigurationManager<WorldServerConfiguration>.Instance.Config.MessageOfTheDay;
             if (motd.Length > 0)
-                SocialManager.SendMessage(Session, "MOTD: " + motd, channel: ChatChannel.Realm);
+                SocialManager.Instance.SendMessage(Session, "MOTD: " + motd, channel: ChatChannel.Realm);
         }
 
         /// <summary>

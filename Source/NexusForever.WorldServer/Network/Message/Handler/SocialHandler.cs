@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.Network;
@@ -27,11 +26,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             {
                 try
                 {
-                    IEnumerable<ChatFormat> chatLinks = SocialManager.ParseChatLinks(session, chat.Formats);
-                    CommandManager.HandleCommand(session, chat.Message, true, chatLinks);
-                    //CommandManager.ParseCommand(chat.Message, out string command, out string[] parameters);
-                    //CommandHandlerDelegate handler = CommandManager.GetCommandHandler(command);
-                    //handler?.Invoke(session, parameters);
+                    CommandManager.Instance.HandleCommand(session, chat.Message, true);
                 }
                 catch (Exception e)
                 {
@@ -39,7 +34,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 }
             }
             else
-                SocialManager.HandleClientChat(session, chat);
+                SocialManager.Instance.HandleClientChat(session, chat);
         }
 
         [MessageHandler(GameMessageOpcode.ClientEmote)]
@@ -49,7 +44,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             uint standState = 0;
             if (emoteId != 0)
             {
-                EmotesEntry entry = GameTableManager.Emotes.GetEntry(emoteId);
+                EmotesEntry entry = GameTableManager.Instance.Emotes.GetEntry(emote.EmoteId);
                 if (entry == null)
                     throw (new InvalidPacketValueException("HandleEmote: Invalid EmoteId"));
 
@@ -66,32 +61,20 @@ namespace NexusForever.WorldServer.Network.Message.Handler
         [MessageHandler(GameMessageOpcode.ClientWhoRequest)]
         public static void HandleWhoRequest(WorldSession session, ClientWhoRequest request)
         {
-            List<ServerWhoResponse.WhoPlayer> players = new List<ServerWhoResponse.WhoPlayer>();
-
-            List<WorldSession> allSessions = NetworkManager<WorldSession>.GetSessions().ToList();
-            foreach (WorldSession whoSession in allSessions)
+            List<ServerWhoResponse.WhoPlayer> players = new List<ServerWhoResponse.WhoPlayer>
             {
-                if (whoSession.Player == null)
-                    continue;
-
-                if (whoSession.Player.IsLoading)
-                    continue;
-
-                if (whoSession.Player.Zone == null)
-                    continue;
-
-                players.Add(new ServerWhoResponse.WhoPlayer
+                new ServerWhoResponse.WhoPlayer
                 {
-                    Name = whoSession.Player.Name,
-                    Level = whoSession.Player.Level,
-                    Race = whoSession.Player.Race,
-                    Class = whoSession.Player.Class,
-                    Path = whoSession.Player.Path,
-                    Faction = whoSession.Player.Faction,
-                    Sex = whoSession.Player.Sex,
-                    Zone = whoSession.Player.Zone.Id
-                });
-            }
+                    Name = session.Player.Name,
+                    Level = session.Player.Level,
+                    Race = session.Player.Race,
+                    Class = session.Player.Class,
+                    Path = session.Player.Path,
+                    Faction = session.Player.Faction,
+                    Sex = session.Player.Sex,
+                    Zone = session.Player.Zone.Id
+                }
+            };
 
             session.EnqueueMessageEncrypted(new ServerWhoResponse
             {
@@ -102,7 +85,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
         [MessageHandler(GameMessageOpcode.ClientChatWhisper)]
         public static void HandleWhisper(WorldSession session, ClientChatWhisper whisper)
         {
-            SocialManager.HandleWhisperChat(session, whisper);
+            SocialManager.Instance.HandleWhisperChat(session, whisper);
         }
     }
 }

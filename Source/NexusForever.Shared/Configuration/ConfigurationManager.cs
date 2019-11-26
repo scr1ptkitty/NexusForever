@@ -17,7 +17,7 @@ namespace NexusForever.Shared.Configuration
             SharedConfiguration.Initialise(file);
             Config = SharedConfiguration.Configuration.Get<T>();
         }
-        public static void Save()
+        public void Save()
         {
             SharedConfiguration.Save<T>(Config);
         }

@@ -632,7 +632,7 @@ namespace NexusForever.Shared.GameTable
         public GameTable<WorldZoneEntry> WorldZone { get; private set; }
 
         [GameData]
-        public GameTable<XpPerLevelEntry> XpPerLevel { get; private set; }
+        public static GameTable<XpPerLevelEntry> XpPerLevel { get; private set; }
 
         public GameTable<ZoneCompletionEntry> ZoneCompletion { get; private set; }
 

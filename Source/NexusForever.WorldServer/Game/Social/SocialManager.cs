@@ -45,7 +45,7 @@ namespace NexusForever.WorldServer.Game.Social
             { ChatChannel.Trade, new List<WorldSession>() }
         };
 
-        private static readonly bool CrossFactionChat = ConfigurationManager<WorldServerConfiguration>.Config.CrossFactionChat;
+        private static readonly bool CrossFactionChat = ConfigurationManager<WorldServerConfiguration>.Instance.Config.CrossFactionChat;
 
         private SocialManager()
         {
@@ -177,7 +177,7 @@ namespace NexusForever.WorldServer.Game.Social
                 Name    = session.Player.Name,
                 GM = RoleManager.HasPermission(session, Permission.GMFlag),
                 Text    = chat.Message,
-                Formats = ParseChatLinks(session, chat.Formats).ToList(),
+                Formats = ParseChatLinks(session, chat).ToList(),
             };
 
             session.Player.Map.Search(
@@ -198,7 +198,7 @@ namespace NexusForever.WorldServer.Game.Social
         [ChatChannelHandler(ChatChannel.Society)]
         [ChatChannelHandler(ChatChannel.WarParty)]
         [ChatChannelHandler(ChatChannel.Community)]
-        private static void HandleGuildChat(WorldSession session, ClientChat chat)
+        private void HandleGuildChat(WorldSession session, ClientChat chat)
         {
             ChatResult result = 0;
             if (chat.ChatId == 0 || !session.Player.GuildMemberships.Contains(chat.ChatId))
@@ -221,7 +221,7 @@ namespace NexusForever.WorldServer.Game.Social
                     ChatId = guild.Id,
                     Name = session.Player.Name,
                     Text = chat.Message,
-                    Formats = ParseChatLinks(session, chat.Formats).ToList(),
+                    Formats = ParseChatLinks(session, chat).ToList(),
                 };
                 guild.SendToOnlineUsers(serverChat, Guild.Static.GuildRankPermission.MemberChat);
             }
@@ -231,7 +231,7 @@ namespace NexusForever.WorldServer.Game.Social
 
         [ChatChannelHandler(ChatChannel.GuildOfficer)]
         [ChatChannelHandler(ChatChannel.WarPartyOfficer)]
-        private static void HandleGuildOfficerChat(WorldSession session, ClientChat chat)
+        private void HandleGuildOfficerChat(WorldSession session, ClientChat chat)
         {
             ChatResult result = 0;
             if (chat.ChatId == 0 || !session.Player.GuildMemberships.Contains(chat.ChatId))
@@ -254,7 +254,7 @@ namespace NexusForever.WorldServer.Game.Social
                     ChatId = guild.Id,
                     Name = session.Player.Name,
                     Text = chat.Message,
-                    Formats = ParseChatLinks(session, chat.Formats).ToList(),
+                    Formats = ParseChatLinks(session, chat).ToList(),
                 };
                 guild.SendToOnlineUsers(serverChat, Guild.Static.GuildRankPermission.OfficerChat);
             }
@@ -267,9 +267,9 @@ namespace NexusForever.WorldServer.Game.Social
         /// </summary>
         /// <param name="session"></param>
         /// <param name="whisper"></param>
-        public static void HandleWhisperChat(WorldSession session, ClientChatWhisper whisper)
+        public void HandleWhisperChat(WorldSession session, ClientChatWhisper whisper)
         {
-            WorldSession targetSession = NetworkManager<WorldSession>.GetSession(s => s.Player?.Name == whisper.PlayerName);
+            WorldSession targetSession = NetworkManager<WorldSession>.Instance.GetSession(s => s.Player?.Name == whisper.PlayerName);
             if (targetSession != null)
             {
                 if (targetSession == session)
@@ -318,7 +318,7 @@ namespace NexusForever.WorldServer.Game.Social
         /// <param name="chat"></param>
         [ChatChannelHandler(ChatChannel.Nexus)]
         [ChatChannelHandler(ChatChannel.Trade)]
-        private static void HandleChannelChat(WorldSession session, ClientChat chat)
+        private void HandleChannelChat(WorldSession session, ClientChat chat)
         {
             var serverChat = new ServerChat
             {
@@ -326,7 +326,7 @@ namespace NexusForever.WorldServer.Game.Social
                 Channel = chat.Channel,
                 Name = session.Player.Name,
                 Text = chat.Message,
-                Formats = ParseChatLinks(session, chat.Formats).ToList(),
+                Formats = ParseChatLinks(session, chat).ToList(),
             };
 
             foreach (WorldSession channelSession in chatChannelSessions[chat.Channel])
@@ -344,7 +344,7 @@ namespace NexusForever.WorldServer.Game.Social
         /// <returns></returns>
         private IEnumerable<ChatFormat> ParseChatLinks(WorldSession session, ClientChat chat)
         {
-            foreach (ChatFormat format in chatFormats)
+            foreach (ChatFormat format in chat.Formats)
             {
                 yield return ParseChatFormat(session, format);
             }
@@ -376,7 +376,7 @@ namespace NexusForever.WorldServer.Game.Social
             {
                 case ChatFormatItemId chatFormatItemId:
                     {
-                        Item2Entry item = GameTableManager.Item.GetEntry(chatFormatItemId.ItemId);
+                        Item2Entry item = GameTableManager.Instance.Item.GetEntry(chatFormatItemId.ItemId);
 
                         return new ChatFormat
                         {

@@ -101,7 +101,7 @@ namespace NexusForever.WorldServer.Command.Handler
         public async Task TeleportToSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             //find online players to teleport to
-            List<WorldSession> allSessions = NetworkManager<WorldSession>.GetSessions().ToList();
+            List<WorldSession> allSessions = NetworkManager<WorldSession>.Instance.GetSessions().ToList();
             string name = string.Join(" ", parameters);
 
             if(name != "")
