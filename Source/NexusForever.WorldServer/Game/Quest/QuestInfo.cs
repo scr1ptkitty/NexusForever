@@ -66,7 +66,7 @@ namespace NexusForever.WorldServer.Game.Quest
             if (Entry.RewardXpOverride != 0u)
                 return Entry.RewardXpOverride;
 
-            XpPerLevelEntry entry = GameTableManager.Instance.XpPerLevel.GetEntry(Entry.ConLevel);
+            XpPerLevelEntry entry = GameTableManager.XpPerLevel.GetEntry(Entry.ConLevel);
             return (uint)(DifficultyEntry.XpMultiplier * entry.BaseQuestXpPerLevel);
         }
 

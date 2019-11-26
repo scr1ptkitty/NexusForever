@@ -74,7 +74,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
         private IEnumerable<uint> GetTextIds(Item2Entry entry)
         {
-            Item2Entry item = GameTableManager.Item.GetEntry(entry.Id);
+            Item2Entry item = GameTableManager.Instance.Item.GetEntry(entry.Id);
             if (item != null && item.LocalizedTextIdName != 0)
                 yield return item.LocalizedTextIdName;
         }
@@ -89,7 +89,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             string searchText = string.Join(" ", parameters);
-            var searchResults = SearchManager.Search<Item2Entry>(searchText, context.Language, e => e.LocalizedTextIdName, true).Take(25);
+            var searchResults = SearchManager.Instance.Search<Item2Entry>(searchText, context.Language, e => e.LocalizedTextIdName, true).Take(25);
 
             if (searchResults.Count() > 0)
             {

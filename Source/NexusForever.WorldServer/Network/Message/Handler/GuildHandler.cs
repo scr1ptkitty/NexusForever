@@ -44,7 +44,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 GlobalGuildManager.JoinGuild(session, session.Player.PendingGuildInvite);
             else
             {
-                var targetSession = NetworkManager<WorldSession>.GetSession(i => i.Player?.CharacterId == session.Player.PendingGuildInvite.InviteeId);
+                var targetSession = NetworkManager<WorldSession>.Instance.GetSession(i => i.Player?.CharacterId == session.Player.PendingGuildInvite.InviteeId);
                 if (targetSession != null)
                     targetSession.EnqueueMessageEncrypted(new ServerGuildResult
                     {

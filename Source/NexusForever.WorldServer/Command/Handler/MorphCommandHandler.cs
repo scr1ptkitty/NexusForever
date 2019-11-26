@@ -55,7 +55,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             
             if (creature2 == null || creatureId == 0)
             {
@@ -64,7 +64,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
             
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -109,7 +109,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -117,7 +117,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
             
@@ -156,7 +156,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -164,7 +164,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -200,7 +200,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -208,7 +208,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -277,7 +277,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -285,7 +285,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -333,7 +333,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -341,7 +341,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -371,7 +371,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -379,7 +379,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -424,7 +424,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -432,7 +432,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -461,7 +461,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -469,7 +469,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -537,7 +537,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -545,7 +545,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -574,7 +574,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -582,7 +582,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
@@ -653,7 +653,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature id from the creature2 table
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
                 log.Info($"Invalid morph variant");
@@ -661,7 +661,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             // get the creature's display information
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 

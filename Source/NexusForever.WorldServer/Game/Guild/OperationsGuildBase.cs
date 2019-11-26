@@ -165,7 +165,7 @@ namespace NexusForever.WorldServer.Game.Guild
                 return;
             }
 
-            var targetSession = NetworkManager<WorldSession>.GetSession(i => i.Player?.CharacterId == targetCharacter.CharacterId);
+            var targetSession = NetworkManager<WorldSession>.Instance.GetSession(i => i.Player?.CharacterId == targetCharacter.CharacterId);
             GuildResult GetCharacterResult()
             {
                 if (targetSession == null)

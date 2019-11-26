@@ -135,7 +135,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 return Task.CompletedTask;
             }
 
-            Residence residence = ResidenceManager.GetResidence(context.Session.Player.Name).GetAwaiter().GetResult();
+            Residence residence = ResidenceManager.Instance.GetResidence(context.Session.Player.Name).GetAwaiter().GetResult();
 
 
             if (parameters[0].ToLower() == "clutter")

@@ -45,11 +45,11 @@ namespace NexusForever.WorldServer.Command.Handler
             uint creatureId;
             uint.TryParse(parameters[0], out creatureId);
 
-            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            Creature2Entry creature2 = GameTableManager.Instance.Creature2.GetEntry(creatureId);
             if (creature2 == null)
                 return Task.CompletedTask;
 
-            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Instance.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 

@@ -37,14 +37,14 @@ namespace NexusForever.WorldServer.Command.Handler
 
             if (zoneName.ToLower() == "home")
             {
-                Residence residence = ResidenceManager.GetResidence(context.Session.Player.Name).GetAwaiter().GetResult();
+                Residence residence = ResidenceManager.Instance.GetResidence(context.Session.Player.Name).GetAwaiter().GetResult();
                 if (residence == null)
                 {
                     //no residence has been created yet
                     await context.SendMessageAsync("No home to go to! Try using !house teleport");
                 }
 
-                ResidenceEntrance entrance = ResidenceManager.GetResidenceEntrance(residence);
+                ResidenceEntrance entrance = ResidenceManager.Instance.GetResidenceEntrance(residence);
                 context.Session.Player.TeleportTo(entrance.Entry, entrance.Position, 0u, residence.Id);
                 await context.SendMessageAsync("Going home...");
             }

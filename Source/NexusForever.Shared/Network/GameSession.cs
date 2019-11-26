@@ -49,7 +49,7 @@ namespace NexusForever.Shared.Network
         /// </summary>
         public void EnqueueMessageEncrypted(IWritable message)
         {
-            if (!MessageManager.GetOpcode(message, out GameMessageOpcode opcode))
+            if (!MessageManager.Instance.GetOpcode(message, out GameMessageOpcode opcode))
             {
                 log.Warn("Failed to send message with no attribute!");
                 return;

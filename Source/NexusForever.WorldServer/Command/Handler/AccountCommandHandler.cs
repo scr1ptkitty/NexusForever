@@ -30,7 +30,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 return;
             }
 
-            AuthDatabase.CreateAccount(parameters[0], parameters[1], 4);
+            AuthDatabase.CreateAccount(parameters[0], parameters[1], ConfigurationManager<WorldServerConfiguration>.Instance.Config.DefaultRole);
             await context.SendMessageAsync($"Account {parameters[0]} created successfully")
                 .ConfigureAwait(false);
         }

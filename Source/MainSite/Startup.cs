@@ -19,8 +19,8 @@ namespace MainSite
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            ConfigurationManager<AuthServerConfiguration>.Initialise("AuthServer.json");
-            DatabaseManager.Initialise(ConfigurationManager<AuthServerConfiguration>.Config.Database);
+            ConfigurationManager<AuthServerConfiguration>.Instance.Initialise("AuthServer.json");
+            DatabaseManager.Initialise(ConfigurationManager<AuthServerConfiguration>.Instance.Config.Database);
         }
 
         public IConfiguration Configuration { get; }
