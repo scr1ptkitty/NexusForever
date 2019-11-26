@@ -22,10 +22,10 @@ namespace NexusForever.WorldServer.Command.Handler
 
         private IEnumerable<uint> GetTextIds(WorldLocation2Entry entry)
         {
-            WorldZoneEntry worldZone = GameTableManager.WorldZone.GetEntry(entry.WorldZoneId);
+            WorldZoneEntry worldZone = GameTableManager.Instance.WorldZone.GetEntry(entry.WorldZoneId);
             if (worldZone != null && worldZone.LocalizedTextIdName != 0)
                 yield return worldZone.LocalizedTextIdName;
-            WorldEntry world = GameTableManager.World.GetEntry(entry.WorldId);
+            WorldEntry world = GameTableManager.Instance.World.GetEntry(entry.WorldId);
             if (world != null && world.LocalizedTextIdName != 0)
                 yield return world.LocalizedTextIdName;
         }
@@ -33,7 +33,7 @@ namespace NexusForever.WorldServer.Command.Handler
         {
             string zoneName = string.Join(" ", parameters).ToLower();
 
-            WorldLocation2Entry zone = SearchManager.Search<WorldLocation2Entry>(zoneName, context.Language, GetTextIds).FirstOrDefault();
+            WorldLocation2Entry zone = SearchManager.Instance.Search<WorldLocation2Entry>(zoneName, context.Language, GetTextIds).FirstOrDefault();
 
             if (zoneName.ToLower() == "home")
             {

@@ -108,7 +108,7 @@ namespace NexusForever.WorldServer.Game.Housing
         {
             Id       = model.Id;
             DecorId  = model.DecorId;
-            Entry    = GameTableManager.HousingDecorInfo.GetEntry(model.DecorInfoId);
+            Entry    = GameTableManager.Instance.HousingDecorInfo.GetEntry(model.DecorInfoId);
             type     = (DecorType)model.DecorType;
             plotIndex = model.PlotIndex;
             position = new Vector3(model.X, model.Y, model.Z);

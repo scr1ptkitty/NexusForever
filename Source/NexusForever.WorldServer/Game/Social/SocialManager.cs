@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NexusForever.Shared;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.Configuration;
@@ -23,15 +24,15 @@ using NexusForever.WorldServer.Game.Account.Static;
 
 namespace NexusForever.WorldServer.Game.Social
 {
-    public class SocialManager
+    public sealed class SocialManager : Singleton<SocialManager>
     {
         private const float LocalChatDistace = 155f;
 
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
-        private static readonly Dictionary<ChatChannel, ChatChannelHandler> chatChannelHandlers
+        private readonly Dictionary<ChatChannel, ChatChannelHandler> chatChannelHandlers
             = new Dictionary<ChatChannel, ChatChannelHandler>();
-        private static readonly Dictionary<ChatFormatType, ChatFormatFactoryDelegate> chatFormatFactories
+        private readonly Dictionary<ChatFormatType, ChatFormatFactoryDelegate> chatFormatFactories
             = new Dictionary<ChatFormatType, ChatFormatFactoryDelegate>();
 
         private delegate IChatFormat ChatFormatFactoryDelegate();
@@ -46,13 +47,17 @@ namespace NexusForever.WorldServer.Game.Social
 
         private static readonly bool CrossFactionChat = ConfigurationManager<WorldServerConfiguration>.Config.CrossFactionChat;
 
-        public static void Initialise()
+        private SocialManager()
+        {
+        }
+
+        public void Initialise()
         {
             InitialiseChatHandlers();
             InitialiseChatFormatFactories();
         }
 
-        private static void InitialiseChatHandlers()
+        private void InitialiseChatHandlers()
         {
             IEnumerable<MethodInfo> methods = Assembly.GetExecutingAssembly()
                 .GetTypes()
@@ -76,7 +81,7 @@ namespace NexusForever.WorldServer.Game.Social
             }
         }
 
-        private static void InitialiseChatFormatFactories()
+        private void InitialiseChatFormatFactories()
         {
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
@@ -93,7 +98,7 @@ namespace NexusForever.WorldServer.Game.Social
         /// <summary>
         /// Returns a new <see cref="IChatFormat"/> model for supplied <see cref="ChatFormatType"/> type.
         /// </summary>
-        public static IChatFormat GetChatFormatModel(ChatFormatType type)
+        public IChatFormat GetChatFormatModel(ChatFormatType type)
         {
             if (!chatFormatFactories.TryGetValue(type, out ChatFormatFactoryDelegate factory))
                 return null;
@@ -103,7 +108,7 @@ namespace NexusForever.WorldServer.Game.Social
         /// <summary>
         /// Process and delegate a <see cref="ClientChat"/> message from <see cref="WorldSession"/>, this is called directly from a packet hander.
         /// </summary>
-        public static void HandleClientChat(WorldSession session, ClientChat chat)
+        public void HandleClientChat(WorldSession session, ClientChat chat)
         {
             if (chatChannelHandlers.ContainsKey(chat.Channel))
                 chatChannelHandlers[chat.Channel](session, chat);
@@ -120,7 +125,7 @@ namespace NexusForever.WorldServer.Game.Social
             }
         }
 
-        private static void SendChatAccept(WorldSession session)
+        private void SendChatAccept(WorldSession session)
         {
             session.EnqueueMessageEncrypted(new ServerChatAccept
             {
@@ -163,7 +168,7 @@ namespace NexusForever.WorldServer.Game.Social
         [ChatChannelHandler(ChatChannel.Say)]
         [ChatChannelHandler(ChatChannel.Yell)]
         [ChatChannelHandler(ChatChannel.Emote)]
-        private static void HandleLocalChat(WorldSession session, ClientChat chat)
+        private void HandleLocalChat(WorldSession session, ClientChat chat)
         {
             var serverChat = new ServerChat
             {
@@ -337,7 +342,7 @@ namespace NexusForever.WorldServer.Game.Social
         /// <param name="session"></param>
         /// <param name="chat"></param>
         /// <returns></returns>
-        public static IEnumerable<ChatFormat> ParseChatLinks(WorldSession session, List<ChatFormat> chatFormats)
+        private IEnumerable<ChatFormat> ParseChatLinks(WorldSession session, ClientChat chat)
         {
             foreach (ChatFormat format in chatFormats)
             {
@@ -426,7 +431,7 @@ namespace NexusForever.WorldServer.Game.Social
             };
         }
 
-        public static void SendMessage(WorldSession session, string message, string name = "", ChatChannel channel = ChatChannel.System)
+        public void SendMessage(WorldSession session, string message, string name = "", ChatChannel channel = ChatChannel.System)
         {
            session.EnqueueMessageEncrypted(new ServerChat
             {

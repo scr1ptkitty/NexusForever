@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
+using NexusForever.Shared;
 using AccountModel = NexusForever.Shared.Database.Auth.Model.Account;
 
 namespace NexusForever.WorldServer.Game
 {
-    public static class CleanupManager
+    public sealed class CleanupManager : Singleton<CleanupManager>
     {
         private static readonly HashSet<uint> pendingCleanup = new HashSet<uint>();
+
+        private CleanupManager()
+        {
+        }
 
         /// <summary>
         /// Start tracking supplied <see cref="AccountModel"/> for pending character cleanup.

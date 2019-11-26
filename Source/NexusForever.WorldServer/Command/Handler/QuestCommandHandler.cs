@@ -24,7 +24,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 return;
             }
 
-            QuestInfo info = GlobalQuestManager.GetQuestInfo(questId);
+            QuestInfo info = GlobalQuestManager.Instance.GetQuestInfo(questId);
             if (info == null)
             {
                 await context.SendMessageAsync($"Quest id {questId} is invalid!");

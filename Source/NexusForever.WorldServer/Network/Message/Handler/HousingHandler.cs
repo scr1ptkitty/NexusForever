@@ -80,9 +80,9 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             {
                 ListType = 0
             };
-            
+
             // TODO: this isn't entirely correct
-            foreach (HousingPlugItemEntry entry in GameTableManager.HousingPlugItem.Entries)
+            foreach (HousingPlugItemEntry entry in GameTableManager.Instance.HousingPlugItem.Entries)
             {
                 serverHousingVendorList.PlugItems.Add(new ServerHousingVendorList.PlugItem
                 {

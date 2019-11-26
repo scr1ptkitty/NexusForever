@@ -20,12 +20,12 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
         private const double SplineGridUpdateTime = 1d;
 
         private readonly WorldEntity owner;
-        
+
         private readonly Dictionary<EntityCommand, IEntityCommandModel> commands = new Dictionary<EntityCommand, IEntityCommandModel>();
 
         private EntityCommand splineCommand;
         private SplinePath splinePath;
-        private double timeToSplineGridUpdate;
+        private readonly UpdateTimer splineGridUpdateTimer = new UpdateTimer(SplineGridUpdateTime);
 
         private bool isDirty;
 
@@ -49,7 +49,6 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             AddCommand(new SetVelocityDefaultsCommand());
             AddCommand(new SetMoveDefaultsCommand());
             //AddCommand(new SetRotationDefaultsCommand());
-            AddCommand(new SetModeCommand());
         }
 
         public void Update(double lastTick)
@@ -67,12 +66,12 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
 
                 UpdateSplineCommand();
 
-                timeToSplineGridUpdate -= lastTick;
-                if (timeToSplineGridUpdate <= 0d)
+                splineGridUpdateTimer.Update(lastTick);
+                if (splineGridUpdateTimer.HasElapsed)
                 {
                     // update grid position with the interpolated position on the spline
                     owner.Map.EnqueueRelocate(owner, splinePath.GetPosition());
-                    timeToSplineGridUpdate = SplineGridUpdateTime;
+                    splineGridUpdateTimer.Reset();
                 }
             }
         }
@@ -83,17 +82,17 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
         private void UpdateSplineCommand()
         {
             float splineOffset = (splinePath.Position % splinePath.Length) / splinePath.Length;
-            uint timeTotal     = (uint)((splinePath.Length / splinePath.Speed) * 1000f);
-            uint timeOffset    = (uint)(timeTotal * splineOffset);
+            uint timeTotal = (uint)((splinePath.Length / splinePath.Speed) * 1000f);
+            uint timeOffset = (uint)(timeTotal * splineOffset);
 
             switch (splineCommand)
             {
                 case EntityCommand.SetPositionPath:
-                {
-                    SetPositionPathCommand command = GetCommand<SetPositionPathCommand>();
-                    command.Offset = timeOffset;
-                    break;
-                }
+                    {
+                        SetPositionPathCommand command = GetCommand<SetPositionPathCommand>();
+                        command.Offset = timeOffset;
+                        break;
+                    }
             }
         }
 
@@ -153,7 +152,7 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
         /// </summary>
         public void LaunchSpline(ushort splineId, SplineMode mode, float speed)
         {
-            Spline2Entry entry = GameTableManager.Spline2.GetEntry(splineId);
+            Spline2Entry entry = GameTableManager.Instance.Spline2.GetEntry(splineId);
             if (entry == null)
                 throw new ArgumentOutOfRangeException();
 
@@ -167,8 +166,8 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             AddCommand(new SetPositionSplineCommand
             {
                 SplineId = splineId,
-                Speed    = speed,
-                Mode     = mode
+                Speed = speed,
+                Mode = mode
             });
 
             // TODO: retail sent SetStateKeysCommand which sets the state for a limited time
@@ -212,9 +211,9 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             AddCommand(new SetPositionPathCommand
             {
                 Positions = nodes.Select(n => new Position(n)).ToList(),
-                Speed     = speed,
-                Type      = type,
-                Mode      = mode
+                Speed = speed,
+                Type = type,
+                Mode = mode
             });
 
             // TODO: retail sent SetStateKeysCommand which sets the state for a limited time
@@ -261,9 +260,9 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
 
             var serverEntityCommand = new ServerEntityCommand
             {
-                Guid             = owner.Guid,
-                Time             = 1u,
-                TimeReset        = true,
+                Guid = owner.Guid,
+                Time = 1u,
+                TimeReset = true,
                 ServerControlled = true
             };
 
@@ -278,9 +277,9 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
         /// <summary>
         /// Add a new <see cref="IEntityCommandModel"/>, this will replaced the existing command of this type.
         /// </summary>
-        public void AddCommand(IEntityCommandModel model, bool dirty = false)
+        private void AddCommand(IEntityCommandModel model, bool dirty = false)
         {
-            EntityCommand? command = EntityCommandManager.GetCommand(model.GetType());
+            EntityCommand? command = EntityCommandManager.Instance.GetCommand(model.GetType());
             if (command == null)
                 throw new ArgumentException();
 
@@ -300,9 +299,31 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             LaunchSpline(nodes, SplineType.Linear, mode, speed);
         }
 
+        public void Follow(WorldEntity entity, float distance)
+        {
+            AddCommand(new SetRotationFaceUnitCommand
+            {
+                UnitId = entity.Guid
+            });
+
+            // angle is directly behind entity being followed
+            float angle = -entity.Rotation.X;
+            angle += MathF.PI / 2;
+
+            var generator = new DirectMovementGenerator
+            {
+                Begin = splinePath?.GetPosition() ?? owner.Position,
+                Final = entity.Position.GetPoint2D(angle, distance),
+                Map = entity.Map
+            };
+
+            // TODO: calculate speed based on entity being followed.
+            LaunchGenerator(generator, 8f);
+        }
+
         private T GetCommand<T>() where T : IEntityCommandModel
         {
-            EntityCommand? command = EntityCommandManager.GetCommand(typeof(T));
+            EntityCommand? command = EntityCommandManager.Instance.GetCommand(typeof(T));
             if (command == null)
                 throw new ArgumentException();
 

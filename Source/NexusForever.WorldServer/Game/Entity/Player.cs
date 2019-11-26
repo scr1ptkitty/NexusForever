@@ -420,7 +420,7 @@ namespace NexusForever.WorldServer.Game.Entity
         {
             if (Zone != null)
             {
-                TextTable tt = GameTableManager.GetTextTable(Language.English);
+                TextTable tt = GameTableManager.Instance.GetTextTable(Language.English);
 
                 /* Shhh quiet zone spam
                 Session.EnqueueMessageEncrypted(new ServerChat
@@ -431,7 +431,7 @@ namespace NexusForever.WorldServer.Game.Entity
                 });
                 */
 
-                uint tutorialId = AssetManager.GetTutorialIdForZone(Zone.Id);
+                uint tutorialId = AssetManager.Instance.GetTutorialIdForZone(Zone.Id);
                 if (tutorialId > 0)
                 {
                     Session.EnqueueMessageEncrypted(new ServerTutorial
@@ -452,7 +452,7 @@ namespace NexusForever.WorldServer.Game.Entity
             SendInGameTime();
             PathManager.SendInitialPackets();
 
-            BuybackManager.SendBuybackItems(this);
+            BuybackManager.Instance.SendBuybackItems(this);
 
             ContactManager.OnLogin(Session);
 
@@ -508,7 +508,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
             var playerCreate = new ServerPlayerCreate
             {
-                ItemProficiencies = GetItemProficiences(),
+                ItemProficiencies = GetItemProficiencies(),
                 FactionData       = new ServerPlayerCreate.Faction
                 {
                     FactionId = Faction1, // This does not do anything for the player's "main" faction. Exiles/Dominion
@@ -552,9 +552,10 @@ namespace NexusForever.WorldServer.Game.Entity
             });
         }
 
-        public ItemProficiency GetItemProficiences()
+        public ItemProficiency GetItemProficiencies()
         {
-            ClassEntry classEntry = GameTableManager.Class.GetEntry((ulong)Class);
+            //TODO: Store proficiencies in DB table and load from there. Do they change ever after creation? Perhaps something for use on custom servers?
+            ClassEntry classEntry = GameTableManager.Instance.Class.GetEntry((ulong)Class);
             return (ItemProficiency)classEntry.StartingItemProficiencies;
 
             //TODO: Store proficiences in DB table and load from there. Do they change ever after creation? Perhaps something for use on custom servers?
@@ -568,7 +569,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
             if (pendingTeleport != null)
             {
-                MapManager.AddToMap(this, pendingTeleport.Info, pendingTeleport.Vector);
+                MapManager.Instance.AddToMap(this, pendingTeleport.Info, pendingTeleport.Vector);
                 pendingTeleport = null;
             }
         }
@@ -716,7 +717,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void TeleportTo(ushort worldId, float x, float y, float z, uint instanceId = 0u, ulong residenceId = 0ul)
         {
-            WorldEntry entry = GameTableManager.World.GetEntry(worldId);
+            WorldEntry entry = GameTableManager.Instance.World.GetEntry(worldId);
             if (entry == null)
                 throw new ArgumentException();
 
@@ -786,7 +787,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         private void SendInGameTime()
         {
-            uint lengthOfInGameDayInSeconds = ConfigurationManager<WorldServerConfiguration>.Config.LengthOfInGameDay;
+            uint lengthOfInGameDayInSeconds = ConfigurationManager<WorldServerConfiguration>.Instance.Config.LengthOfInGameDay;
             if (lengthOfInGameDayInSeconds == 0u)
                 lengthOfInGameDayInSeconds = (uint)TimeSpan.FromHours(3.5d).TotalSeconds; // Live servers were 3.5h per in game day
 

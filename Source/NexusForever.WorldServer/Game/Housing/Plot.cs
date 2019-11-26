@@ -62,8 +62,8 @@ namespace NexusForever.WorldServer.Game.Housing
         {
             Id         = model.Id;
             Index      = model.Index;
-            PlotEntry  = GameTableManager.HousingPlotInfo.GetEntry(model.PlotInfoId);
-            plugEntry = GameTableManager.HousingPlugItem.GetEntry(model.PlugItemId);
+            PlotEntry = GameTableManager.Instance.HousingPlotInfo.GetEntry(model.PlotInfoId);
+            PlugEntry = GameTableManager.Instance.HousingPlugItem.GetEntry(model.PlugItemId);
             plugFacing = (HousingPlugFacing)model.PlugFacing;
             buildState = model.BuildState;
         }
@@ -139,7 +139,7 @@ namespace NexusForever.WorldServer.Game.Housing
         public void SetPlug(uint plugItemId, HousingPlugFacing plugFacing = HousingPlugFacing.East)
         {
             // TODO
-            PlugEntry  = GameTableManager.HousingPlugItem.GetEntry(plugItemId);
+            PlugEntry = GameTableManager.Instance.HousingPlugItem.GetEntry(plugItemId);
             PlugFacing = plugFacing;
 
             // BuildState needs to be cleared to get rid of the plug entity properly
