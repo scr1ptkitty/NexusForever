@@ -8,6 +8,10 @@ namespace NexusForever.WorldServer
         public struct MapConfig
         {
             public string MapPath { get; set; }
+            public List<ushort> PrecacheBaseMaps { get; set; }
+            public List<ushort> PrecacheMapSpawns { get; set; }
+            public uint? GridActionThreshold { get; set; }
+            public double? GridUnloadTimer { get; set; }
         }
         
 

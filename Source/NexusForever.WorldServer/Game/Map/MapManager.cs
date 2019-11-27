@@ -22,34 +22,12 @@ namespace NexusForever.WorldServer.Game.Map
         {
         }
 
-        public void Initialise()
-        {
-            ValidateMapFiles();
-        }
 
         public int GetMapCount()
         {
             return maps.Keys.Count;
         }
 
-        private void ValidateMapFiles()
-        {
-            log.Info("Validating map files...");
-
-            string mapPath = ConfigurationManager<WorldServerConfiguration>.Instance.Config.Map.MapPath;
-            if (mapPath == null || !Directory.Exists(mapPath))
-                throw new DirectoryNotFoundException("Invalid path to base maps! Make sure you have set it in the configuration file.");
-
-            foreach (string fileName in Directory.EnumerateFiles(mapPath, "*.nfmap"))
-            {
-                using (FileStream stream = File.OpenRead(fileName))
-                using (BinaryReader reader = new BinaryReader(stream))
-                {
-                    var mapFile = new MapFile();
-                    mapFile.ReadHeader(reader);
-                }
-            }
-        }
 
         public void Update(double lastTick)
         {

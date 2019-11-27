@@ -333,3 +333,6 @@ ASALocalRun/
 AuthServer.json
 WorldServer.json
 StsServer.json
+
+# Visual Studio profiling session file
+*.diagsession
