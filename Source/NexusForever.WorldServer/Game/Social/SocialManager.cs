@@ -59,11 +59,8 @@ namespace NexusForever.WorldServer.Game.Social
 
         private void InitialiseChatHandlers()
         {
-            IEnumerable<MethodInfo> methods = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .SelectMany(t => t.GetMethods(BindingFlags.NonPublic | BindingFlags.Static));
-
-            foreach (MethodInfo method in methods)
+            foreach (MethodInfo method in Assembly.GetExecutingAssembly().GetTypes()
+                .SelectMany(t => t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)))
             {
                 IEnumerable<ChatChannelHandlerAttribute> attributes = method.GetCustomAttributes<ChatChannelHandlerAttribute>();
                 foreach (ChatChannelHandlerAttribute attribute in attributes)
@@ -75,7 +72,7 @@ namespace NexusForever.WorldServer.Game.Social
                     Debug.Assert(typeof(ClientChat) == parameterInfo[1].ParameterType);
                     #endregion
 
-                    ChatChannelHandler @delegate = (ChatChannelHandler)Delegate.CreateDelegate(typeof(ChatChannelHandler), method);
+                    ChatChannelHandler @delegate = (ChatChannelHandler)Delegate.CreateDelegate(typeof(ChatChannelHandler), this, method);
                     chatChannelHandlers.Add(attribute.ChatChannel, @delegate);
                 }
             }

@@ -87,8 +87,9 @@ namespace NexusForever.WorldServer
             NetworkManager<WorldSession>.Instance.Initialise(ConfigurationManager<WorldServerConfiguration>.Instance.Config.Network);
             WorldManager.Instance.Initialise(lastTick =>
             {
-                //Console.Title = Title + " Current users: " + NetworkManager<WorldSession>.Update(lastTick);
                 NetworkManager<WorldSession>.Instance.Update(lastTick);
+                Console.Title = Title + " Current users: " + NetworkManager<WorldSession>.Instance.SessCount;
+
                 MapManager.Instance.Update(lastTick);
                 ResidenceManager.Instance.Update(lastTick);
                 BuybackManager.Instance.Update(lastTick);

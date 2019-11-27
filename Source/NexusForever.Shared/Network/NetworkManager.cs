@@ -16,6 +16,8 @@ namespace NexusForever.Shared.Network
 
         private readonly HashSet<T> sessions = new HashSet<T>();
 
+        public int SessCount = 0;
+
         private NetworkManager()
         {
         }
@@ -34,8 +36,6 @@ namespace NexusForever.Shared.Network
             //
             while (pendingAdd.TryDequeue(out T session))
                 sessions.Add(session);
-
-            int SessCount = 0;
 
             //
             foreach (T session in sessions)
