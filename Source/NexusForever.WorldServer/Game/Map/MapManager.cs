@@ -71,8 +71,9 @@ namespace NexusForever.WorldServer.Game.Map
             }
 
             sw.Stop();
-            if (sw.ElapsedMilliseconds > 10)
-                log.Warn($"{maps.Count} map(s) took {sw.ElapsedMilliseconds}ms to update!");
+            // shhhh... silencio
+            //if (sw.ElapsedMilliseconds > 10)
+            //    log.Warn($"{maps.Count} map(s) took {sw.ElapsedMilliseconds}ms to update!");
         }
 
         /// <summary>
