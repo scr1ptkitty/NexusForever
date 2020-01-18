@@ -72,4 +72,6 @@ INSERT INTO `role_permission` (`id`, `permissionId`) VALUES
 	(4, 31),
 	(4, 33),
 	(4, 34),
-	(4, 36);
+	(4, 36),
+    (4, 40),
+    (4, 42);
