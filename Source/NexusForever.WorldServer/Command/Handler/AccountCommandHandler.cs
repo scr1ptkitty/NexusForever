@@ -10,12 +10,14 @@ using NexusForever.WorldServer.Command.Contexts;
 using NexusForever.WorldServer.Game.Account.Static;
 using System.Collections.Generic;
 using NexusForever.Shared.Configuration;
+using NLog;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
     [Name("Account Management", Permission.None)]
     public class AccountCommandHandler : CommandCategory
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         public AccountCommandHandler()
             : base(false, "acc", "account")
         {
@@ -62,12 +64,14 @@ namespace NexusForever.WorldServer.Command.Handler
             if (context.Session.Account == null)
             {
                 context.SendMessageAsync("Account not found. Please try again.");
+                log.Info($"{context.Session.Player.Name} : account currencyadd : account not found");
                 return Task.CompletedTask;
             }
 
             if (parameters.Length != 2)
             {
                 context.SendMessageAsync("Parameters are invalid. Please try again.");
+                log.Info($"{context.Session.Player.Name} : account currencyadd : parameters invalid");
                 return Task.CompletedTask;
             }
 
@@ -75,6 +79,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (!currencyParsed || currencyId == 13) // Disabled Character Token for now due to causing server errors if the player tries to use it. TODO: Fix level 50 creation
             {
                 context.SendMessageAsync("Invalid currencyId. Please try again.");
+                log.Info($"{context.Session.Player.Name} : account currencyadd : invalid currency ID");
                 return Task.CompletedTask;
             }
 
@@ -82,12 +87,14 @@ namespace NexusForever.WorldServer.Command.Handler
             if (currencyEntry == null)
             {
                 context.SendMessageAsync("Invalid currencyId. Please try again.");
+                log.Info($"{context.Session.Player.Name} : account currencyadd : invalid currency ID");
                 return Task.CompletedTask;
             }
 
             if (!uint.TryParse(parameters[1], out uint amount))
             {
                 context.SendMessageAsync("Unable to parse amount. Please try again.");
+                log.Info($"{context.Session.Player.Name} : account currencyadd : unable to parse amount");
                 return Task.CompletedTask;
             }
 

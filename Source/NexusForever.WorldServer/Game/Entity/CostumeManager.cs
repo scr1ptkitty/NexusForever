@@ -175,6 +175,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void SetCostume(int index)
         {
+            log.Info($"{player.Name} : set costume");
             // TODO: some packet to respond? client starts timer and sets index before sending packet so maybe not?
             if (index < -1 || index >= MaxCostumes)
                 throw new ArgumentOutOfRangeException();

@@ -27,7 +27,11 @@ namespace NexusForever.WorldServer.Command.Handler
         public Task AddItemSubCommand(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length <= 0)
+            {
+                log.Info($"{context.Session.Player.Name} : item add : not enough parameters");
                 return context.SendMessageAsync($"Not enough parameters. Please try again.");
+                
+            }
 
             List<ChatFormat> ItemLinks = context.ChatLinks.Where(i => (i.Type == Game.Social.Static.ChatFormatType.ItemItemId || i.Type == Game.Social.Static.ChatFormatType.ItemGuid || i.Type == Game.Social.Static.ChatFormatType.ItemFull)).ToList();
 
@@ -48,12 +52,16 @@ namespace NexusForever.WorldServer.Command.Handler
             }
             else if (ItemLinks.Count > 1)
                 return context.SendMessageAsync($"Too many item links included. Please try again using a single item link.");
+            
             else
             {
                 if (uint.TryParse(parameters[0], out uint parsedItemId))
                     itemId = parsedItemId;
                 else
+                {
+                    log.Info($"{context.Session.Player.Name} : item add : failed to parse item ID");
                     return context.SendMessageAsync($"Failed to parse Item ID. Please ensure you entered it accurately, or try re-linking the item.");
+                }
             }
 
             uint amount = 1;
@@ -85,6 +93,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (parameters.Length <= 0)
             {
                 context.SendMessageAsync($"Not enough parameters. Please try again.");
+                log.Info($"{context.Session.Player.Name} : item lookup : not enough parameters");
                 return Task.CompletedTask;
             }
 
@@ -98,6 +107,7 @@ namespace NexusForever.WorldServer.Command.Handler
                     Channel = ChatChannel.System,
                     Text = $"Item Lookup Results for '{searchText}' ({searchResults.Count()}):"
                 });
+                log.Info($"{context.Session.Player.Name} : item lookup : results");
 
                 foreach (Item2Entry itemEntry in searchResults)
                 {
@@ -128,7 +138,9 @@ namespace NexusForever.WorldServer.Command.Handler
                 {
                     Channel = ChatChannel.System,
                     Text = $"Item Lookup Results was 0 entries for '{searchText}'."
+                    
                 });
+                log.Info($"{context.Session.Player.Name} : item lookup : zero results");
             }
             return Task.CompletedTask;
         }

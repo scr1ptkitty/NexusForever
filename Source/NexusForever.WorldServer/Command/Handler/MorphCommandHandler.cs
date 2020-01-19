@@ -59,6 +59,7 @@ namespace NexusForever.WorldServer.Command.Handler
             
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
             
@@ -67,7 +68,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into dagun");
+            log.Info($"Morphing {context.Session.Player.Name} into dagun");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -111,6 +112,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -119,7 +121,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
             
-            log.Info($"Morphing player into dawngrazer");
+            log.Info($"Morphing {context.Session.Player.Name} into dawngrazer");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -157,6 +159,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -165,7 +168,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into jabbit");
+            log.Info($"Morphing {context.Session.Player.Name} into jabbit");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -200,6 +203,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -208,7 +212,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into kurg");
+            log.Info($"Morphing {context.Session.Player.Name} into kurg");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -276,6 +280,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -284,7 +289,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into pumera");
+            log.Info($"Morphing {context.Session.Player.Name} into pumera");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -331,6 +336,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -339,7 +345,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into ekose");
+            log.Info($"Morphing {context.Session.Player.Name} into ekose");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -368,6 +374,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -376,7 +383,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into grumpel");
+            log.Info($"Morphing {context.Session.Player.Name} into grumpel");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -420,6 +427,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -428,7 +436,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into ikthian");
+            log.Info($"Morphing {context.Session.Player.Name} into ikthian");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -456,6 +464,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -464,7 +473,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into krogg");
+            log.Info($"Morphing {context.Session.Player.Name} into krogg");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -531,6 +540,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -539,7 +549,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into lopp");
+            log.Info($"Morphing {context.Session.Player.Name} into lopp");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -567,6 +577,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -575,7 +586,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into nerid");
+            log.Info($"Morphing {context.Session.Player.Name} into nerid");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -645,6 +656,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -653,7 +665,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into pell");
+            log.Info($"Morphing {context.Session.Player.Name} into pell");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -696,6 +708,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -704,7 +717,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into elemental");
+            log.Info($"Morphing {context.Session.Player.Name} into elemental");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -759,6 +772,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -767,7 +781,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into strain");
+            log.Info($"Morphing {context.Session.Player.Name} into strain");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -849,6 +863,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -857,7 +872,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into osun");
+            log.Info($"Morphing {context.Session.Player.Name} into osun");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -897,6 +912,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -905,7 +921,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into high priest");
+            log.Info($"Morphing {context.Session.Player.Name} into high priest");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -942,6 +958,7 @@ namespace NexusForever.WorldServer.Command.Handler
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
             if (creature2 == null || creatureId == 0)
             {
+                log.Info($"{context.Session.Player.Name} : morph : invalid variant");
                 return context.SendMessageAsync($"Invalid morph variant!");
             }
 
@@ -950,7 +967,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into triton");
+            log.Info($"Morphing {context.Session.Player.Name} into triton");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;

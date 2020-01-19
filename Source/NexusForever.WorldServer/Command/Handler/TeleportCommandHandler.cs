@@ -14,12 +14,14 @@ using NexusForever.WorldServer.Game.Housing;
 using NexusForever.WorldServer.Game.Social;
 using NexusForever.WorldServer.Network;
 using NexusForever.WorldServer.Network.Message.Model;
+using NLog;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
     [Name("Teleport", Permission.None)]
     public class TeleportCommandHandler : CommandCategory
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         public TeleportCommandHandler()
             : base(true, "teleport", "port")
         {
@@ -50,6 +52,7 @@ namespace NexusForever.WorldServer.Command.Handler
                             Channel = ChatChannel.System,
                             Text = "Oi! No using the teleport coordinates command for housing!"
                         });
+                        log.Info($"{context.Session.Player.Name} : teleport coordinates : player tried to go to housing");
                     }
                     context.Session.EnqueueMessageEncrypted(new ServerChat
                     {
@@ -57,6 +60,7 @@ namespace NexusForever.WorldServer.Command.Handler
                         Channel = ChatChannel.System,
                         Text = "Teleportation coordinates invalid."
                     });
+                    log.Info($"{context.Session.Player.Name} : teleport coordinates : coordinates invalid");
                     return;
                 }
 
@@ -70,6 +74,7 @@ namespace NexusForever.WorldServer.Command.Handler
                     Channel = ChatChannel.System,
                     Text = "Using the teleport coordinates command while at player housing is not recommended. Please use !go to relocate somewhere else first."
                 });
+                log.Info($"{context.Session.Player.Name} : teleport coordinates : player in housing");
                 return;
             }
             else
@@ -89,6 +94,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (entry == null)
             {
                 await context.SendMessageAsync($"WorldLocation2 entry not found: {worldLocation2Id}");
+                log.Info($"{context.Session.Player.Name} : teleport location : location not found");
                 return;
             }
 
@@ -104,9 +110,9 @@ namespace NexusForever.WorldServer.Command.Handler
             List<WorldSession> allSessions = NetworkManager<WorldSession>.GetSessions().ToList();
             string name = string.Join(" ", parameters);
 
-            if(name != "")
+            if (name != "")
             {
-                foreach(WorldSession whoSession in allSessions)
+                foreach (WorldSession whoSession in allSessions)
                 {
                     if (whoSession.Player == null)
                         continue;
@@ -122,9 +128,13 @@ namespace NexusForever.WorldServer.Command.Handler
                         if (whoSession.Player.Map.Entry.Id == 1229)
                         {
                             await context.SendMessageAsync($"{name} is on their house plot! Try using !house teleport {name} instead!");
+                            log.Info($"{context.Session.Player.Name} : teleport to : target in housing");
                         }
                         else
+                        {
+                            log.Info($"{context.Session.Player.Name} : teleport to");
                             context.Session.Player.TeleportTo((ushort)whoSession.Player.Map.Entry.Id, whoSession.Player.Position.X, whoSession.Player.Position.Y + 2, whoSession.Player.Position.Z);
+                        }
                     }
                     else
                     {
@@ -134,7 +144,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 }
             }
             else
+            {
                 await context.SendMessageAsync($"Name not valid.");
+                log.Info($"{context.Session.Player.Name} : teleport to : target name not valid");
+            }
 
         }
     }

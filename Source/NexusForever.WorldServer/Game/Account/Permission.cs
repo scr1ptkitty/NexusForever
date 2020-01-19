@@ -19,6 +19,13 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandBroadcast = 3,
         //
+        CommandCharacterLevel = 45,
+        CommandCharacterProperties = 44,
+        CommandCharacterXp = 46,
+        //
+        CommandCurrencyAdd = 47,
+        CommandCurrencyList = 48,
+        //
         CommandGenericUnlock = 4,
         CommandGenericUnlockAll = 5,
         CommandGenericList = 6,

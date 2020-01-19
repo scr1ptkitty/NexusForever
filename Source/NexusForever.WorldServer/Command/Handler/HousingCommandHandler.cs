@@ -11,12 +11,14 @@ using NexusForever.WorldServer.Game.Map;
 using NexusForever.WorldServer.Network.Message.Model;
 using NexusForever.WorldServer.Game.Housing.Static;
 using NexusForever.WorldServer.Game.Account.Static;
+using NLog;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
     [Name("Housing", Permission.None)]
     public class HousingCommandHandler : CommandCategory
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         public HousingCommandHandler()
             : base(true, "house")
         {
@@ -45,12 +47,14 @@ namespace NexusForever.WorldServer.Command.Handler
                     residence = ResidenceManager.CreateResidence(context.Session.Player);
                 else
                 {
+                    log.Info($"{context.Session.Player.Name} : house teleport : {name}");
                     context.SendMessageAsync("A residence for that character doesn't exist!");
                     return Task.CompletedTask;
                 }
             }
 
             ResidenceEntrance entrance = ResidenceManager.GetResidenceEntrance(residence);
+            log.Info($"{context.Session.Player.Name} : house teleport : {name}");
             context.Session.Player.TeleportTo(entrance.Entry, entrance.Position, 0u, residence.Id);
 
             return Task.CompletedTask;
@@ -70,6 +74,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 return Task.CompletedTask;
 
             context.Session.Player.TeleportTo(worldEntry, new Vector3(entry.Position0, entry.Position1, entry.Position2), 0u, 3u);
+            log.Info($"{context.Session.Player.Name} : house teleportinside");
 
             return Task.CompletedTask;
         }
@@ -94,6 +99,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (entry == null)
             {
                 context.SendMessageAsync($"Invalid decor info id {decorInfoId}!");
+                log.Info($"{context.Session.Player.Name} : house decoradd : invalid decor ID");
                 return Task.CompletedTask;
             }
 
@@ -108,6 +114,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 return Task.CompletedTask;
 
             var sw = new StringWriter();
+            log.Info($"{context.Session.Player.Name} : house decorlookup");
             sw.WriteLine("Decor Lookup Results:");
 
             TextTable tt = GameTableManager.GetTextTable(context.Language);
@@ -136,7 +143,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
             Residence residence = ResidenceManager.GetResidence(context.Session.Player.Name).GetAwaiter().GetResult();
 
-
+            log.Info($"{context.Session.Player.Name} : house remodel");
             if (parameters[0].ToLower() == "clutter")
             {
                 if (parameters[1].ToLower() == "off")
