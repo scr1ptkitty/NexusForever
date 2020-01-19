@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="StsServer.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="StsServer.example.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

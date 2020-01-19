@@ -328,3 +328,8 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# NF server config files
+AuthServer.json
+StsServer.json
+WorldServer.json
