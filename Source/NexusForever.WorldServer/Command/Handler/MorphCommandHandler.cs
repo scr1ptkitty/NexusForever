@@ -555,7 +555,7 @@ namespace NexusForever.WorldServer.Command.Handler
             string variant = parameters[0].ToLower();
             switch (variant)
             {
-                case "blueBase":
+                case "bluebase":
                     creatureId = 30602;
                     break;
                 case "blue":
@@ -723,13 +723,13 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "brute":
                     creatureId = 55050;
                     break;
-                case "brutetechno":
+                case "technobrute":
                     creatureId = 52970;
                     break;
                 case "corruptor":
                     creatureId = 30208;
                     break;
-                case "corruptortechno":
+                case "technocorruptor":
                     creatureId = 52963;
                     break;
                 case "crawler":
@@ -741,7 +741,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "mauler":
                     creatureId = 55010;
                     break;
-                case "maulertechno":
+                case "technomauler":
                     creatureId = 52964;
                     break;
                 case "peep":
@@ -750,7 +750,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "ravager":
                     creatureId = 30210;
                     break;
-                case "ravagertechno":
+                case "technoravager":
                     creatureId = 52968;
                     break;
             }
@@ -857,7 +857,7 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            log.Info($"Morphing player into x");
+            log.Info($"Morphing player into osun");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
@@ -911,7 +911,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("triton", "variantName - ", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("triton", "variantName - 5 variants", Permission.CommandMorphStoryteller)]
         public Task TritonSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
