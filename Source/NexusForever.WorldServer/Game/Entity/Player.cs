@@ -246,6 +246,8 @@ namespace NexusForever.WorldServer.Game.Entity
             QuestManager            = new QuestManager(this, model);
             IgnoreList              = ContactManager.GetIgnoreList(model);
 
+            Session.EntitlementManager.OnNewCharacter(model);
+
             // temp
             Properties.Add(Property.BaseHealth, new PropertyValue(Property.BaseHealth, 200f, 800f));
             Properties.Add(Property.ShieldCapacityMax, new PropertyValue(Property.ShieldCapacityMax, 0f, 450f));
@@ -515,6 +517,13 @@ namespace NexusForever.WorldServer.Game.Entity
                 },
                 ActiveCostumeIndex = CostumeIndex,
                 InputKeySet = (uint)InputKeySet,
+                CharacterEntitlements = Session.EntitlementManager.GetCharacterEntitlements()
+                    .Select(e => new ServerPlayerCreate.CharacterEntitlement
+                    {
+                        Entitlement = e.Type,
+                        Count = e.Amount
+                    })
+                    .ToList(),
                 Xp = TotalXp
             };
 
@@ -1083,6 +1092,7 @@ namespace NexusForever.WorldServer.Game.Entity
             Session.GenericUnlockManager.Save(context);
             Session.AccountCurrencyManager.Save(context);
             CostumeManager.Save(context);
+            Session.EntitlementManager.Save(context);
             KeybindingManager.Save(context);
         }
 
@@ -1207,6 +1217,7 @@ namespace NexusForever.WorldServer.Game.Entity
             MailManager.Save(context);
             ZoneMapManager.Save(context);
             QuestManager.Save(context);
+            Session.EntitlementManager.Save(context);
         }
 
         /// <summary>

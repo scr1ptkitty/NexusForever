@@ -73,7 +73,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 charges = uint.Parse(parameters[2]);
 
             if (itemId > 0)
+            {
+                log.Info($"{context.Session.Player.Name} : item add");
                 context.Session.Player.Inventory.ItemCreate(itemId, amount, Game.Entity.Static.ItemUpdateReason.Cheat, charges);
+            }
             else
                 context.SendMessageAsync($"Problem trying to create item: {parameters[0]}. Please try again.");
 

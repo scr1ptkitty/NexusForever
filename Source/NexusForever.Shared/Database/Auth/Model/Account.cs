@@ -8,9 +8,10 @@ namespace NexusForever.Shared.Database.Auth.Model
         public Account()
         {
             AccountCostumeUnlock = new HashSet<AccountCostumeUnlock>();
-            AccountCurrency      = new HashSet<AccountCurrency>();
+            AccountCurrency = new HashSet<AccountCurrency>();
+            AccountEntitlement = new HashSet<AccountEntitlement>();
             AccountGenericUnlock = new HashSet<AccountGenericUnlock>();
-            AccountKeybinding    = new HashSet<AccountKeybinding>();
+            AccountKeybinding = new HashSet<AccountKeybinding>();
             AccountPermission = new HashSet<AccountPermission>();
             AccountRole = new HashSet<AccountRole>();
         }
@@ -24,7 +25,7 @@ namespace NexusForever.Shared.Database.Auth.Model
         public DateTime CreateTime { get; set; }
         public virtual ICollection<AccountPermission> AccountPermission { get; set; }
         public virtual ICollection<AccountRole> AccountRole { get; set; }
-
+        public virtual ICollection<AccountEntitlement> AccountEntitlement { get; set; }
         public virtual ICollection<AccountCostumeUnlock> AccountCostumeUnlock { get; set; }
         public virtual ICollection<AccountCurrency> AccountCurrency { get; set; }
         public virtual ICollection<AccountGenericUnlock> AccountGenericUnlock { get; set; }

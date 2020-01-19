@@ -26,6 +26,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandCurrencyAdd = 47,
         CommandCurrencyList = 48,
         //
+        CommandEntitlement = 49,
+        //
         CommandGenericUnlock = 4,
         CommandGenericUnlockAll = 5,
         CommandGenericList = 6,

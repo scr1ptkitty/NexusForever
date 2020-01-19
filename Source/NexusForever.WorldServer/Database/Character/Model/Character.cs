@@ -65,6 +65,7 @@ namespace NexusForever.WorldServer.Database.Character.Model
         public virtual ICollection<CharacterAppearance> CharacterAppearance { get; set; }
         public virtual ICollection<CharacterBone> CharacterBone { get; set; }
         public virtual ICollection<CharacterCostume> CharacterCostume { get; set; }
+        public virtual ICollection<CharacterEntitlement> CharacterEntitlement { get; set; }
         public virtual ICollection<CharacterCurrency> CharacterCurrency { get; set; }
         public virtual ICollection<CharacterCustomisation> CharacterCustomisation { get; set; }
         public virtual ICollection<CharacterDatacube> CharacterDatacube { get; set; }

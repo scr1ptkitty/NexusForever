@@ -29,6 +29,7 @@ namespace NexusForever.WorldServer.Database.Character.Model
         public virtual DbSet<CharacterCustomisation> CharacterCustomisation { get; set; }
         public virtual DbSet<CharacterDatacube> CharacterDatacube { get; set; }
         public virtual DbSet<CharacterKeybinding> CharacterKeybinding { get; set; }
+        public virtual DbSet<CharacterEntitlement> CharacterEntitlement { get; set; }
         public virtual DbSet<CharacterMail> CharacterMail { get; set; }
         public virtual DbSet<CharacterMailAttachment> CharacterMailAttachment { get; set; }
         public virtual DbSet<CharacterPath> CharacterPath { get; set; }
@@ -413,6 +414,31 @@ namespace NexusForever.WorldServer.Database.Character.Model
                     .WithMany(p => p.CharacterCustomisation)
                     .HasForeignKey(d => d.Id)
                     .HasConstraintName("FK__character_customisation_id__character_id");
+            });
+
+            modelBuilder.Entity<CharacterEntitlement>(entity =>
+            {
+                entity.HasKey(e => new { e.Id, e.EntitlementId })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("character_entitlement");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.EntitlementId)
+                    .HasColumnName("entitlementId")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.Amount)
+                    .HasColumnName("amount")
+                    .HasDefaultValueSql("'0'");
+
+                entity.HasOne(d => d.IdNavigation)
+                    .WithMany(p => p.CharacterEntitlement)
+                    .HasForeignKey(d => d.Id)
+                    .HasConstraintName("FK__character_entitlement_id__character_id");
             });
 
             modelBuilder.Entity<CharacterDatacube>(entity =>

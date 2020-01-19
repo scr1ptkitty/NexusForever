@@ -29,9 +29,7 @@ using CostumeEntity = NexusForever.WorldServer.Game.Entity.Costume;
 using Item = NexusForever.WorldServer.Game.Entity.Item;
 using Residence = NexusForever.WorldServer.Game.Housing.Residence;
 using NetworkMessage = NexusForever.Shared.Network.Message.Model.Shared.Message;
-using NexusForever.WorldServer.Game.Static;
 using NLog;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NexusForever.WorldServer.Game.CharacterCache;
 
 namespace NexusForever.WorldServer.Network.Message.Handler
@@ -47,7 +45,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 Messages = ServerManager.ServerMessages
                     .Select(m => new NetworkMessage
                     {
-                        Index    = m.Index,
+                        Index = m.Index,
                         Messages = m.Messages
                     })
                     .ToList()
@@ -57,12 +55,12 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             {
                 serverRealmList.Realms.Add(new ServerRealmList.RealmInfo
                 {
-                    RealmId    = server.Model.Id,
-                    RealmName  = server.Model.Name,
-                    Type       = (RealmType)server.Model.Type,
-                    Status     = RealmStatus.Up,
+                    RealmId = server.Model.Id,
+                    RealmName = server.Model.Name,
+                    Type = (RealmType)server.Model.Type,
+                    Status = RealmStatus.Up,
                     Population = RealmPopulation.Low,
-                    Unknown8   = new byte[16],
+                    Unknown8 = new byte[16],
                     AccountRealmInfo = new ServerRealmList.RealmInfo.AccountRealmData
                     {
                         RealmId = server.Model.Id
@@ -90,14 +88,14 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             {
                 session.EnqueueMessageEncrypted(new ServerNewRealm
                 {
-                    SessionKey  = sessionKey,
+                    SessionKey = sessionKey,
                     GatewayData = new ServerNewRealm.Gateway
                     {
                         Address = server.Address,
-                        Port    = server.Model.Port
+                        Port = server.Model.Port
                     },
-                    RealmName   = server.Model.Name,
-                    Type        = (RealmType)server.Model.Type
+                    RealmName = server.Model.Name,
+                    Type = (RealmType)server.Model.Type
                 });
             }));
         }
@@ -117,34 +115,13 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 session.GenericUnlockManager.SendUnlockList();
                 session.EnqueueMessageEncrypted(new ServerAccountEntitlements
                 {
-                    Entitlements =
-                    {
-                        new ServerAccountEntitlements.AccountEntitlementInfo
-                        {
-                            Entitlement = Entitlement.BaseCharacterSlots,
-                            Count       = 12
-                        },
-                        new ServerAccountEntitlements.AccountEntitlementInfo
-                        {
-                            Entitlement = Entitlement.AdditionalCostumeUnlocks,
-                            Count       = 2000 //not sure if this is the correct #. Check tbl file later
-                        },
-                        new ServerAccountEntitlements.AccountEntitlementInfo
-                        {
-                            Entitlement = Entitlement.ExtraDecorSlots,
-                            Count       = 2000
-                        },
-                        new ServerAccountEntitlements.AccountEntitlementInfo
-                        {
-                            Entitlement = Entitlement.ChuaWarriorUnlock,
-                            Count       = 1
-                        },
-                        new ServerAccountEntitlements.AccountEntitlementInfo
-                        {
-                            Entitlement = Entitlement.AurinEngineerUnlock,
-                            Count       = 1
-                        }
-                    }
+                    Entitlements = session.EntitlementManager.GetAccountEntitlements()
+                       .Select(e => new ServerAccountEntitlements.AccountEntitlementInfo
+                       { 
+                            Entitlement = e.Type,
+                            Count = e.Amount
+                       })
+                       .ToList()
                 });
 
                 var serverCharacterList = new ServerCharacterList
@@ -159,23 +136,23 @@ namespace NexusForever.WorldServer.Network.Message.Handler
 
                     var listCharacter = new ServerCharacterList.Character
                     {
-                        Id          = character.Id,
-                        Name        = character.Name,
-                        Sex         = (Sex)character.Sex,
-                        Race        = (Race)character.Race,
-                        Class       = (Class)character.Class,
-                        Faction     = character.FactionId,
-                        Level       = character.Level,
-                        WorldId     = character.WorldId,
+                        Id = character.Id,
+                        Name = character.Name,
+                        Sex = (Sex)character.Sex,
+                        Race = (Race)character.Race,
+                        Class = (Class)character.Class,
+                        Faction = character.FactionId,
+                        Level = character.Level,
+                        WorldId = character.WorldId,
                         WorldZoneId = character.WorldZoneId,
-                        RealmId     = WorldServer.RealmId,
-                        Path        = (byte)character.ActivePath
+                        RealmId = WorldServer.RealmId,
+                        Path = (byte)character.ActivePath
                     };
 
                     MaxCharacterLevelAchieved = (byte)Math.Max(MaxCharacterLevelAchieved, character.Level);
 
                     // create a temporary Inventory and CostumeManager to show equipped gear
-                    var inventory      = new Inventory(null, character);
+                    var inventory = new Inventory(null, character);
                     var costumeManager = new CostumeManager(null, session.Account, character);
 
                     CostumeEntity costume = null;
@@ -191,7 +168,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                     {
                         listCharacter.Appearance.Add(new ItemVisual
                         {
-                            Slot      = (ItemSlot)appearance.Slot,
+                            Slot = (ItemSlot)appearance.Slot,
                             DisplayId = appearance.DisplayId
                         });
                     }
@@ -255,13 +232,13 @@ namespace NexusForever.WorldServer.Network.Message.Handler
 
                 var character = new Character
                 {
-                    AccountId  = session.Account.Id,
-                    Id         = AssetManager.NextCharacterId,
-                    Name       = characterCreate.Name,
-                    Race       = (byte)creationEntry.RaceId,
-                    Sex        = (byte)creationEntry.Sex,
-                    Class      = (byte)creationEntry.ClassId,
-                    FactionId  = (ushort)creationEntry.FactionId,
+                    AccountId = session.Account.Id,
+                    Id = AssetManager.NextCharacterId,
+                    Name = characterCreate.Name,
+                    Race = (byte)creationEntry.RaceId,
+                    Sex = (byte)creationEntry.Sex,
+                    Class = (byte)creationEntry.ClassId,
+                    FactionId = (ushort)creationEntry.FactionId,
                     ActivePath = characterCreate.Path
                 };
 
@@ -269,7 +246,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 {
                     character.CharacterPath.Add(new CharacterPath
                     {
-                        Path     = (byte)path,
+                        Path = (byte)path,
                         Unlocked = Convert.ToByte(characterCreate.Path == (byte)path)
                     });
                 }
@@ -331,7 +308,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                     character.LocationZ = -448.7984f;
                     character.WorldId = 51;
                 }
-                
+
 
                 character.ActiveSpec = 0;
 
@@ -346,19 +323,19 @@ namespace NexusForever.WorldServer.Network.Message.Handler
 
                     character.CharacterSpell.Add(new CharacterSpell
                     {
-                        Id           = character.Id,
+                        Id = character.Id,
                         Spell4BaseId = spell4Entry.Spell4BaseIdBaseSpell,
-                        Tier         = 1
+                        Tier = 1
                     });
 
                     character.CharacterActionSetShortcut.Add(new CharacterActionSetShortcut
                     {
-                        Id           = character.Id,
-                        SpecIndex    = 0,
-                        Location     = (ushort)location,
+                        Id = character.Id,
+                        SpecIndex = 0,
+                        Location = (ushort)location,
                         ShortcutType = (byte)ShortcutType.Spell,
-                        ObjectId     = spell4Entry.Spell4BaseIdBaseSpell,
-                        Tier         = 1
+                        ObjectId = spell4Entry.Spell4BaseIdBaseSpell,
+                        Tier = 1
                     });
 
                     location++;
@@ -373,32 +350,32 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 //TODO: handle starting stats per class/race
                 character.CharacterStats.Add(new CharacterStats
                 {
-                    Id    = character.Id,
-                    Stat  = (byte)Stat.Health,
+                    Id = character.Id,
+                    Stat = (byte)Stat.Health,
                     Value = 800
                 });
                 character.CharacterStats.Add(new CharacterStats
                 {
-                    Id    = character.Id,
-                    Stat  = (byte)Stat.Shield,
+                    Id = character.Id,
+                    Stat = (byte)Stat.Shield,
                     Value = 450
                 });
                 character.CharacterStats.Add(new CharacterStats
                 {
-                    Id    = character.Id,
-                    Stat  = (byte)Stat.Dash,
+                    Id = character.Id,
+                    Stat = (byte)Stat.Dash,
                     Value = 200
                 });
                 character.CharacterStats.Add(new CharacterStats
                 {
-                    Id    = character.Id,
-                    Stat  = (byte)Stat.Level,
+                    Id = character.Id,
+                    Stat = (byte)Stat.Level,
                     Value = 1
                 });
                 character.CharacterStats.Add(new CharacterStats
                 {
-                    Id    = character.Id,
-                    Stat  = (byte)Stat.StandState,
+                    Id = character.Id,
+                    Stat = (byte)Stat.StandState,
                     Value = 3
                 });
 
@@ -410,8 +387,8 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                     session.EnqueueMessageEncrypted(new ServerCharacterCreate
                     {
                         CharacterId = character.Id,
-                        WorldId     = character.WorldId,
-                        Result      = CharacterModifyResult.CreateOk
+                        WorldId = character.WorldId,
+                        Result = CharacterModifyResult.CreateOk
                     });
                 }));
             }
@@ -531,28 +508,28 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             {
                 // housing map
                 case 5:
-                {
-                    // characters logging in to a housing map are returned to their own residence
-                    session.EnqueueEvent(new TaskGenericEvent<Residence>(ResidenceManager.GetResidence(session.Player.Name),
-                        residence =>
                     {
-                        if (residence == null)
-                            residence = ResidenceManager.CreateResidence(session.Player);
+                        // characters logging in to a housing map are returned to their own residence
+                        session.EnqueueEvent(new TaskGenericEvent<Residence>(ResidenceManager.GetResidence(session.Player.Name),
+                            residence =>
+                        {
+                            if (residence == null)
+                                residence = ResidenceManager.CreateResidence(session.Player);
 
-                        ResidenceEntrance entrance = ResidenceManager.GetResidenceEntrance(residence);
-                        var mapInfo = new MapInfo(entrance.Entry, 0u, residence.Id);
-                        MapManager.AddToMap(session.Player, mapInfo, entrance.Position);
-                    }));
+                            ResidenceEntrance entrance = ResidenceManager.GetResidenceEntrance(residence);
+                            var mapInfo = new MapInfo(entrance.Entry, 0u, residence.Id);
+                            MapManager.AddToMap(session.Player, mapInfo, entrance.Position);
+                        }));
 
-                    break;
-                }
+                        break;
+                    }
                 default:
-                {
-                    var mapInfo = new MapInfo(entry);
-                    var vector3 = new Vector3(character.LocationX, character.LocationY, character.LocationZ);
-                    MapManager.AddToMap(session.Player, mapInfo, vector3);
-                    break;
-                }
+                    {
+                        var mapInfo = new MapInfo(entry);
+                        var vector3 = new Vector3(character.LocationX, character.LocationY, character.LocationZ);
+                        MapManager.AddToMap(session.Player, mapInfo, vector3);
+                        break;
+                    }
             }
         }
 
@@ -595,10 +572,10 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             double diff = session.Player.GetTimeSinceLastSave();
             session.EnqueueMessageEncrypted(new ServerPlayerPlayed
             {
-                CreateTime        = session.Player.CreateTime,
+                CreateTime = session.Player.CreateTime,
                 TimePlayedSession = (uint)(session.Player.TimePlayedSession + diff),
-                TimePlayedTotal   = (uint)(session.Player.TimePlayedTotal + diff),
-                TimePlayedLevel   = (uint)(session.Player.TimePlayedLevel + diff)
+                TimePlayedTotal = (uint)(session.Player.TimePlayedTotal + diff),
+                TimePlayedLevel = (uint)(session.Player.TimePlayedLevel + diff)
             });
         }
 
