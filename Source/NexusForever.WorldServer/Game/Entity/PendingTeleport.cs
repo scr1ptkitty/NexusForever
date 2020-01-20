@@ -7,11 +7,13 @@ namespace NexusForever.WorldServer.Game.Entity
     {
         public MapInfo Info { get; }
         public Vector3 Vector { get; }
+        public uint? VanityPetId { get; }
 
-        public PendingTeleport(MapInfo info, Vector3 vector)
+        public PendingTeleport(MapInfo info, Vector3 vector, uint? vanityPetId)
         {
-            Info   = info;
+            Info = info;
             Vector = vector;
+            VanityPetId = vanityPetId;
         }
     }
 }
