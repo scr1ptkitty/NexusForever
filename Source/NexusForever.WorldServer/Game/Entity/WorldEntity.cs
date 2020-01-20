@@ -73,12 +73,12 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public virtual void Initialise(EntityModel model)
         {
-            CreatureId   = model.Creature;
-            Rotation     = new Vector3(model.Rx, model.Ry, model.Rz);
-            DisplayInfo  = model.DisplayInfo;
-            OutfitInfo   = model.OutfitInfo;
-            Faction1     = (Faction)model.Faction1;
-            Faction2     = (Faction)model.Faction2;
+            CreatureId = model.Creature;
+            Rotation = new Vector3(model.Rx, model.Ry, model.Rz);
+            DisplayInfo = model.DisplayInfo;
+            OutfitInfo = model.OutfitInfo;
+            Faction1 = (Faction)model.Faction1;
+            Faction2 = (Faction)model.Faction2;
             if (ActivePropId == 0)
                 ActivePropId = model.ActivePropId;
 
@@ -88,7 +88,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
         public override void OnAddToMap(BaseMap map, uint guid, Vector3 vector)
         {
-            LeashPosition   = vector;
+            LeashPosition = vector;
             MovementManager = new MovementManager(this, vector, Rotation);
             base.OnAddToMap(map, guid, vector);
         }
@@ -111,20 +111,20 @@ namespace NexusForever.WorldServer.Game.Entity
 
         public virtual ServerEntityCreate BuildCreatePacket()
         {
-            ServerEntityCreate entityCreatePacket =  new ServerEntityCreate
+            ServerEntityCreate entityCreatePacket = new ServerEntityCreate
             {
-                Guid         = Guid,
-                Type         = Type,
-                EntityModel  = BuildEntityModel(),
-                CreateFlags  = (byte)CreateFlags,
-                Stats        = stats.Values.ToList(),
-                Commands     = MovementManager.ToList(),
+                Guid = Guid,
+                Type = Type,
+                EntityModel = BuildEntityModel(),
+                CreateFlags = (byte)CreateFlags,
+                Stats = stats.Values.ToList(),
+                Commands = MovementManager.ToList(),
                 VisibleItems = itemVisuals.Values.ToList(),
-                Properties   = Properties.Values.ToList(),
-                Faction1     = Faction1,
-                Faction2     = Faction2,
-                DisplayInfo  = DisplayInfo,
-                OutfitInfo   = OutfitInfo
+                Properties = Properties.Values.ToList(),
+                Faction1 = Faction1,
+                Faction2 = Faction2,
+                DisplayInfo = DisplayInfo,
+                OutfitInfo = OutfitInfo
             };
 
             if (ActivePropId > 0 || SocketId > 0)
@@ -202,6 +202,18 @@ namespace NexusForever.WorldServer.Game.Entity
         }
 
         /// <summary>
+        /// Return the <see cref="uint"/> value of the supplied <see cref="Stat"/> as an <see cref="Enum"/>.
+        /// </summary>
+        public T? GetStatEnum<T>(Stat stat) where T : struct, Enum
+        {
+            uint? value = GetStatInteger(stat);
+            if (value == null)
+                return null;
+
+            return (T)Enum.ToObject(typeof(T), value.Value);
+        }
+
+        /// <summary>
         /// Set <see cref="Stat"/> to the supplied <see cref="float"/> value.
         /// </summary>
         protected void SetStat(Stat stat, float value)
@@ -223,7 +235,7 @@ namespace NexusForever.WorldServer.Game.Entity
                 EnqueueToVisible(new ServerEntityStatUpdateFloat
                 {
                     UnitId = Guid,
-                    Stat   = statValue
+                    Stat = statValue
                 }, true);
             }
         }
@@ -250,9 +262,17 @@ namespace NexusForever.WorldServer.Game.Entity
                 EnqueueToVisible(new ServerEntityStatUpdateInteger
                 {
                     UnitId = Guid,
-                    Stat   = statValue
+                    Stat = statValue
                 }, true);
             }
+        }
+
+        /// <summary>
+        /// Set <see cref="Stat"/> to the supplied <see cref="Enum"/> value.
+        /// </summary>
+        protected void SetStat<T>(Stat stat, T value) where T : Enum, IConvertible
+        {
+            SetStat(stat, value.ToUInt32(null));
         }
 
         /// <summary>
@@ -294,7 +314,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
             EnqueueToVisible(new ServerEntityVisualUpdate
             {
-                UnitId      = Guid,
+                UnitId = Guid,
                 DisplayInfo = DisplayInfo
             }, true);
         }
@@ -304,6 +324,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void EnqueueToVisible(IWritable message, bool includeSelf = false)
         {
+            // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
             foreach (WorldEntity entity in visibleEntities.Values)
             {
                 if (!(entity is Player player))

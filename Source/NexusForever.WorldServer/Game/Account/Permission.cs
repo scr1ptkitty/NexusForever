@@ -28,6 +28,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandEntitlement = 49,
         //
+        CommandDoor = 50,
+        //
         CommandGenericUnlock = 4,
         CommandGenericUnlockAll = 5,
         CommandGenericList = 6,
