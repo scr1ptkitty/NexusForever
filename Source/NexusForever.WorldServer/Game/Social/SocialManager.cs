@@ -10,7 +10,7 @@ using NexusForever.Shared.Configuration;
 using NexusForever.Shared.Network;
 using NexusForever.WorldServer.Game.Entity;
 using NexusForever.WorldServer.Game.Guild;
-using NexusForever.WorldServer.Game.Map;
+using NexusForever.WorldServer.Game.Map.Search;
 using NexusForever.WorldServer.Game.Social.Model;
 using NexusForever.WorldServer.Game.Social.Static;
 using NexusForever.WorldServer.Network;

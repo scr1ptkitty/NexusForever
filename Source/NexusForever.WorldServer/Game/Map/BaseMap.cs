@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using NexusForever.Shared.Configuration;
 using NexusForever.Shared.Game.Map;
+using NexusForever.WorldServer.Game.Map.Search;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.IO.Map;
 using NexusForever.Shared.Network.Message;
