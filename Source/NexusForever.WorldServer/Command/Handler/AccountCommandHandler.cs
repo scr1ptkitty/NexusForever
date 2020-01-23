@@ -23,7 +23,7 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        [SubCommandHandler("create", "email password [extraRoles] - Create a new account", Permission.CommandAccountCreate)]
+        [SubCommandHandler("create", "username password [extraRoles] - Create a new account", Permission.CommandAccountCreate)]
         public async Task HandleAccountCreate(CommandContext context, string subCommand, string[] parameters)
         {
             if (parameters.Length != 2)
@@ -41,7 +41,7 @@ namespace NexusForever.WorldServer.Command.Handler
         }
 
 
-        [SubCommandHandler("delete", "email - Delete an account", Permission.CommandAccountDelete)]
+        [SubCommandHandler("delete", "username - Delete an account", Permission.CommandAccountDelete)]
         public async Task HandleAccountDeleteAsync(CommandContext context, string subCommand, string[] parameters)
         {
             if (parameters.Length < 1)
@@ -54,7 +54,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 await context.SendMessageAsync($"Account {parameters[0]} successfully removed!")
                     .ConfigureAwait(false);
             else
-                await context.SendMessageAsync($"Cannot find account with Email: {parameters[0]}")
+                await context.SendMessageAsync($"Cannot find account with username: {parameters[0]}")
                     .ConfigureAwait(false);
         }
 
