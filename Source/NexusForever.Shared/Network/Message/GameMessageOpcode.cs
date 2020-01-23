@@ -192,6 +192,8 @@ namespace NexusForever.Shared.Network.Message
         ServerHousingPlotUpdate         = 0x053B,
         ClientHousingEditMode           = 0x053C,
         ServerSpellList                 = 0x0551,
+        ClientInspectPlayerRequest      = 0x0552,
+        ServerInspectPlayerResponse     = 0x0553,
         ServerItemSwap                  = 0x0568,
         ServerItemMove                  = 0x0569,
         ServerItemError                 = 0x056A,
