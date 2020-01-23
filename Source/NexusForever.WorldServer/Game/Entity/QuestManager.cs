@@ -12,6 +12,7 @@ using NexusForever.WorldServer.Game.Quest;
 using NexusForever.WorldServer.Game.Quest.Static;
 using NexusForever.WorldServer.Game.Static;
 using NexusForever.WorldServer.Network.Message.Model;
+using NexusForever.WorldServer.Game.Achievement.Static;
 using NLog;
 
 namespace NexusForever.WorldServer.Game.Entity
@@ -479,6 +480,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
             activeQuests.Remove(questId);
             completedQuests.Add(questId, quest);
+            player.AchievementManager.CheckAchievements(player, AchievementType.QuestComplete, questId);
         }
 
         private void RewardQuest(QuestInfo info, ushort reward)

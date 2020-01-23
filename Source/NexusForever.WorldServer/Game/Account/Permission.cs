@@ -10,6 +10,7 @@ namespace NexusForever.WorldServer.Game.Account.Static
         None = 0,
         ///
         ///
+        CommandAchievement = 51,
         ///
         CommandAccountCreate = 1,
         CommandAccountCurrency = 42, 

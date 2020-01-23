@@ -20,6 +20,7 @@ namespace NexusForever.WorldServer.Database.Character.Model
 
         public virtual DbSet<Character> Character { get; set; }
         public virtual DbSet<CharacterActionSetAmp> CharacterActionSetAmp { get; set; }
+        public virtual DbSet<CharacterAchievement> CharacterAchievement { get; set; }
         public virtual DbSet<CharacterActionSetShortcut> CharacterActionSetShortcut { get; set; }
         public virtual DbSet<CharacterAppearance> CharacterAppearance { get; set; }
         public virtual DbSet<CharacterBone> CharacterBone { get; set; }
@@ -187,6 +188,39 @@ namespace NexusForever.WorldServer.Database.Character.Model
                 entity.Property(e => e.WorldZoneId)
                     .HasColumnName("worldZoneId")
                     .HasDefaultValueSql("'0'");
+            });
+
+            modelBuilder.Entity<CharacterAchievement>(entity =>
+            {
+                entity.HasKey(e => new { e.Id, e.AchievementId })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("character_achievement");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.AchievementId)
+                    .HasColumnName("achievementId")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.Data0)
+                    .HasColumnName("data0")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.Data1)
+                    .HasColumnName("data1")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.DateCompleted)
+                    .HasColumnName("dateCompleted")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdNavigation)
+                    .WithMany(p => p.CharacterAchievement)
+                    .HasForeignKey(d => d.Id)
+                    .HasConstraintName("FK__character_achievement_id__character_id");
             });
 
             modelBuilder.Entity<CharacterActionSetAmp>(entity =>
