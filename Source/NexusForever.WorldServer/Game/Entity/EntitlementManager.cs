@@ -85,15 +85,19 @@ namespace NexusForever.WorldServer.Game.Entity
         public void OnNewCharacter(Character model)
         {
             characterEntitlements.Clear();
-            foreach (CharacterEntitlementModel entitlementModel in model.CharacterEntitlement)
+            if (model.CharacterEntitlement.Count != 0)
             {
-                EntitlementEntry entry = GameTableManager.Entitlement.GetEntry(entitlementModel.EntitlementId);
-                if (entry == null)
-                    throw new DatabaseDataException($"Character {model.Id} has invalid entitlement {entitlementModel.EntitlementId} stored!");
+                foreach (CharacterEntitlementModel entitlementModel in model.CharacterEntitlement)
+                {
+                    EntitlementEntry entry = GameTableManager.Entitlement.GetEntry(entitlementModel.EntitlementId);
+                    if (entry == null)
+                        throw new DatabaseDataException($"Character {model.Id} has invalid entitlement {entitlementModel.EntitlementId} stored!");
 
-                var entitlement = new CharacterEntitlement(entitlementModel, entry);
-                characterEntitlements.Add(entitlement.Type, entitlement);
+                    var entitlement = new CharacterEntitlement(entitlementModel, entry);
+                    characterEntitlements.Add(entitlement.Type, entitlement);
+                }
             }
+            
         }
 
         /// <summary>

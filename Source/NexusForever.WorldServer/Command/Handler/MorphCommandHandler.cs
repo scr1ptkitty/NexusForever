@@ -973,6 +973,225 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
+        [SubCommandHandler("oghra", "variantName - 11 variants", Permission.CommandMorph)]
+        public Task OghraSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "skirt":
+                    creatureId = 4089;
+                    break;
+                case "coat":
+                    creatureId = 4091;
+                    break;
+                case "vest":
+                    creatureId = 15756;
+                    break;
+                case "duster":
+                    creatureId = 33426;
+                    break;
+                case "captain":
+                    creatureId = 28079;
+                    break;
+                case "skin":
+                    creatureId = 9633;
+                    break;
+                case "grimduster":
+                    creatureId = 27875;
+                    break;
+                case "grimvest":
+                    creatureId = 63557;
+                    break;
+                case "augmented":
+                    creatureId = 65441;
+                    break;
+                case "zombievest":
+                    creatureId = 75681;
+                    break;
+                case "zombieskin":
+                    creatureId = 69110;
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into oghra");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("grund", "variantName - 16 variants", Permission.CommandMorph)]
+        public Task GrundSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "red":
+                    creatureId = 9634;
+                    break;
+                case "red2":
+                    creatureId = 23588;
+                    break;
+                case "red3":
+                    creatureId = 24951;
+                    break;
+                case "red4":
+                    creatureId = 24986;
+                    break;
+                case "red5":
+                    creatureId = 53395;
+                    break;
+                case "red6":
+                    creatureId = 61901;
+                    break;
+                case "white":
+                    creatureId = 18624;
+                    break;
+                case "white2":
+                    creatureId = 68841;
+                    break;
+                case "white3":
+                    creatureId = 8982;
+                    break;
+                case "white5":
+                    creatureId = 63252;
+                    break;
+                case "augmented":
+                    creatureId = 48649;
+                    break;
+                case "grim":
+                    creatureId = 63556;
+                    break;
+                case "grim3":
+                    creatureId = 11902;
+                    break;
+                case "grim6":
+                    creatureId = 70196;
+                    break;
+                case "zombie":
+                    creatureId = 68632;
+                    break;
+                case "zombie2":
+                    creatureId = 68633;
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into grund");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("eeklu", "variantName - 16 variants", Permission.CommandMorph)]
+        public Task EekluSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "belt":
+                    creatureId = 4087;
+                    break;
+                case "belt2":
+                    creatureId = 75355;
+                    break;
+                case "maskbelt":
+                    creatureId = 72895;
+                    break;
+                case "jacket":
+                    creatureId = 24950;
+                    break;
+                case "duster":
+                    creatureId = 24981;
+                    break;
+                case "buccaneer":
+                    creatureId = 24983;
+                    break;
+                case "corsair":
+                    creatureId = 25007;
+                    break;
+                case "captain":
+                    creatureId = 27609;
+                    break;
+                case "grimjacket":
+                    creatureId = 45979;
+                    break;
+                case "grimduster":
+                    creatureId = 27895;
+                    break;
+                case "grimbuccaneer":
+                    creatureId = 27873;
+                    break;
+                case "pinkjacket":
+                    creatureId = 27903;
+                    break;
+                case "pinkbuccaneer":
+                    creatureId = 63269;
+                    break;
+                case "pinkcaptain":
+                    creatureId = 28187;
+                    break;
+                case "zombie":
+                    creatureId = 75432;
+                    break;
+                case "zombiebelt":
+                    creatureId = 72760;
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into eeklu");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
         [SubCommandHandler("demorph", "removes the player's current morph", Permission.CommandMorph)]
         public Task DemorphSubCommandHandler(CommandContext context, string command, string[] parameters)
         {

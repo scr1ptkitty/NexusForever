@@ -18,6 +18,8 @@ using NexusForever.WorldServer.Network.Message.Model;
 using NexusForever.WorldServer.Network.Message.Model.Shared;
 using NLog;
 using Item = NexusForever.WorldServer.Game.Entity.Item;
+using NexusForever.WorldServer.Game.Account.Static;
+using NexusForever.WorldServer.Game.Account;
 
 namespace NexusForever.WorldServer.Game.Social
 {
@@ -123,7 +125,8 @@ namespace NexusForever.WorldServer.Game.Social
             session.EnqueueMessageEncrypted(new ServerChatAccept
             {
                 Name = session.Player.Name,
-                Guid = session.Player.Guid
+                Guid = session.Player.Guid,
+                GM = RoleManager.HasPermission(session, Permission.GMFlag)
             });
         }
 
@@ -167,6 +170,7 @@ namespace NexusForever.WorldServer.Game.Social
                 Guid    = session.Player.Guid,
                 Channel = chat.Channel,
                 Name    = session.Player.Name,
+                GM = RoleManager.HasPermission(session, Permission.GMFlag),
                 Text    = chat.Message,
                 Formats = ParseChatLinks(session, chat.Formats).ToList(),
             };
@@ -211,6 +215,7 @@ namespace NexusForever.WorldServer.Game.Social
                     Channel = chat.Channel,
                     ChatId = guild.Id,
                     Name = session.Player.Name,
+                    GM = RoleManager.HasPermission(session, Permission.GMFlag),
                     Text = chat.Message,
                     Formats = ParseChatLinks(session, chat.Formats).ToList(),
                 };
@@ -244,6 +249,7 @@ namespace NexusForever.WorldServer.Game.Social
                     Channel = chat.Channel,
                     ChatId = guild.Id,
                     Name = session.Player.Name,
+                    GM = RoleManager.HasPermission(session, Permission.GMFlag),
                     Text = chat.Message,
                     Formats = ParseChatLinks(session, chat.Formats).ToList(),
                 };
@@ -280,6 +286,7 @@ namespace NexusForever.WorldServer.Game.Social
                 {
                     Channel = ChatChannel.Whisper,
                     Name = whisper.PlayerName,
+                    GM = RoleManager.HasPermission(session, Permission.GMFlag),
                     Text = whisper.Message,
                     Self = true,
                     CrossFaction = targetSession.Player.Faction1 != session.Player.Faction1,
@@ -291,6 +298,7 @@ namespace NexusForever.WorldServer.Game.Social
                 {
                     Channel = ChatChannel.Whisper,
                     Name = session.Player.Name,
+                    GM = RoleManager.HasPermission(session, Permission.GMFlag),
                     Text = whisper.Message,
                     CrossFaction = targetSession.Player.Faction1 != session.Player.Faction1,
                     Formats = ParseChatLinks(session, whisper).ToList(),
@@ -316,6 +324,7 @@ namespace NexusForever.WorldServer.Game.Social
                 Guid = session.Player.Guid,
                 Channel = chat.Channel,
                 Name = session.Player.Name,
+                GM = RoleManager.HasPermission(session, Permission.GMFlag),
                 Text = chat.Message,
                 Formats = ParseChatLinks(session, chat.Formats).ToList(),
             };
