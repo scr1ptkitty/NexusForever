@@ -1,18 +1,26 @@
-using NexusForever.Shared.Game.Events;
+﻿using NexusForever.Shared.Game.Events;
 using NexusForever.Shared.Network;
 using NexusForever.Shared.Network.Message;
 using NexusForever.WorldServer.Database.Character;
 using NexusForever.WorldServer.Database.Character.Model;
 using NexusForever.WorldServer.Game.Contact.Static;
+using NexusForever.WorldServer.Game.Entity;
 using NexusForever.WorldServer.Game.Entity.Static;
+using NexusForever.WorldServer.Game.Map.Search;
+using NexusForever.WorldServer.Game.Social;
 using NexusForever.WorldServer.Network.Message.Model;
 using NexusForever.WorldServer.Network.Message.Model.Shared;
 using System;
+using System.Collections.Generic;
+using NLog;
 
 namespace NexusForever.WorldServer.Network.Message.Handler
 {
     public static class MiscHandler
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private const float LocalChatDistance = 175f;
+        
         [MessageHandler(GameMessageOpcode.ClientPing)]
         public static void HandlePing(WorldSession session, ClientPing ping)
         {
@@ -86,6 +94,28 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             if (randomRoll.MaxRandom > 1000000u)
                 throw new InvalidPacketValueException();
 
+            int RandomRollResult = new Random().Next((int)randomRoll.MinRandom, (int)randomRoll.MaxRandom);
+            ServerChat serverChat = new ServerChat
+            {
+                Guid = session.Player.Guid,
+                Channel = ChatChannel.Emote, // roll result to emote channel
+                Text = $"♥♦♣♠ {session.Player.Name} rolled {RandomRollResult} ({randomRoll.MinRandom} - {randomRoll.MaxRandom}) ♠♣♦♥"
+            };
+
+            // get players in local chat range
+            session.Player.Map.Search(
+                session.Player.Position,
+                LocalChatDistance,
+                new SearchCheckRangePlayerOnly(session.Player.Position, LocalChatDistance, session.Player),
+                out List<GridEntity> intersectedEntities
+            );
+
+            // send roll result to emote channel for players in local range
+            log.Info($"{session.Player.Name} rolled {RandomRollResult} ({randomRoll.MinRandom} - {randomRoll.MaxRandom})");
+            intersectedEntities.ForEach(e => ((Player)e).Session.EnqueueMessageEncrypted(serverChat));
+            session.Player.Session.EnqueueMessageEncrypted(serverChat); // send to player's own emote channel as well?
+
+            log.Info($"{session.Player.Name} : random roll : begin enqueue message encrypted");
             session.EnqueueMessageEncrypted(new ServerRandomRollResponse
             {
                 TargetPlayerIdentity = new TargetPlayerIdentity
@@ -95,7 +125,8 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                 },
                 MinRandom = randomRoll.MinRandom,
                 MaxRandom = randomRoll.MaxRandom,
-                RandomRollResult = new Random().Next((int)randomRoll.MinRandom, (int)randomRoll.MaxRandom)
+                RandomRollResult = RandomRollResult
+                
             });
         }
     }

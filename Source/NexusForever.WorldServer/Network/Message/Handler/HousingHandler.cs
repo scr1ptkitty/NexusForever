@@ -46,7 +46,9 @@ namespace NexusForever.WorldServer.Network.Message.Handler
         [MessageHandler(GameMessageOpcode.ClientHousingDecorUpdate)]
         public static void HandleHousingDecorUpdate(WorldSession session, ClientHousingDecorUpdate housingDecorUpdate)
         {
-            if (!(session.Player.Map is ResidenceMap residenceMap))
+            /** throwing exception vomit on GP, check later **/
+            log.Info($"{session.Player.Name} : handle housing decor update : if player map is ResidenceMap");
+            if (!(session.Player.Map is ResidenceMap residenceMap)) /**/
                 throw new InvalidPacketValueException();
 
             residenceMap.DecorUpdate(session.Player, housingDecorUpdate);

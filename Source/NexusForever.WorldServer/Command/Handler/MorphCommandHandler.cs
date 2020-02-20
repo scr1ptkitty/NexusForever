@@ -1192,6 +1192,75 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
+        [SubCommandHandler("freebot", "variantName - 11", Permission.CommandMorph)]
+        public Task FreebotSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "blue":
+                    creatureId = 26449;
+                    break;
+                case "bluedrills":
+                    creatureId = 39034;
+                    break;
+                case "blueneedles":
+                    creatureId = 24382;
+                    break;
+                case "bronze":
+                    creatureId = 75865;
+                    break;
+                case "bronzeclubs":
+                    creatureId = 24381;
+                    break;
+                case "green":
+                    creatureId = 14271;
+                    break;
+                case "reddrills":
+                    creatureId = 70341;
+                    break;
+                case "silverclubs":
+                    creatureId = 19778;
+                    break;
+                case "heavyblue":
+                    creatureId = 52112;
+                    break;
+                case "heavygold":
+                    creatureId = 59184;
+                    break;
+                case "heavygrey":
+                    creatureId = 61852;
+                    break;
+                case "heavyred":
+                    creatureId = 61854;
+                    break;
+                case "pellprobe":
+                    creatureId = 49366;
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into freebot");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
         [SubCommandHandler("demorph", "removes the player's current morph", Permission.CommandMorph)]
         public Task DemorphSubCommandHandler(CommandContext context, string command, string[] parameters)
         {

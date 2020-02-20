@@ -286,7 +286,6 @@ namespace NexusForever.WorldServer.Game.Social
                 {
                     Channel = ChatChannel.Whisper,
                     Name = whisper.PlayerName,
-                    GM = RoleManager.HasPermission(session, Permission.GMFlag),
                     Text = whisper.Message,
                     Self = true,
                     CrossFaction = targetSession.Player.Faction1 != session.Player.Faction1,

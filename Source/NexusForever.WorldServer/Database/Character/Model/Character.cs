@@ -16,6 +16,7 @@ namespace NexusForever.WorldServer.Database.Character.Model
             CharacterCurrency = new HashSet<CharacterCurrency>();
             CharacterCustomisation = new HashSet<CharacterCustomisation>();
             CharacterDatacube = new HashSet<CharacterDatacube>();
+            CharacterEntitlement = new HashSet<CharacterEntitlement>();
             CharacterKeybinding = new HashSet<CharacterKeybinding>();
             CharacterMail = new HashSet<CharacterMail>();
             CharacterPath = new HashSet<CharacterPath>();

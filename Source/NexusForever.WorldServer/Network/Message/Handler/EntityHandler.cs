@@ -17,6 +17,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
         [MessageHandler(GameMessageOpcode.ClientEntityCommand)]
         public static void HandleEntityCommand(WorldSession session, ClientEntityCommand entityCommand)
         {
+            //log.Info($"{session.Player.Name} : handle entity command");
             WorldEntity mover = session.Player;
             if (session.Player.ControlGuid != session.Player.Guid)
                 mover = session.Player.GetVisible<WorldEntity>(session.Player.ControlGuid);
@@ -29,11 +30,12 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                     {
                         // this is causing issues after moving to soon after mounting:
                         // session.Player.CancelSpellsOnMove();
-
+                        //log.Info($"{session.Player.Name} : handle entity command : enqueue relocation");
                         mover.Map.EnqueueRelocate(mover, setPosition.Position.Vector);
                         break;
                     }
                     case SetRotationCommand setRotation:
+                        //log.Info($"{session.Player.Name} : handle entity command : set rotation");
                         mover.Rotation = setRotation.Position.Vector;
                         break;
                 }
