@@ -99,7 +99,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             {
                 Guid = session.Player.Guid,
                 Channel = ChatChannel.Emote, // roll result to emote channel
-                Text = $"♥♦♣♠ {session.Player.Name} rolled {RandomRollResult} ({randomRoll.MinRandom} - {randomRoll.MaxRandom}) ♠♣♦♥"
+                Text = $"♥♦♣♠ (({session.Player.Name} rolls {RandomRollResult})) ({randomRoll.MinRandom} - {randomRoll.MaxRandom}) ♠♣♦♥"
             };
 
             // get players in local chat range
