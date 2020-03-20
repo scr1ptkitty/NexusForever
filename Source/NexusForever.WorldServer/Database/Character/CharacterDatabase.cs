@@ -9,11 +9,13 @@ using ResidenceEntity = NexusForever.WorldServer.Game.Housing.Residence;
 using ContactEntity = NexusForever.WorldServer.Game.Contact.Contact;
 using GuildEntity = NexusForever.WorldServer.Game.Guild.GuildBase;
 using IGuild = NexusForever.WorldServer.Game.Guild.IGuild;
+using NLog;
 
 namespace NexusForever.WorldServer.Database.Character
 {
     public static class CharacterDatabase
     {
+        private static readonly Logger log = LogManager.GetCurrentClassLogger();
         public static async Task Save(Action<CharacterContextExtended> action)
         {
             using (var context = new CharacterContextExtended())
@@ -117,6 +119,7 @@ namespace NexusForever.WorldServer.Database.Character
         {
             using (var context = new CharacterContext())
             {
+                log.Info($"{character.Name} : create character ");
                 context.Character.Add(character);
                 foreach (var item in items)
                     item.Save(context);
@@ -129,6 +132,7 @@ namespace NexusForever.WorldServer.Database.Character
         {
             using (var context = new CharacterContextExtended())
             {
+                //log.Info($"{residence.Name} : save residence");
                 residence.Save(context);
                 await context.SaveChangesAsync();
             }

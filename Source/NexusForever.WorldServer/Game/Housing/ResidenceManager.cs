@@ -8,11 +8,13 @@ using NexusForever.Shared.GameTable.Model;
 using NexusForever.WorldServer.Database.Character;
 using NexusForever.WorldServer.Game.Entity;
 using ResidenceModel = NexusForever.WorldServer.Database.Character.Model.Residence;
+using NLog;
 
 namespace NexusForever.WorldServer.Game.Housing
 {
     public static class ResidenceManager
     {
+        private static readonly Logger log = LogManager.GetCurrentClassLogger();
         // TODO: move this to the config file
         private const double SaveDuration = 60d;
 
@@ -55,7 +57,7 @@ namespace NexusForever.WorldServer.Game.Housing
                     tasks.Add(CharacterDatabase.SaveResidence(residence));
 
                 Task.WaitAll(tasks.ToArray());
-
+                log.Info($"Saved {residences.Count} cached residences");
                 timeToSave = SaveDuration;
             }
         }
@@ -65,6 +67,7 @@ namespace NexusForever.WorldServer.Game.Housing
         /// </summary>
         public static Residence CreateResidence(Player player)
         {
+            log.Info($"{player.Name} : create residence");
             var residence = new Residence(player);
             residences.TryAdd(residence.Id, residence);
             ownerCache.TryAdd(player.Name, residence.Id);
@@ -76,6 +79,7 @@ namespace NexusForever.WorldServer.Game.Housing
         /// </summary>
         public static async Task<Residence> GetResidence(ulong residenceId)
         {
+            log.Info($"get residence by : id {residenceId}");
             Residence residence = GetCachedResidence(residenceId);
             if (residence != null)
                 return residence;
@@ -95,6 +99,7 @@ namespace NexusForever.WorldServer.Game.Housing
         /// </summary>
         public static async Task<Residence> GetResidence(string name)
         {
+            log.Info($"get residence by : name {name}");
             if (ownerCache.TryGetValue(name, out ulong residenceId))
                 return GetCachedResidence(residenceId);
 
@@ -113,6 +118,7 @@ namespace NexusForever.WorldServer.Game.Housing
         /// </summary>
         public static Residence GetCachedResidence(ulong residenceId)
         {
+            log.Info($"get cached residence by: id {residenceId}");
             return residences.TryGetValue(residenceId, out Residence residence) ? residence : null;
         }
 

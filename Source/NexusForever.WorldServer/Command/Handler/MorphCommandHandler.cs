@@ -52,6 +52,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "white":
                     creatureId = 73296;
                     break;
+                default:
+                    creatureId = 69407;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -106,6 +110,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "zebra":
                     creatureId = 69406;
                     break;
+                default:
+                    creatureId = 69403;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -153,6 +161,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "strain":
                     creatureId = 69416;
                     break;
+                default:
+                    creatureId = 69414;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -196,6 +208,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "caravanwhite":
                     creatureId = 24091;
+                    break;
+                default:
+                    creatureId = 42293;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -274,6 +290,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "whitevale":
                     creatureId = 69425;
                     break;
+                default:
+                    creatureId = 69417;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -330,6 +350,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "redSpacemale":
                     creatureId = 29798;
                     break;
+                default:
+                    creatureId = 45009;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -367,6 +391,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "space":
                     creatureId = 75253;
+                    break;
+                default:
+                    creatureId = 17381;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -421,6 +449,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "armor4":
                     creatureId = 28508;
                     break;
+                default:
+                    creatureId = 21439;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -457,6 +489,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "highwayman":
                     creatureId = 23804;
+                    break;
+                default:
+                    creatureId = 23804;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -534,6 +570,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "snowmale":
                     creatureId = 11010;
                     break;
+                default: 
+                    creatureId = 20809;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -570,6 +610,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "blue":
                     creatureId = 26044;
+                    break;
+                default:
+                    creatureId = 26044;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -650,6 +694,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "greyarmored4":
                     creatureId = 49346;
                     break;
+                default:
+                    creatureId = 70873;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -671,7 +719,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("elemental", "variantName - 7 variants", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("elemental", "variantName - 7 variants - storyteller only", Permission.CommandMorphStoryteller)]
         public Task ElementalSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -702,6 +750,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "water":
                     creatureId = 52515;
                     break;
+                default:
+                    creatureId = 52514;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -723,7 +775,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("strain", "variantName - 11 variants", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("strain", "variantName - 10 variants - storyteller only", Permission.CommandMorphStoryteller)]
         public Task StrainSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -748,9 +800,6 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "crawler":
                     creatureId = 48146;
                     break;
-                case "giant":
-                    creatureId = 49391;
-                    break;
                 case "mauler":
                     creatureId = 55010;
                     break;
@@ -765,6 +814,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "technoravager":
                     creatureId = 52968;
+                    break;
+                default:
+                    creatureId = 48146;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -787,7 +840,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("osun", "variantName - 20 variants", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("osun", "variantName - 20 variants - storyteller only", Permission.CommandMorphStoryteller)]
         public Task OsunSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -857,6 +910,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "strainwitch":
                     creatureId = 52969;
                     break;
+                default:
+                    creatureId = 13019;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -878,7 +935,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("highpriest", "variantName - 6 variants", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("highpriest", "variantName - 6 variants - storyteller only", Permission.CommandMorphStoryteller)]
         public Task HighPriestSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -906,6 +963,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "strain":
                     creatureId = 55015;
                     break;
+                default:
+                    creatureId = 48554;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -927,7 +988,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("triton", "variantName - 5 variants", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("triton", "variantName - 5 variants - storyteller only", Permission.CommandMorphStoryteller)]
         public Task TritonSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -951,6 +1012,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "strain":
                     creatureId = 55018;
+                    break;
+                default:
+                    creatureId = 34094;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -1015,6 +1080,10 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "zombieskin":
                     creatureId = 69110;
+                    break;
+                default:
+                    creatureId = 4089;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
 
@@ -1094,6 +1163,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "zombie2":
                     creatureId = 68633;
                     break;
+                default:
+                    creatureId = 9634;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -1172,6 +1245,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "zombiebelt":
                     creatureId = 72760;
                     break;
+                default:
+                    creatureId = 4087;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -1241,6 +1318,10 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "pellprobe":
                     creatureId = 49366;
                     break;
+                default:
+                    creatureId = 26449;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
             }
 
             // get the creature id from the creature2 table
@@ -1256,6 +1337,487 @@ namespace NexusForever.WorldServer.Command.Handler
                 return Task.CompletedTask;
 
             log.Info($"Morphing {context.Session.Player.Name} into freebot");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("malverine", "variantName - 6 variants", Permission.CommandMorph)]
+        public Task MalverineSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "golden":
+                    creatureId = 25982;
+                    break;
+                case "purple":
+                    creatureId = 23851;
+                    break;
+                case "white":
+                    creatureId = 31755;
+                    break;
+                case "augmented":
+                    creatureId = 32213;
+                    break;
+                case "strain":
+                    creatureId = 38071;
+                    break;
+                case "black":
+                    creatureId = 41659;
+                    break;
+                default:
+                    creatureId = 25982;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into malverine");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("vind", "base variant", Permission.CommandMorph)]
+        public Task VindSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            // there's only one variant for vind!
+
+            /*
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+            */
+            uint creatureId = 2410;
+            /*
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "":
+                    creatureId = 0;
+                    break;
+            }
+            */
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into vind");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("girrok", "variantName - 10 variants", Permission.CommandMorph)]
+        public Task GirrokSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "black":
+                    creatureId = 1753;
+                    break;
+                case "brown":
+                    creatureId = 17646;
+                    break;
+                case "augmented":
+                    creatureId = 19741;
+                    break;
+                case "white":
+                    creatureId = 19742;
+                    break;
+                case "purple":
+                    creatureId = 19969;
+                    break;
+                case "bone":
+                    creatureId = 23775;
+                    break;
+                case "skeledroid":
+                    creatureId = 26201;
+                    break;
+                case "scarred":
+                    creatureId = 26846;
+                    break;
+                case "strain":
+                    creatureId = 38289;
+                    break;
+                case "purplestripe":
+                    creatureId = 45505;
+                    break;
+                default:
+                    creatureId = 1753;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into girrok");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("chompy", "variantName - 10 variants", Permission.CommandMorph)]
+        public Task ChompySubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "orange":
+                    creatureId = 69483;
+                    break;
+                case "tawny":
+                    creatureId = 69485;
+                    break;
+                case "dusty":
+                    creatureId = 69486;
+                    break;
+                case "ginger":
+                    creatureId = 69487;
+                    break;
+                case "tawnydarkspur":
+                    creatureId = 69488;
+                    break;
+                case "blue":
+                    creatureId = 69489;
+                    break;
+                case "black":
+                    creatureId = 69490;
+                    break;
+                case "strain":
+                    creatureId = 69491;
+                    break;
+                case "bluedarkspur":
+                    creatureId = 69492;
+                    break;
+                case "white":
+                    creatureId = 71360;
+                    break;
+                default:
+                    creatureId = 69483;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into chompy");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("slank", "base variant ", Permission.CommandMorph)]
+        public Task SlankSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            // slanks only have one variant
+
+            /*
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+            */
+            uint creatureId = 27250;
+            /*
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "":
+                    creatureId = 0;
+                    break;
+                default:
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+            */
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into x");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("roan", "variantName - 3 variants", Permission.CommandMorph)]
+        public Task RoanSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "brownbull":
+                    creatureId = 1741;
+                    break;
+                case "browncow":
+                    creatureId = 2065;
+                    break;
+                case "greybull":
+                    creatureId = 15640;
+                    break;
+                default:
+                    creatureId = 1741;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into roan");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("rowsdower", "variantName - 5 variants", Permission.CommandMorph)]
+        public Task RowsdowerSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "white":
+                    creatureId = 12921;
+                    break;
+                case "demonic":
+                    creatureId = 48437;
+                    break;
+                case "augmented":
+                    creatureId = 69474;
+                    break;
+                case "pink":
+                    creatureId = 69475;
+                    break;
+                case "party":
+                    creatureId = 70316;
+                    break;
+                default:
+                    creatureId = 12921;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into rowsdower");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("warbot", "variantName - 4 variants - storyteller only", Permission.CommandMorphStoryteller)]
+        public Task WarbotSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "dominion":
+                    creatureId = 20998;
+                    break;
+                case "exile":
+                    creatureId = 21544;
+                    break;
+                case "ikthian":
+                    creatureId = 34644;
+                    break;
+                case "osun":
+                    creatureId = 32519;
+                    break;
+                default:
+                    creatureId = 32519;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into warbot");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("tank", "variantName - 2 variants - storyteller only", Permission.CommandMorphStoryteller)]
+        public Task TankSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "exile":
+                    creatureId = 41168;
+                    break;
+                case "dominion":
+                    creatureId = 47567;
+                    break;
+                default:
+                    creatureId = 47567;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into tank");
+            // change the player's display information to the creature's display information
+            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("witchgiant", "variantName - 3 variants - storyteller only", Permission.CommandMorphStoryteller)]
+        public Task WitchgiantSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "life":
+                    creatureId = 21804;
+                    break;
+                case "ice":
+                    creatureId = 20857;
+                    break;
+                case "strain":
+                    creatureId = 49391;
+                    break;
+                default:
+                    creatureId = 21804;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+            // get the creature id from the creature2 table
+            Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+            if (creature2 == null || creatureId == 0)
+            {
+                return context.SendMessageAsync($"Invalid morph variant!");
+            }
+
+            // get the creature's display information
+            Creature2DisplayGroupEntryEntry displayGroupEntry = GameTableManager.Creature2DisplayGroupEntry.Entries.FirstOrDefault(d => d.Creature2DisplayGroupId == creature2.Creature2DisplayGroupId);
+            if (displayGroupEntry == null)
+                return Task.CompletedTask;
+
+            log.Info($"Morphing {context.Session.Player.Name} into witch giant");
             // change the player's display information to the creature's display information
             context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
             return Task.CompletedTask;
