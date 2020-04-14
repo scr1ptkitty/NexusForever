@@ -1,38 +1,115 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NexusForever.Database.Character;
+using NexusForever.Database.Character.Model;
 using NexusForever.Shared;
-using NexusForever.WorldServer.Database.Character.Model;
+using NexusForever.Shared.GameTable;
+using NexusForever.Shared.GameTable.Model;
 using NexusForever.WorldServer.Game.Entity.Static;
 using NexusForever.WorldServer.Game.Spell;
 using NexusForever.WorldServer.Game.Spell.Static;
 using NexusForever.WorldServer.Network.Message.Model;
 using NexusForever.WorldServer.Network.Message.Model.Shared;
+using NexusForever.WorldServer.Network.Message.Static;
 using NLog;
 
 namespace NexusForever.WorldServer.Game.Entity
 {
-    public class SpellManager : IUpdate
+    public class SpellManager : IUpdate, ISaveCharacter
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Index of the active <see cref="ActionSet"/>.
+        /// </summary>
+        public byte ActiveActionSet
+        {
+            get => activeActionSet;
+            private set
+            {
+                saveMask |= SpellManagerSaveMask.ActiveActionSet;
+                activeActionSet = value;
+            }
+        }
+
+        private byte activeActionSet;
+
         private readonly Player player;
 
-        private readonly Dictionary<uint /*spell4BaseId*/, UnlockedSpell> spells = new Dictionary<uint, UnlockedSpell>();
+        private readonly Dictionary<uint /*spell4BaseId*/, CharacterSpell> spells = new Dictionary<uint, CharacterSpell>();
         private readonly Dictionary<uint /*spell4Id*/, double /*cooldown*/> spellCooldowns = new Dictionary<uint, double>();
         private double globalSpellCooldown;
 
         private readonly ActionSet[] actionSets = new ActionSet[ActionSet.MaxActionSets];
-        private byte activeActionSet;
+
+        private SpellManagerSaveMask saveMask;
 
         /// <summary>
-        /// Create a new <see cref="SpellManager"/> from existing <see cref="Character"/> database model.
+        /// Create a new <see cref="SpellManager"/> from existing <see cref="CharacterModel"/> database model.
         /// </summary>
-        public SpellManager(Player owner, Character model)
+        public SpellManager(Player owner, CharacterModel model)
         {
             player = owner;
+
+            foreach (CharacterSpellModel spellModel in model.Spell)
+            {
+                SpellBaseInfo spellBaseInfo = GlobalSpellManager.Instance.GetSpellBaseInfo(spellModel.Spell4BaseId);
+                Item item = player.Inventory.SpellCreate(spellBaseInfo.Entry, ItemUpdateReason.NoReason);
+                spells.Add(spellModel.Spell4BaseId, new CharacterSpell(owner, spellModel, spellBaseInfo, item));
+            }
+
+            GrantSpells();
+
             for (byte i = 0; i < ActionSet.MaxActionSets; i++)
-                actionSets[i] = new ActionSet(i);
+            {
+                actionSets[i] = new ActionSet(i, player);
+
+                foreach (CharacterActionSetShortcutModel shortcutModel in model.ActionSetShortcut
+                    .Where(c => c.SpecIndex == i))
+                    actionSets[i].AddShortcut(shortcutModel);
+
+                foreach (CharacterActionSetAmpModel ampModel in model.ActionSetAmp
+                    .Where(c => c.SpecIndex == i))
+                    actionSets[i].AddAmp(ampModel);
+            }
+
+            activeActionSet = model.ActiveSpec;
+        }
+
+        public void GrantSpells()
+        {
+            // TODO: TEMPORARY, this should eventually be used on level up
+            foreach (SpellLevelEntry spellLevel in GameTableManager.Instance.SpellLevel.Entries
+                .Where(s => s.ClassId == (byte)player.Class && s.CharacterLevel <= player.Level)
+                .OrderBy(s => s.CharacterLevel))
+            {
+                //FIXME
+                if (spellLevel.PrerequisiteId > 0)
+                    continue;
+
+                Spell4Entry spell4Entry = GameTableManager.Instance.Spell4.GetEntry(spellLevel.Spell4Id);
+                if (spell4Entry == null)
+                    continue;
+
+                if (GetSpell(spell4Entry.Spell4BaseIdBaseSpell) == null)
+                    AddSpell(spell4Entry.Spell4BaseIdBaseSpell);
+            }
+
+            ClassEntry classEntry = GameTableManager.Instance.Class.GetEntry((byte)player.Class);
+            foreach (uint classSpell in classEntry.Spell4IdInnateAbilityActive
+                .Concat(classEntry.Spell4IdInnateAbilityPassive)
+                .Concat(classEntry.Spell4IdAttackPrimary)
+                .Concat(classEntry.Spell4IdAttackUnarmed))
+            {
+                Spell4Entry spell4Entry = GameTableManager.Instance.Spell4.GetEntry(classSpell);
+                if (spell4Entry == null)
+                    continue;
+
+                if (GetSpell(spell4Entry.Spell4BaseIdBaseSpell) == null)
+                    AddSpell(spell4Entry.Spell4BaseIdBaseSpell);
+            }
         }
 
         public void Update(double lastTick)
@@ -60,14 +137,49 @@ namespace NexusForever.WorldServer.Game.Entity
                 else
                     spellCooldowns[spellId] = cooldown - lastTick;
             }
+
+            foreach (CharacterSpell unlockedSpell in spells.Values)
+                unlockedSpell.Update(lastTick);
+        }
+
+        public void Save(CharacterContext context)
+        {
+            if (saveMask != SpellManagerSaveMask.None)
+            {
+                // character is attached in Player::Save, this will only be local lookup
+                CharacterModel character = context.Character.Find(player.CharacterId);
+                EntityEntry<CharacterModel> entity = context.Entry(character);
+
+                if ((saveMask & SpellManagerSaveMask.ActiveActionSet) != 0)
+                {
+                    character.ActiveSpec = ActiveActionSet;
+                    entity.Property(p => p.ActiveSpec).IsModified = true;
+                }
+
+                saveMask = SpellManagerSaveMask.None;
+            }
+
+            foreach (CharacterSpell spell in spells.Values)
+                spell.Save(context);
+
+            foreach (ActionSet actionSet in actionSets)
+                actionSet.Save(context);
         }
 
         /// <summary>
-        /// Add a new <see cref="UnlockedSpell"/> created from supplied spell base id and tier.
+        /// Returns <see cref="CharacterSpell"/> for an existing spell.
+        /// </summary>
+        public CharacterSpell GetSpell(uint spell4BaseId)
+        {
+            return spells.TryGetValue(spell4BaseId, out CharacterSpell spell) ? spell : null;
+        }
+
+        /// <summary>
+        /// Add a new <see cref="CharacterSpell"/> created from supplied spell base id and tier.
         /// </summary>
         public void AddSpell(uint spell4BaseId, byte tier = 1)
         {
-            SpellBaseInfo spellBaseInfo = GlobalSpellManager.GetSpellBaseInfo(spell4BaseId);
+            SpellBaseInfo spellBaseInfo = GlobalSpellManager.Instance.GetSpellBaseInfo(spell4BaseId);
             if (spellBaseInfo == null)
                 throw new ArgumentOutOfRangeException();
 
@@ -78,16 +190,16 @@ namespace NexusForever.WorldServer.Game.Entity
             if (spells.ContainsKey(spell4BaseId))
                 throw new InvalidOperationException();
 
-            Item item = player.Inventory.SpellCreate(spellBaseInfo.Entry, 49);
+            Item item = player.Inventory.SpellCreate(spellBaseInfo.Entry, ItemUpdateReason.NoReason);
 
-            var unlockedSpell = new UnlockedSpell(spellBaseInfo, tier, item);
+            var unlockedSpell = new CharacterSpell(player, spellBaseInfo, tier, item);
             if (!player.IsLoading)
             {
                 player.Session.EnqueueMessageEncrypted(new ServerSpellUpdate
                 {
                     Spell4BaseId = spell4BaseId,
                     TierIndex    = tier,
-                    Activated    = true
+                    Activated    = tier > 0
                 });
             }
 
@@ -95,19 +207,63 @@ namespace NexusForever.WorldServer.Game.Entity
         }
 
         /// <summary>
-        /// Returns <see cref="UnlockedSpell"/> for an existing spell.
+        /// Update existing <see cref="CharacterSpell"/> with supplied tier. The base tier will be updated if no action set index is supplied.
         /// </summary>
-        public UnlockedSpell GetSpell(uint spell4BaseId)
+        public void UpdateSpell(uint spell4BaseId, byte tier, byte? actionSetIndex)
         {
-            return spells.TryGetValue(spell4BaseId, out UnlockedSpell spell) ? spell : null;
+            SpellBaseInfo spellBaseInfo = GlobalSpellManager.Instance.GetSpellBaseInfo(spell4BaseId);
+            if (spellBaseInfo == null)
+                throw new ArgumentOutOfRangeException();
+
+            SpellInfo spellInfo = spellBaseInfo.GetSpellInfo(tier);
+            if (spellInfo == null)
+                throw new ArgumentOutOfRangeException();
+
+            CharacterSpell spell = GetSpell(spell4BaseId);
+            if (spell == null)
+                throw new ArgumentOutOfRangeException();
+
+            if (actionSetIndex == null)
+                spell.Tier = tier;
+            else
+            {
+                ActionSet actionSet = GetActionSet(actionSetIndex.Value);
+                actionSet.UpdateSpellShortcut(spell4BaseId, tier);
+            }
+
+            if (!player.IsLoading)
+            {
+                player.Session.EnqueueMessageEncrypted(new ServerSpellUpdate
+                {
+                    Spell4BaseId = spell4BaseId,
+                    TierIndex = tier,
+                    SpecIndex = actionSetIndex ?? 0,
+                    Activated = tier > 0
+                });
+            }
         }
 
-        public List<UnlockedSpell> GetPets()
+        /// <summary>
+        /// Return the tier for supplied spell.
+        /// This will either be the <see cref="ActionSetShortcut"/> tier if placed in the active <see cref="ActionSet"/> or base tier if not.
+        /// </summary>
+        public byte GetSpellTier(uint spell4BaseId)
+        {
+            CharacterSpell spell = GetSpell(spell4BaseId);
+            if (spell == null)
+                throw new ArgumentException();
+
+            ActionSet actionSet = GetActionSet(ActiveActionSet);
+            ActionSetShortcut shortcut = actionSet.GetShortcut(ShortcutType.Spell, spell4BaseId);
+            return shortcut?.Tier ?? spell.Tier;
+        }
+
+        public List<CharacterSpell> GetPets()
         {
             return spells.Values
-                .Where(s => s.Info.SpellType.Id == 27 ||
-                            s.Info.SpellType.Id == 30 ||
-                            s.Info.SpellType.Id == 104)
+                .Where(s => s.BaseInfo.SpellType.Id == 27 ||
+                            s.BaseInfo.SpellType.Id == 30 ||
+                            s.BaseInfo.SpellType.Id == 104)
                 .ToList();
         }
 
@@ -167,21 +323,54 @@ namespace NexusForever.WorldServer.Game.Entity
         }
 
         /// <summary>
-        /// Add an existing spell to the specified action set.
+        /// Return <see cref="ActionSet"/> at supplied index.
         /// </summary>
-        public void AddSpellToActionSet(byte actionSetIndex, uint spell4BaseId, UILocation location, byte tier = 1)
+        public ActionSet GetActionSet(byte actionSetIndex)
         {
             if (actionSetIndex >= ActionSet.MaxActionSets)
                 throw new ArgumentOutOfRangeException();
 
-            if (!spells.TryGetValue(spell4BaseId, out UnlockedSpell spell))
-                throw new ArgumentOutOfRangeException();
+            return actionSets[actionSetIndex];
+        }
 
-            actionSets[actionSetIndex].AddSpell(spell, location, tier);
-            spell.Tier = tier;
+        /// <summary>
+        /// Update active <see cref="ActionSet"/> with supplied index, returned <see cref="SpecError"/> is sent to the client.
+        /// </summary>
+        public SpecError SetActiveActionSet(byte value)
+        {
+            if (value >= ActionSet.MaxActionSets)
+                return SpecError.InvalidIndex;
+
+            if (value == ActiveActionSet)
+                return SpecError.NoChange;
+
+            // TODO: handle other errors
+
+            ActiveActionSet = value;
+            return SpecError.Ok;
         }
 
         public void SendInitialPackets()
+        {
+            SendServerAbilities();
+            SendServerSpellList();
+            SendServerAbilityPoints();
+            SendServerActionSets();
+            SendServerAmpLists();
+
+            player.Session.EnqueueMessageEncrypted(new ServerCooldownList
+            {
+                Cooldowns = spellCooldowns.Select(c => new Cooldown
+                {
+                    Type          = 1,
+                    SpellId       = c.Key,
+                    TypeId        = c.Key,
+                    TimeRemaining = (uint)(c.Value * 1000u)
+                }).ToList()
+            });
+        }
+
+        private void SendServerAbilities()
         {
             foreach (Item spell in player.Inventory
                 .Where(b => b.Location == InventoryLocation.Ability)
@@ -192,80 +381,64 @@ namespace NexusForever.WorldServer.Game.Entity
                     InventoryItem = new InventoryItem
                     {
                         Item   = spell.BuildNetworkItem(),
-                        Reason = 49
+                        Reason = ItemUpdateReason.NoReason
                     }
                 });
             }
+        }
 
+        private void SendServerSpellList()
+        {
             var serverSpellList = new ServerSpellList();
-            foreach ((uint spell4BaseId, UnlockedSpell spell) in spells)
+            foreach ((uint spell4BaseId, CharacterSpell spell) in spells)
             {
-                serverSpellList.Spells.Add(new ServerSpellList.Spell
+                SpellBaseInfo spellBaseInfo = GlobalSpellManager.Instance.GetSpellBaseInfo(spell4BaseId);
+                if (spellBaseInfo == null)
+                    continue;
+                
+                for (byte i = 0; i < ActionSet.MaxActionSets; i++)
                 {
-                    Spell4BaseId      = spell4BaseId,
-                    TierIndexAchieved = spell.Tier
-                });
+                    ActionSetShortcut shortcut = actionSets[i].GetShortcut(ShortcutType.Spell, spell4BaseId);
+                    serverSpellList.Spells.Add(new ServerSpellList.Spell
+                    {
+                        Spell4BaseId      = spell4BaseId,
+                        TierIndexAchieved = shortcut?.Tier ?? spell.Tier,
+                        SpecIndex         = i
+                    });
+
+                    // class ability
+                    if (spellBaseInfo.SpellType.Id != 5)
+                        break;
+                }
             }
 
             player.Session.EnqueueMessageEncrypted(serverSpellList);
+        }
 
+        public void SendServerAbilityPoints()
+        {
             player.Session.EnqueueMessageEncrypted(new ServerAbilityPoints
             {
-                AbilityPoints      = actionSets[activeActionSet].TierPoints,
+                AbilityPoints      = actionSets[ActiveActionSet].TierPoints,
                 TotalAbilityPoints = ActionSet.MaxTierPoints
             });
+        }
 
-            foreach (ActionSet actionSet in actionSets)
+        private void SendServerActionSets()
+        {
+            for (byte i = 0; i < ActionSet.MaxActionSets; i++)
             {
-                var serverActionSet = new ServerActionSet
-                {
-                    Index    = actionSet.Index,
-                    Unknown3 = 1,
-                    Unknown5 = 1
-                };
+                ActionSet actionSet = GetActionSet(i);
+                player.Session.EnqueueMessageEncrypted(actionSet.BuildServerActionSet());
+            }
+        }
 
-                foreach (ActionSetAction action in actionSet)
-                {
-                    serverActionSet.Actions.Add(new ServerActionSet.Action
-                    {
-                        ShortcutType = action.ShortcutType,
-                        ObjectId     = action.ObjectId,
-                        Location     = new ItemLocation
-                        {
-                            Location = InventoryLocation.Ability,
-                            BagIndex = (uint)action.Location
-                        }
-                    });
-                }
-
-                // initial action set packet requires all slots to be sent
-                uint count = (uint)serverActionSet.Actions.Count;
-                for (byte i = 0; i < ActionSet.MaxActionCount - count; i++)
-                {
-                    serverActionSet.Actions.Add(new ServerActionSet.Action
-                    {
-                        ShortcutType = 0,
-                        ObjectId     = 0,
-                        Location     = new ItemLocation
-                        {
-                            Location = (InventoryLocation)300, // no idea why 300, this is what retail did
-                            BagIndex = count + i
-                        }
-                    });
-                }
-
-                player.Session.EnqueueMessageEncrypted(serverActionSet);
-
-                player.Session.EnqueueMessageEncrypted(new ServerCooldownList
-                {
-                    Cooldowns = spellCooldowns.Select(c => new Cooldown
-                    {
-                        Type          = 1,
-                        SpellId       = c.Key,
-                        TypeId        = c.Key,
-                        TimeRemaining = (uint)(c.Value * 1000u)
-                    }).ToList()
-                });
+        private void SendServerAmpLists()
+        {
+            for (byte i = 0; i < ActionSet.MaxActionSets; i++)
+            {
+                ActionSet actionSet = GetActionSet(i);
+                player.Session.EnqueueMessageEncrypted(actionSet.BuildServerAmpList());
             }
         }
     }

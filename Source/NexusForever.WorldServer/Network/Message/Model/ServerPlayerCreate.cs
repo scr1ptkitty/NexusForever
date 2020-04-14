@@ -7,7 +7,7 @@ using FactionId = NexusForever.WorldServer.Game.Entity.Static.Faction;
 
 namespace NexusForever.WorldServer.Network.Message.Model
 {
-    [Message(GameMessageOpcode.ServerPlayerCreate, MessageDirection.Server)]
+    [Message(GameMessageOpcode.ServerPlayerCreate)]
     public class ServerPlayerCreate : IWritable
     {
         public class Faction : IWritable
@@ -52,15 +52,15 @@ namespace NexusForever.WorldServer.Network.Message.Model
             }
         }
 
-        public class UnknownStructure : IWritable
+        public class CharacterEntitlement : IWritable
         {
-            public ushort Unknown0 { get; set; }
-            public uint Unknown4 { get; set; }
+            public EntitlementType Entitlement { get; set; }
+            public uint Count { get; set; }
 
             public void Write(GamePacketWriter writer)
             {
-                writer.Write(Unknown0, 14u);
-                writer.Write(Unknown4);
+                writer.Write(Entitlement, 14u);
+                writer.Write(Count);
             }
         }
 
@@ -76,17 +76,17 @@ namespace NexusForever.WorldServer.Network.Message.Model
         public uint UnknownA0 { get; set; }
         public Faction FactionData { get; set; }
         public List<Pet> Pets { get; } = new List<Pet>();
-        public uint UnknownB8 { get; set; }
+        public uint InputKeySet { get; set; }
         public ushort UnknownBC { get; set; }
         public int ActiveCostumeIndex { get; set; }
         public uint UnknownC4 { get; set; }
         public uint UnknownC8 { get; set; }
         public List<ushort> KnownDyes { get; } = new List<ushort>();
-        public byte[] TradeskillMaterials { get; } = new byte[1024];
+        public ushort[] TradeskillMaterials { get; set; } = new ushort[512];
         public float GearScore { get; set; }
         public bool IsPvpServer { get; set; }
         public uint Unknown4DC { get; set; }
-        public List<UnknownStructure> Unknown4E4 { get; } = new List<UnknownStructure>();
+        public List<CharacterEntitlement> CharacterEntitlements { set; get; } = new List<CharacterEntitlement>();
 
         public void Write(GamePacketWriter writer)
         {
@@ -110,7 +110,7 @@ namespace NexusForever.WorldServer.Network.Message.Model
             writer.Write(Pets.Count);
             Pets.ForEach(p => p.Write(writer));
 
-            writer.Write(UnknownB8);
+            writer.Write(InputKeySet);
             writer.Write(UnknownBC);
             writer.Write(ActiveCostumeIndex);
             writer.Write(UnknownC4);
@@ -126,8 +126,8 @@ namespace NexusForever.WorldServer.Network.Message.Model
             writer.Write(IsPvpServer);
             writer.Write(Unknown4DC);
 
-            writer.Write(Unknown4E4.Count);
-            Unknown4E4.ForEach(u => u.Write(writer));
+            writer.Write(CharacterEntitlements.Count);
+            CharacterEntitlements.ForEach(u => u.Write(writer));
         }
     }
 }

@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using NexusForever.Database.Auth.Model;
+using NexusForever.Database.Character.Model;
 using NexusForever.Shared.Cryptography;
-using NexusForever.Shared.Database.Auth.Model;
 using NexusForever.Shared.Network;
 using NexusForever.Shared.Network.Message;
 using NexusForever.Shared.Network.Message.Model;
-using NexusForever.WorldServer.Database.Character.Model;
+using NexusForever.Shared.Network.Packet;
+using NexusForever.WorldServer.Game.Account;
 using NexusForever.WorldServer.Game.Entity;
 using NexusForever.WorldServer.Network.Message.Model;
 
@@ -14,12 +16,14 @@ namespace NexusForever.WorldServer.Network
 {
     public class WorldSession : GameSession
     {
-        public Account Account { get; private set; }
-        public List<Character> Characters { get; } = new List<Character>();
+        public AccountModel Account { get; private set; }
+        public List<CharacterModel> Characters { get; } = new List<CharacterModel>();
 
         public Player Player { get; set; }
 
         public GenericUnlockManager GenericUnlockManager { get; set; }
+        public AccountCurrencyManager AccountCurrencyManager { get; set; }
+        public EntitlementManager EntitlementManager { get; set; }
 
         public override void OnAccept(Socket newSocket)
         {
@@ -27,11 +31,11 @@ namespace NexusForever.WorldServer.Network
 
             EnqueueMessageEncrypted(new ServerHello
             {
-                AuthVersion = 16042,
-                RealmId     = WorldServer.RealmId,
-                Unknown8    = 21,
-                AuthMessage = 0x97998A0,
-                Unknown1C   = 11
+                AuthVersion    = 16042,
+                RealmId        = WorldServer.RealmId,
+                RealmGroupId   = 21,
+                AuthMessage    = 0x97998A0,
+                ConnectionType = 11
             });
         }
 
@@ -50,22 +54,31 @@ namespace NexusForever.WorldServer.Network
         }
 
         /// <summary>
-        /// Initialise <see cref="WorldSession"/> from an existing <see cref="Account"/> database model.
+        /// Initialise <see cref="WorldSession"/> from an existing <see cref="AccountModel"/> database model.
         /// </summary>
-        public void Initialise(Account account)
+        public void Initialise(AccountModel account)
         {
             if (Account != null)
                 throw new InvalidOperationException();
 
             Account = account;
 
-            GenericUnlockManager = new GenericUnlockManager(this, account);
+            GenericUnlockManager   = new GenericUnlockManager(this, account);
+            AccountCurrencyManager = new AccountCurrencyManager(this, account);
+            EntitlementManager     = new EntitlementManager(this, account);
         }
 
         public void SetEncryptionKey(byte[] sessionKey)
         {
             ulong key = PacketCrypt.GetKeyFromTicket(sessionKey);
             encryption = new PacketCrypt(key);
+        }
+
+        [MessageHandler(GameMessageOpcode.ClientPackedWorld)]
+        public void HandlePackedWorld(ClientPackedWorld packedWorld)
+        {
+            var packet = new ClientGamePacket(packedWorld.Data);
+            HandlePacket(packet);
         }
     }
 }

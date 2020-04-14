@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
-using NexusForever.WorldServer.Database.World.Model;
+using System.Linq;
+using NexusForever.Database.World.Model;
 
 namespace NexusForever.WorldServer.Game.Entity
 {
@@ -8,24 +9,24 @@ namespace NexusForever.WorldServer.Game.Entity
         public uint Id { get; }
         public float SellPriceMultiplier { get; }
         public float BuyPriceMultiplier { get; }
-        public ImmutableList<EntityVendorCategory> Categories { get; }
-        public ImmutableList<EntityVendorItem> Items { get; }
+        public ImmutableList<EntityVendorCategoryModel> Categories { get; }
+        public ImmutableList<EntityVendorItemModel> Items { get; }
 
-        public VendorInfo(EntityVendor vendor, ImmutableList<EntityVendorCategory> categories, ImmutableList<EntityVendorItem> items)
+        public VendorInfo(EntityModel model)
         {
-            Id                  = vendor.Id;
-            SellPriceMultiplier = vendor.SellPriceMultiplier;
-            BuyPriceMultiplier  = vendor.BuyPriceMultiplier;
-            Categories          = categories;
-            Items               = items;
+            Id                  = model.EntityVendor.Id;
+            SellPriceMultiplier = model.EntityVendor.SellPriceMultiplier;
+            BuyPriceMultiplier  = model.EntityVendor.BuyPriceMultiplier;
+            Categories          = model.EntityVendorCategory.ToImmutableList();
+            Items               = model.EntityVendorItem.ToImmutableList();
         }
 
-        public EntityVendorItem GetItemAtIndex(uint index)
+        /// <summary>
+        /// Return <see cref="EntityVendorItemModel"/> at the supplied index;
+        /// </summary>
+        public EntityVendorItemModel GetItemAtIndex(uint index)
         {
-            foreach (EntityVendorItem item in Items)
-                if (item.Index == index)
-                    return item;
-            return null;
+            return Items.SingleOrDefault(i => i.Index == index);
         }
     }
 }

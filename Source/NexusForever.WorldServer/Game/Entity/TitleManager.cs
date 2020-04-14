@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NexusForever.Database.Character;
+using NexusForever.Database.Character.Model;
 using NexusForever.Shared;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.Network;
-using NexusForever.WorldServer.Database;
-using NexusForever.WorldServer.Database.Character.Model;
 using NexusForever.WorldServer.Network.Message.Model;
 
 namespace NexusForever.WorldServer.Game.Entity
@@ -40,14 +40,14 @@ namespace NexusForever.WorldServer.Game.Entity
         private readonly Dictionary<ushort, Title> titles = new Dictionary<ushort, Title>();
 
         /// <summary>
-        /// Create a new <see cref="TitleManager"/> from existing <see cref="Character"/> database model.
+        /// Create a new <see cref="TitleManager"/> from existing <see cref="CharacterModel"/> database model.
         /// </summary>
-        public TitleManager(Player owner, Character model)
+        public TitleManager(Player owner, CharacterModel model)
         {
             player = owner;
             activeTitleId = model.Title;
 
-            foreach (CharacterTitle titleModel in model.CharacterTitle)
+            foreach (CharacterTitleModel titleModel in model.CharacterTitle)
                 titles.Add(titleModel.Title, new Title(titleModel));
 
             EnsureActiveTitleIsOwned();
@@ -71,10 +71,10 @@ namespace NexusForever.WorldServer.Game.Entity
             if (!activeSaved)
             {
                 // character is attached in Player::Save, this will only be local lookup
-                Character character = context.Character.Find(player.CharacterId);
+                CharacterModel character = context.Character.Find(player.CharacterId);
                 character.Title = activeTitleId;
 
-                EntityEntry<Character> entity = context.Entry(character);
+                EntityEntry<CharacterModel> entity = context.Entry(character);
                 entity.Property(p => p.Title).IsModified = true;
 
                 activeSaved = true;
@@ -89,7 +89,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void AddTitle(ushort titleId, bool suppress = false)
         {
-            CharacterTitleEntry entry = GameTableManager.CharacterTitle.GetEntry(titleId);
+            CharacterTitleEntry entry = GameTableManager.Instance.CharacterTitle.GetEntry(titleId);
             if (entry == null)
                 throw new InvalidPacketValueException();
 
@@ -125,7 +125,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void RevokeTitle(ushort titleId, bool suppress = false)
         {
-            if (GameTableManager.CharacterTitle.GetEntry(titleId) == null)
+            if (GameTableManager.Instance.CharacterTitle.GetEntry(titleId) == null)
                 throw new InvalidPacketValueException();
 
             if (!titles.TryGetValue(titleId, out Title title))
@@ -166,7 +166,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void AddAllTitles()
         {
-            ushort[] titleIds = GameTableManager.CharacterTitle.Entries
+            ushort[] titleIds = GameTableManager.Instance.CharacterTitle.Entries
                 .Select(entry => (ushort)entry.Id)
                 .ToArray();
 

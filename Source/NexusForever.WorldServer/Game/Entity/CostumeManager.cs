@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NexusForever.Database.Auth;
+using NexusForever.Database.Auth.Model;
+using NexusForever.Database.Character;
+using NexusForever.Database.Character.Model;
 using NexusForever.Shared;
-using NexusForever.Shared.Database;
-using NexusForever.Shared.Database.Auth.Model;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
-using NexusForever.WorldServer.Database;
-using NexusForever.WorldServer.Database.Character.Model;
 using NexusForever.WorldServer.Game.Entity.Static;
 using NexusForever.WorldServer.Network.Message.Model;
 using NexusForever.WorldServer.Network.Message.Model.Shared;
@@ -33,16 +33,16 @@ namespace NexusForever.WorldServer.Game.Entity
         private double costumeSwapCooldown;
 
         /// <summary>
-        /// Create a new <see cref="CurrencyManager"/> from existing <see cref="Account"/> and <see cref="Character"/> database models.
+        /// Create a new <see cref="CurrencyManager"/> from existing <see cref="AccountModel"/> and <see cref="CharacterModel"/> database models.
         /// </summary>
-        public CostumeManager(Player owner, Account accountModel, Character characterModel)
+        public CostumeManager(Player owner, AccountModel accountModel, CharacterModel characterModel)
         {
             player = owner;
 
-            foreach (CharacterCostume costumeModel in characterModel.CharacterCostume)
+            foreach (CharacterCostumeModel costumeModel in characterModel.Costume)
                 costumes.Add(costumeModel.Index, new Costume(costumeModel));
 
-            foreach (AccountCostumeUnlock costumeUnlockModel in accountModel.AccountCostumeUnlock)
+            foreach (AccountCostumeUnlockModel costumeUnlockModel in accountModel.AccountCostumeUnlock)
                 costumeUnlocks.Add(costumeUnlockModel.ItemId, new CostumeUnlock(costumeUnlockModel));
         }
 
@@ -106,7 +106,7 @@ namespace NexusForever.WorldServer.Game.Entity
                 if (costumeItem.ItemId == 0)
                     continue;
 
-                Item2Entry itemEntry = GameTableManager.Item.GetEntry(costumeItem.ItemId);
+                Item2Entry itemEntry = GameTableManager.Instance.Item.GetEntry(costumeItem.ItemId);
                 if (itemEntry == null)
                 {
                     SendCostumeSaveResult(CostumeSaveResult.InvalidItem);
@@ -126,7 +126,7 @@ namespace NexusForever.WorldServer.Game.Entity
                     return;
                 }
 
-                ItemDisplayEntry itemDisplayEntry = GameTableManager.ItemDisplay.GetEntry(Item.GetDisplayId(itemEntry));
+                ItemDisplayEntry itemDisplayEntry = GameTableManager.Instance.ItemDisplay.GetEntry(Item.GetDisplayId(itemEntry));
                 for (int i = 0; i < costumeItem.Dyes.Length; i++)
                 {
                     if (costumeItem.Dyes[i] == 0u)
@@ -238,7 +238,7 @@ namespace NexusForever.WorldServer.Game.Entity
         private uint GetMaxUnlockItemCount()
         {
             // client defaults to 1000 if entry doesn't exist
-            GameFormulaEntry entry = GameTableManager.GameFormula.GetEntry(1203);
+            GameFormulaEntry entry = GameTableManager.Instance.GameFormula.GetEntry(1203);
             if (entry == null)
                 return 1000u;
 
@@ -250,7 +250,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void ForgetItem(uint itemId)
         {
-            Item2Entry itemEntry = GameTableManager.Item.GetEntry(itemId);
+            Item2Entry itemEntry = GameTableManager.Instance.Item.GetEntry(itemId);
             if (itemEntry == null)
             {
                 SendCostumeItemUnlock(CostumeUnlockResult.InvalidItem);

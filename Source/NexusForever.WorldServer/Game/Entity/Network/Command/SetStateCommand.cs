@@ -1,9 +1,9 @@
-﻿using NexusForever.Shared.Network;
+using NexusForever.Shared.Network;
 
 namespace NexusForever.WorldServer.Game.Entity.Network.Command
 {
     [EntityCommand(EntityCommand.SetState)]
-    public class SetStateCommand : IEntityCommand
+    public class SetStateCommand : IEntityCommandModel
     {
         public uint State { get; set; }
 

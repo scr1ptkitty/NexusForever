@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NexusForever.Shared.Database;
-using NexusForever.Shared.Database.Auth.Model;
+using NexusForever.Database.Auth;
+using NexusForever.Database.Auth.Model;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.WorldServer.Game.Entity.Static;
@@ -18,13 +18,13 @@ namespace NexusForever.WorldServer.Game.Entity
         private readonly Dictionary<uint, GenericUnlock> unlocks = new Dictionary<uint, GenericUnlock>();
 
         /// <summary>
-        /// Create a new <see cref="GenericUnlockManager"/> from <see cref="Account"/> database model.
+        /// Create a new <see cref="GenericUnlockManager"/> from <see cref="AccountModel"/> database model.
         /// </summary>
-        public GenericUnlockManager(WorldSession session, Account model)
+        public GenericUnlockManager(WorldSession session, AccountModel model)
         {
             this.session = session;
 
-            foreach (AccountGenericUnlock unlockModel in model.AccountGenericUnlock)
+            foreach (AccountGenericUnlockModel unlockModel in model.AccountGenericUnlock)
                 unlocks.Add(unlockModel.Entry, new GenericUnlock(unlockModel));
         }
 
@@ -39,7 +39,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void Unlock(ushort genericUnlockEntryId)
         {
-            GenericUnlockEntryEntry entry = GameTableManager.GenericUnlockEntry.GetEntry(genericUnlockEntryId);
+            GenericUnlockEntryEntry entry = GameTableManager.Instance.GenericUnlockEntry.GetEntry(genericUnlockEntryId);
             if (entry == null)
             {
                 SendUnlockResult(GenericUnlockResult.Invalid);
@@ -63,7 +63,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void UnlockAll(GenericUnlockType type)
         {
-            foreach (GenericUnlockEntryEntry entry in GameTableManager.GenericUnlockEntry.Entries
+            foreach (GenericUnlockEntryEntry entry in GameTableManager.Instance.GenericUnlockEntry.Entries
                 .Where(e => e.GenericUnlockTypeEnum == (uint)type))
             {
                 if (unlocks.ContainsKey(entry.Id))
@@ -72,6 +72,11 @@ namespace NexusForever.WorldServer.Game.Entity
                 unlocks.Add(entry.Id, new GenericUnlock(session.Account, entry));
                 SendUnlock((ushort)entry.Id);
             }
+        }
+
+        public bool IsUnlocked(GenericUnlockType type, uint objectId)
+        {
+            return unlocks.Values.Any(e => e.Type == type && e.Entry.UnlockObject == objectId);
         }
 
         public bool IsDyeUnlocked(uint dyeColourRampId)

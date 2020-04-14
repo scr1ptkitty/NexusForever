@@ -7,6 +7,7 @@ using NexusForever.WorldServer.Game.Entity;
 using NexusForever.WorldServer.Game.Spell.Event;
 using NexusForever.WorldServer.Game.Spell.Static;
 using NexusForever.WorldServer.Network.Message.Model;
+using NexusForever.WorldServer.Network.Message.Model.Shared;
 using NLog;
 
 namespace NexusForever.WorldServer.Game.Spell
@@ -15,12 +16,12 @@ namespace NexusForever.WorldServer.Game.Spell
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
+        public uint CastingId { get; }
         public bool IsCasting => status == SpellStatus.Casting;
         public bool IsFinished => status == SpellStatus.Finished;
 
         private readonly UnitEntity caster;
         private readonly SpellParameters parameters;
-        private readonly uint castingId;
         private SpellStatus status;
 
         private readonly List<SpellTargetInfo> targets = new List<SpellTargetInfo>();
@@ -31,7 +32,7 @@ namespace NexusForever.WorldServer.Game.Spell
         {
             this.caster     = caster;
             this.parameters = parameters;
-            castingId       = GlobalSpellManager.NextCastingId;
+            CastingId       = GlobalSpellManager.Instance.NextCastingId;
             status          = SpellStatus.Initiating;
 
             if (parameters.RootSpellInfo == null)
@@ -103,6 +104,9 @@ namespace NexusForever.WorldServer.Game.Spell
                 if (parameters.SpellInfo.Entry.GlobalCooldownEnum == 0
                     && player.SpellManager.GetGlobalSpellCooldown() > 0d)
                     return CastResult.SpellGlobalCooldown;
+
+                if (parameters.CharacterSpell?.MaxAbilityCharges > 0 && parameters.CharacterSpell?.AbilityCharges == 0)
+                    return CastResult.SpellNoCharges;
             }
 
             return CastResult.Ok;
@@ -159,7 +163,7 @@ namespace NexusForever.WorldServer.Game.Spell
             {
                 player.Session.EnqueueMessageEncrypted(new Server07F9
                 {
-                    ServerUniqueId = castingId,
+                    ServerUniqueId = CastingId,
                     CastResult     = result,
                     CancelCast     = true
                 });
@@ -182,8 +186,15 @@ namespace NexusForever.WorldServer.Game.Spell
 
             SelectTargets();
             ExecuteEffects();
+            CostSpell();
 
             SendSpellGo();
+        }
+
+        private void CostSpell()
+        {
+            if (parameters.CharacterSpell?.MaxAbilityCharges > 0)
+                parameters.CharacterSpell.UseCharge();
         }
 
         private void SelectTargets()
@@ -206,12 +217,12 @@ namespace NexusForever.WorldServer.Game.Spell
                     .Where(t => (t.Flags & (SpellEffectTargetFlags)spell4EffectsEntry.TargetFlags) != 0)
                     .ToList();
 
-                SpellEffectDelegate handler = GlobalSpellManager.GetEffectHandler((SpellEffectType)spell4EffectsEntry.EffectType);
+                SpellEffectDelegate handler = GlobalSpellManager.Instance.GetEffectHandler((SpellEffectType)spell4EffectsEntry.EffectType);
                 if (handler == null)
                     log.Warn($"Unhandled spell effect {(SpellEffectType)spell4EffectsEntry.EffectType}");
                 else
                 {
-                    uint effectId = GlobalSpellManager.NextEffectId;
+                    uint effectId = GlobalSpellManager.Instance.NextEffectId;
                     foreach (SpellTargetInfo effectTarget in effectTargets)
                     {
                         var info = new SpellTargetInfo.SpellTargetEffectInfo(effectId, spell4EffectsEntry);
@@ -249,7 +260,7 @@ namespace NexusForever.WorldServer.Game.Spell
         {
             caster.EnqueueToVisible(new ServerSpellStart
             {
-                CastingId              = castingId,
+                CastingId              = CastingId,
                 CasterId               = caster.Guid,
                 PrimaryTargetId        = caster.Guid,
                 Spell4Id               = parameters.SpellInfo.Entry.Id,
@@ -267,7 +278,7 @@ namespace NexusForever.WorldServer.Game.Spell
 
             caster.EnqueueToVisible(new ServerSpellFinish
             {
-                ServerUniqueId = castingId,
+                ServerUniqueId = CastingId,
             }, true);
         }
 
@@ -275,7 +286,7 @@ namespace NexusForever.WorldServer.Game.Spell
         {
             var serverSpellGo = new ServerSpellGo
             {
-                ServerUniqueId     = castingId,
+                ServerUniqueId     = CastingId,
                 PrimaryDestination = new Position(caster.Position),
                 Phase              = -1
             };
@@ -283,7 +294,7 @@ namespace NexusForever.WorldServer.Game.Spell
             foreach (SpellTargetInfo targetInfo in targets
                 .Where(t => t.Effects.Count > 0))
             {
-                var networkTargetInfo = new ServerSpellGo.TargetInfo
+                var networkTargetInfo = new TargetInfo
                 {
                     UnitId        = targetInfo.Entity.Guid,
                     TargetFlags   = 1,
@@ -293,7 +304,7 @@ namespace NexusForever.WorldServer.Game.Spell
 
                 foreach (SpellTargetInfo.SpellTargetEffectInfo targetEffectInfo in targetInfo.Effects)
                 {
-                    var networkTargetEffectInfo = new ServerSpellGo.TargetInfo.EffectInfo
+                    var networkTargetEffectInfo = new TargetInfo.EffectInfo
                     {
                         Spell4EffectId = targetEffectInfo.Entry.Id,
                         EffectUniqueId = targetEffectInfo.EffectId,
@@ -303,7 +314,7 @@ namespace NexusForever.WorldServer.Game.Spell
                     if (targetEffectInfo.Damage != null)
                     {
                         networkTargetEffectInfo.InfoType = 1;
-                        networkTargetEffectInfo.DamageDescriptionData = new ServerSpellGo.TargetInfo.EffectInfo.DamageDescription
+                        networkTargetEffectInfo.DamageDescriptionData = new TargetInfo.EffectInfo.DamageDescription
                         {
                             RawDamage          = targetEffectInfo.Damage.RawDamage,
                             RawScaledDamage    = targetEffectInfo.Damage.RawScaledDamage,
@@ -324,6 +335,18 @@ namespace NexusForever.WorldServer.Game.Spell
             }
 
             caster.EnqueueToVisible(serverSpellGo, true);
+        }
+
+        private void SendRemoveBuff(uint unitId)
+        {
+            if (!parameters.SpellInfo.BaseInfo.HasIcon)
+                throw new InvalidOperationException();
+
+            caster.EnqueueToVisible(new ServerSpellBuffRemove
+            {
+                CastingId = CastingId,
+                CasterId  = unitId
+            }, true);
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System.Linq;
 using NexusForever.AuthServer.Network.Message.Model;
+using NexusForever.AuthServer.Network.Message.Static;
+using NexusForever.Database.Auth.Model;
+using NexusForever.Shared;
 using NexusForever.Shared.Cryptography;
-using NexusForever.Shared.Database.Auth;
-using NexusForever.Shared.Database.Auth.Model;
+using NexusForever.Shared.Database;
 using NexusForever.Shared.Game;
 using NexusForever.Shared.Game.Events;
 using NexusForever.Shared.Network.Message;
+using NetworkMessage = NexusForever.Shared.Network.Message.Model.Shared.Message;
 
 namespace NexusForever.AuthServer.Network.Message.Handler
 {
@@ -14,20 +17,45 @@ namespace NexusForever.AuthServer.Network.Message.Handler
         [MessageHandler(GameMessageOpcode.ClientHelloAuth)]
         public static void HandleHelloAuth(AuthSession session, ClientHelloAuth helloAuth)
         {
-            session.EnqueueEvent(new TaskGenericEvent<Account>(AuthDatabase.GetAccountAsync(helloAuth.Email, helloAuth.GameToken.Guid),
+            void SendServerAuthDenied(NpLoginResult result)
+            {
+                session.EnqueueMessageEncrypted(new ServerAuthDenied
+                {
+                    LoginResult = result
+                });
+            }
+
+            if (helloAuth.Build != 16042)
+            {
+                SendServerAuthDenied(NpLoginResult.ClientServerVersionMismatch);
+                return;
+            }
+
+            string gameToken = helloAuth.GameToken.Guid
+                .ToByteArray()
+                .ToHexString();
+            session.EnqueueEvent(new TaskGenericEvent<AccountModel>(DatabaseManager.Instance.AuthDatabase.GetAccountByGameTokenAsync(helloAuth.Email, gameToken),
                 account =>
             {
                 if (account == null)
                 {
-                    // TODO: send error
+                    SendServerAuthDenied(NpLoginResult.ErrorInvalidToken);
+                    return;
+                }
+
+                // TODO: might want to make this smarter in the future, eg: select a server the user has characters on
+                ServerInfo server = ServerManager.Instance.Servers.FirstOrDefault();
+                if (server == null)
+                {
+                    SendServerAuthDenied(NpLoginResult.NoRealmsAvailableAtThisTime);
                     return;
                 }
 
                 session.EnqueueMessageEncrypted(new ServerAuthAccepted());
                 session.EnqueueMessageEncrypted(new ServerRealmMessages
                 {
-                    Messages = ServerManager.ServerMessages
-                        .Select(m => new ServerRealmMessages.Message
+                    Messages = ServerManager.Instance.ServerMessages
+                        .Select(m => new NetworkMessage
                         {
                             Index    = m.Index,
                             Messages = m.Messages
@@ -36,16 +64,15 @@ namespace NexusForever.AuthServer.Network.Message.Handler
                 });
 
                 byte[] sessionKey = RandomProvider.GetBytes(16u);
-                session.EnqueueEvent(new TaskEvent(AuthDatabase.UpdateAccountSessionKey(account, sessionKey),
+                session.EnqueueEvent(new TaskEvent(DatabaseManager.Instance.AuthDatabase.UpdateAccountSessionKey(account, sessionKey.ToHexString()),
                     () =>
                 {
-                    ServerInfo server = ServerManager.Servers.First();
                     session.EnqueueMessageEncrypted(new ServerRealmInfo
                     {
                         AccountId  = account.Id,
                         SessionKey = sessionKey,
                         Realm      = server.Model.Name,
-                        Host       = server.Address,
+                        Address    = server.Address,
                         Port       = server.Model.Port,
                         Type       = server.Model.Type
                     });

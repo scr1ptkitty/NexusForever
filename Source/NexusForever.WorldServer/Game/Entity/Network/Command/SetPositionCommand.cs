@@ -1,24 +1,24 @@
-﻿using NexusForever.Shared.Network;
+using NexusForever.Shared.Network;
 
 namespace NexusForever.WorldServer.Game.Entity.Network.Command
 {
     [EntityCommand(EntityCommand.SetPosition)]
-    public class SetPositionCommand : IEntityCommand
+    public class SetPositionCommand : IEntityCommandModel
     {
         public Position Position { get; set; }
-        public bool Unknown3 { get; set; }
+        public bool Blend { get; set; }
 
         public void Read(GamePacketReader reader)
         {
             Position = new Position();
             Position.Read(reader);
-            Unknown3 = reader.ReadBit();
+            Blend = reader.ReadBit();
         }
 
         public void Write(GamePacketWriter writer)
         {
             Position.Write(writer);
-            writer.Write(Unknown3);
+            writer.Write(Blend);
         }
     }
 }

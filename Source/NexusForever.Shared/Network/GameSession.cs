@@ -30,7 +30,7 @@ namespace NexusForever.Shared.Network
         /// </summary>
         public void EnqueueMessage(IWritable message)
         {
-            if (!MessageManager.GetOpcode(message, out GameMessageOpcode opcode))
+            if (!MessageManager.Instance.GetOpcode(message, out GameMessageOpcode opcode))
             {
                 log.Warn("Failed to send message with no attribute!");
                 return;
@@ -49,7 +49,7 @@ namespace NexusForever.Shared.Network
         /// </summary>
         public void EnqueueMessageEncrypted(IWritable message)
         {
-            if (!MessageManager.GetOpcode(message, out GameMessageOpcode opcode))
+            if (!MessageManager.Instance.GetOpcode(message, out GameMessageOpcode opcode))
             {
                 log.Warn("Failed to send message with no attribute!");
                 return;
@@ -149,16 +149,16 @@ namespace NexusForever.Shared.Network
             base.Update(lastTick);
         }
 
-        private void HandlePacket(ClientGamePacket packet)
+        protected void HandlePacket(ClientGamePacket packet)
         {
-            IReadable message = MessageManager.GetMessage(packet.Opcode);
+            IReadable message = MessageManager.Instance.GetMessage(packet.Opcode);
             if (message == null)
             {
                 log.Warn($"Received unknown packet {packet.Opcode:X}");
                 return;
             }
 
-            MessageHandlerDelegate handlerInfo = MessageManager.GetMessageHandler(packet.Opcode);
+            MessageHandlerDelegate handlerInfo = MessageManager.Instance.GetMessageHandler(packet.Opcode);
             if (handlerInfo == null)
             {
                 log.Warn($"Received unhandled packet {packet.Opcode}(0x{packet.Opcode:X}).");
@@ -167,6 +167,7 @@ namespace NexusForever.Shared.Network
 
             if (packet.Opcode != GameMessageOpcode.ClientEncrypted
                 && packet.Opcode != GameMessageOpcode.ClientPacked
+                && packet.Opcode != GameMessageOpcode.ClientPackedWorld
                 && packet.Opcode != GameMessageOpcode.ClientEntityCommand)
                 log.Trace($"Received packet {packet.Opcode}(0x{packet.Opcode:X}).");
 
@@ -202,20 +203,8 @@ namespace NexusForever.Shared.Network
         {
             byte[] data = encryption.Decrypt(encrypted.Data, encrypted.Data.Length);
 
-            // TODO: research this...
-            if (data[0] == 0x8C)
-            {
-                byte[] dataHack = new byte[data.Length - 7];
-                Buffer.BlockCopy(data, 7, dataHack, 0, dataHack.Length);
-
-                var packet = new ClientGamePacket(dataHack);
-                HandlePacket(packet);
-            }
-            else
-            {
-                var packet = new ClientGamePacket(data);
-                HandlePacket(packet);
-            }
+            var packet = new ClientGamePacket(data);
+            HandlePacket(packet);
         }
 
         [MessageHandler(GameMessageOpcode.ClientPacked)]

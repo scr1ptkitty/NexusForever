@@ -2,17 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NexusForever.Database.Character;
+using NexusForever.Database.Character.Model;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
-using NexusForever.WorldServer.Database;
-using NexusForever.WorldServer.Database.Character.Model;
 using NexusForever.WorldServer.Game.Entity.Static;
 using NexusForever.WorldServer.Network.Message.Model;
+using NLog;
 
 namespace NexusForever.WorldServer.Game.Entity
 {
     public class PathManager: ISaveCharacter, IEnumerable<PathEntry>
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         private const uint MaxPathCount = 4u;
         private const uint MaxPathLevel = 30u;
 
@@ -22,10 +25,10 @@ namespace NexusForever.WorldServer.Game.Entity
         /// <summary>
         /// Create a new <see cref="PathManager"/> from <see cref="Player"/> database model.
         /// </summary>
-        public PathManager(Player owner, Character model)
+        public PathManager(Player owner, CharacterModel model)
         {
             player = owner;
-            foreach (CharacterPath pathModel in model.CharacterPath)
+            foreach (CharacterPathModel pathModel in model.Path)
                 paths[pathModel.Path] = new PathEntry(pathModel);
 
             Validate();
@@ -169,7 +172,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// <returns></returns>
         private uint GetCurrentLevel(Path path)
         {
-            return GameTableManager.PathLevel.Entries
+            return GameTableManager.Instance.PathLevel.Entries
                 .Last(x => x.PathXP <= paths[(int)path].TotalXp && x.PathTypeEnum == (uint)path).PathLevel;
         }
 
@@ -180,7 +183,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// <returns></returns>
         private uint GetLevelByExperience(uint xp)
         {
-            return GameTableManager.PathLevel.Entries
+            return GameTableManager.Instance.PathLevel.Entries
                 .Last(x => x.PathXP <= xp && x.PathTypeEnum == (uint)player.Path).PathLevel;
         }
 
@@ -193,7 +196,7 @@ namespace NexusForever.WorldServer.Game.Entity
         private IEnumerable<uint> CheckForLevelUp(uint totalXp, uint xpGained)
         {
             uint currentLevel = GetLevelByExperience(totalXp - xpGained);
-            return GameTableManager.PathLevel.Entries
+            return GameTableManager.Instance.PathLevel.Entries
                 .Where(x => x.PathLevel > currentLevel && x.PathXP <= totalXp && x.PathTypeEnum == (uint)player.Path)
                 .Select(e => e.PathLevel);
         }
@@ -209,11 +212,14 @@ namespace NexusForever.WorldServer.Game.Entity
             uint baseRewardObjectId = (uint)path * MaxPathLevel + 7u; // 7 is the base offset
             uint pathRewardObjectId = baseRewardObjectId + (Math.Clamp(level - 2, 0, 29)); // level - 2 is used because the objectIDs start at level 2 and a -2 offset was needed
 
-            IEnumerable<PathRewardEntry> pathRewardEntries = GameTableManager.PathReward.Entries
+            IEnumerable<PathRewardEntry> pathRewardEntries = GameTableManager.Instance.PathReward.Entries
                 .Where(x => x.ObjectId == pathRewardObjectId);
             foreach (PathRewardEntry pathRewardEntry in pathRewardEntries)
             {
                 if (pathRewardEntry.PathRewardFlags > 0)
+                    continue;
+
+                if (pathRewardEntry.PathRewardTypeEnum != 0)
                     continue;
 
                 if (pathRewardEntry.Item2Id == 0 && pathRewardEntry.Spell4Id == 0 && pathRewardEntry.CharacterTitleId == 0)
@@ -226,10 +232,10 @@ namespace NexusForever.WorldServer.Game.Entity
                     continue;
 
                 GrantPathReward(pathRewardEntry);
-                GetPathEntry(path).LevelRewarded = (byte)level;
-                // TODO: Play Level up effect
-                break;
             }
+
+            GetPathEntry(path).LevelRewarded = (byte)level;
+            player.CastSpell(53234, new Spell.SpellParameters());
         }
 
         /// <summary>
@@ -243,9 +249,13 @@ namespace NexusForever.WorldServer.Game.Entity
 
             // TODO: Check if there's bag space. Otherwise queue? Or is there an overflow inventory?
             if (pathRewardEntry.Item2Id > 0)
-                player.Inventory.ItemCreate(pathRewardEntry.Item2Id, 1, 4);
-            
-            // TODO: Grant Spell rewards (needs PR #76)
+                player.Inventory.ItemCreate(pathRewardEntry.Item2Id, 1, ItemUpdateReason.PathReward);
+
+            if (pathRewardEntry.Spell4Id > 0)
+            {
+                Spell4Entry spell4Entry = GameTableManager.Instance.Spell4.GetEntry(pathRewardEntry.Spell4Id);
+                player.SpellManager.AddSpell(spell4Entry.Spell4BaseIdBaseSpell);
+            }
 
             if (pathRewardEntry.CharacterTitleId > 0)
                 player.TitleManager.AddTitle((ushort)pathRewardEntry.CharacterTitleId);
@@ -272,10 +282,15 @@ namespace NexusForever.WorldServer.Game.Entity
                 pathEntry.Save(context);
         }
 
+        public void SendInitialPackets()
+        {
+            SendPathLogPacket();
+        }
+
         /// <summary>
         /// Used to update the Player's Path Log.
         /// </summary>
-        public void SendPathLogPacket()
+        private void SendPathLogPacket()
         {
             player.Session.EnqueueMessageEncrypted(new ServerPathLog
             {

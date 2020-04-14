@@ -7,7 +7,7 @@ using NexusForever.WorldServer.Network.Message.Model.Shared;
 
 namespace NexusForever.WorldServer.Network.Message.Model
 {
-    [Message(GameMessageOpcode.ServerChat, MessageDirection.Server)]
+    [Message(GameMessageOpcode.ServerChat)]
     class ServerChat : IWritable
     {
         public ChatChannel Channel { get; set; }
@@ -24,7 +24,6 @@ namespace NexusForever.WorldServer.Network.Message.Model
 
         public string Name { get; set; }
         public string Realm { get; set; }
-
         public ulong Guid { get; set; }
         public string Text { get; set; }
 

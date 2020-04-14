@@ -11,24 +11,28 @@ namespace NexusForever.Shared.Network.Message
 {
     public delegate void MessageHandlerDelegate(NetworkSession session, IReadable message);
 
-    public static class MessageManager
+    public sealed class MessageManager : Singleton<MessageManager>
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         private delegate IReadable MessageFactoryDelegate();
 
-        private static ImmutableDictionary<GameMessageOpcode, MessageFactoryDelegate> clientMessageFactories;
-        private static ImmutableDictionary<Type, GameMessageOpcode> serverMessageOpcodes;
+        private ImmutableDictionary<GameMessageOpcode, MessageFactoryDelegate> clientMessageFactories;
+        private ImmutableDictionary<Type, GameMessageOpcode> serverMessageOpcodes;
 
-        private static ImmutableDictionary<GameMessageOpcode, MessageHandlerDelegate> clientMessageHandlers;
+        private ImmutableDictionary<GameMessageOpcode, MessageHandlerDelegate> clientMessageHandlers;
 
-        public static void Initialise()
+        private MessageManager()
+        {
+        }
+
+        public void Initialise()
         {
             InitialiseMessages();
             InitialiseMessageHandlers();
         }
 
-        private static void InitialiseMessages()
+        private void InitialiseMessages()
         {
             var messageFactories = new Dictionary<GameMessageOpcode, MessageFactoryDelegate>();
             var messageOpcodes   = new Dictionary<Type, GameMessageOpcode>();
@@ -40,12 +44,12 @@ namespace NexusForever.Shared.Network.Message
                 if (attribute == null)
                     continue;
 
-                if ((attribute.Direction & MessageDirection.Client) != 0)
+                if (typeof(IReadable).IsAssignableFrom(type))
                 {
                     NewExpression @new = Expression.New(type.GetConstructor(Type.EmptyTypes));
                     messageFactories.Add(attribute.Opcode, Expression.Lambda<MessageFactoryDelegate>(@new).Compile());
                 }
-                if ((attribute.Direction & MessageDirection.Server) != 0)
+                if (typeof(IWritable).IsAssignableFrom(type))
                     messageOpcodes.Add(type, attribute.Opcode);
             }
 
@@ -55,7 +59,7 @@ namespace NexusForever.Shared.Network.Message
             log.Info($"Initialised {serverMessageOpcodes.Count} message(s).");
         }
 
-        private static void InitialiseMessageHandlers()
+        private void InitialiseMessageHandlers()
         {
             var messageHandlers = new Dictionary<GameMessageOpcode, MessageHandlerDelegate>();
 
@@ -118,18 +122,18 @@ namespace NexusForever.Shared.Network.Message
             log.Info($"Initialised {clientMessageHandlers.Count} message handler(s).");
         }
 
-        public static IReadable GetMessage(GameMessageOpcode opcode)
+        public IReadable GetMessage(GameMessageOpcode opcode)
         {
             return clientMessageFactories.TryGetValue(opcode, out MessageFactoryDelegate factory)
                 ? factory.Invoke() : null;
         }
 
-        public static bool GetOpcode(IWritable message, out GameMessageOpcode opcode)
+        public bool GetOpcode(IWritable message, out GameMessageOpcode opcode)
         {
             return serverMessageOpcodes.TryGetValue(message.GetType(), out opcode);
         }
 
-        public static MessageHandlerDelegate GetMessageHandler(GameMessageOpcode opcode)
+        public MessageHandlerDelegate GetMessageHandler(GameMessageOpcode opcode)
         {
             return clientMessageHandlers.TryGetValue(opcode, out MessageHandlerDelegate handler)
                 ? handler : null;

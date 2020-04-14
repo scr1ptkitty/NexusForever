@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NexusForever.Shared.Database;
-using NexusForever.Shared.Database.Auth.Model;
+using NexusForever.Database.Auth;
+using NexusForever.Database.Auth.Model;
 using NexusForever.WorldServer.Game.Entity.Static;
 
 namespace NexusForever.WorldServer.Game.Entity
@@ -15,9 +15,9 @@ namespace NexusForever.WorldServer.Game.Entity
         public bool PendingDelete => (saveMask & CostumeUnlockSaveMask.Delete) != 0;
 
         /// <summary>
-        /// Create a new <see cref="CostumeUnlock"/> from an existing <see cref="AccountCostumeUnlock"/> database model.
+        /// Create a new <see cref="CostumeUnlock"/> from an existing <see cref="AccountCostumeUnlockModel"/> database model.
         /// </summary>
-        public CostumeUnlock(AccountCostumeUnlock model)
+        public CostumeUnlock(AccountCostumeUnlockModel model)
         {
             ItemId    = model.ItemId;
             accountId = model.Id;
@@ -26,7 +26,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// <summary>
         /// Create a new <see cref="CostumeUnlock"/> from supplied item id.
         /// </summary>
-        public CostumeUnlock(Account account, uint itemId)
+        public CostumeUnlock(AccountModel account, uint itemId)
         {
             ItemId    = itemId;
             accountId = account.Id;
@@ -38,7 +38,7 @@ namespace NexusForever.WorldServer.Game.Entity
             if (saveMask == CostumeUnlockSaveMask.None)
                 return;
 
-            var model = new AccountCostumeUnlock
+            var model = new AccountCostumeUnlockModel
             {
                 Id     = accountId,
                 ItemId = ItemId

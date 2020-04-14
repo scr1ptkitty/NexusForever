@@ -103,6 +103,14 @@ namespace NexusForever.Shared.Network
             WriteBits(value, bits);
         }
 
+        public void Write(long value, uint bits = 64)
+        {
+            if (bits > sizeof(double) * 8)
+                throw new ArgumentException();
+
+            Write((ulong)value, bits);
+        }
+
         public void Write<T>(T value, uint bits = 64u) where T : Enum, IConvertible
         {
             if (bits > sizeof(ulong) * 8)
@@ -120,6 +128,15 @@ namespace NexusForever.Shared.Network
                 WriteBits(value, 8);
         }
 
+        public void Write(ulong[] data, uint elements = 0u)
+        {
+            if (elements != 0 && elements != data.Length)
+                throw new ArgumentException();
+
+            foreach (ulong value in data)
+                Write(value);
+        }
+
         public void WriteStringWide(string value)
         {
             byte[] data = Encoding.Unicode.GetBytes(value ?? "");
@@ -128,6 +145,35 @@ namespace NexusForever.Shared.Network
             Write(extended);
             Write(data.Length >> 1, extended ? 15u : 7u);
             WriteBytes(data);
+        }
+
+        public void WriteStringFixed(string value)
+        {
+            string str = $"{value ?? ""}\0";
+            byte[] data = Encoding.Unicode.GetBytes(str);
+
+            Write(str.Length, 16);
+            WriteBytes(data);
+        }
+
+        public void WritePackedFloat(float value)
+        {
+            ushort PackFloat(float unpacked)
+            {
+                uint v1 = (uint)BitConverter.SingleToInt32Bits(unpacked);
+                uint v2 = v1 & 0x7FFFFFFF;
+                uint v3 = (v1 >> 16) & 0x8000;
+
+                if ((v1 & 0x7FFFFFFF) < 0x33800000)
+                    return (ushort)v3;
+                if (v2 <= 0x387FEFFF)
+                    return (ushort)(v3 | ((((v1 & 0x7FFFFF | 0x800000u) >> (int)(113 - ((v1 & 0x7FFFFFFFu) >> 23))) + 4096) >> 13));
+                if (v2 > 0x47FFEFFF)
+                    return (ushort)(v3 | 0x43FF);
+                return (ushort)(v3 | ((v2 - 0x37FFF000) >> 13));
+            }
+
+            Write(PackFloat(value));
         }
     }
 }

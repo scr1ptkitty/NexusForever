@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NexusForever.Database.Character;
+using NexusForever.Database.Character.Model;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
-using NexusForever.WorldServer.Database;
-using NexusForever.WorldServer.Database.Character.Model;
 using NexusForever.WorldServer.Game.Entity.Static;
 using NexusForever.WorldServer.Network.Message.Model.Shared;
-using ItemModel = NexusForever.WorldServer.Database.Character.Model.Item;
 using NetworkItem = NexusForever.WorldServer.Network.Message.Model.Shared.Item;
 
 namespace NexusForever.WorldServer.Game.Entity
@@ -27,12 +26,21 @@ namespace NexusForever.WorldServer.Game.Entity
             if (entry.ItemSourceId == 0u)
                 return (ushort)entry.ItemDisplayId;
 
-            List<ItemDisplaySourceEntryEntry> entries = AssetManager.GetItemDisplaySource(entry.ItemSourceId)
+            List<ItemDisplaySourceEntryEntry> entries = AssetManager.Instance.GetItemDisplaySource(entry.ItemSourceId)
                 .Where(e => e.Item2TypeId == entry.Item2TypeId)
                 .ToList();
 
             if (entries.Count == 1)
                 return (ushort)entries[0].ItemDisplayId;
+            else if (entries.Count > 1)
+            {
+                if (entry.ItemDisplayId > 0)
+                    return (ushort)entry.ItemDisplayId; // This is what the preview window shows for "Frozen Wrangler Mitts" (Item2Id: 28366).
+
+                ItemDisplaySourceEntryEntry fallbackVisual = entries.FirstOrDefault(e => entry.PowerLevel >= e.ItemMinLevel && entry.PowerLevel <= e.ItemMaxLevel);
+                if (fallbackVisual != null)
+                    return (ushort)fallbackVisual.ItemDisplayId;
+            }
 
             // TODO: research this...
             throw new NotImplementedException();
@@ -43,7 +51,7 @@ namespace NexusForever.WorldServer.Game.Entity
         public Spell4BaseEntry SpellEntry { get; }
         public ulong Guid { get; }
 
-        public ulong CharacterId
+        public ulong? CharacterId
         {
             get => characterId;
             set
@@ -53,7 +61,7 @@ namespace NexusForever.WorldServer.Game.Entity
             }
         }
 
-        private ulong characterId;
+        private ulong? characterId;
 
         public InventoryLocation Location
         {
@@ -140,6 +148,11 @@ namespace NexusForever.WorldServer.Game.Entity
         }
 
         private uint expirationTimeLeft;
+        
+        /// <summary>
+        /// Returns if <see cref="Item"/> is enqueued to be saved to the database.
+        /// </summary>
+        public bool PendingCreate => (saveMask & ItemSaveMask.Create) != 0;
 
         private ItemSaveMask saveMask;
 
@@ -157,23 +170,23 @@ namespace NexusForever.WorldServer.Game.Entity
             durability  = model.Durability;
 
             if ((InventoryLocation)model.Location != InventoryLocation.Ability)
-                Entry       = GameTableManager.Item.GetEntry(model.ItemId);
+                Entry       = GameTableManager.Instance.Item.GetEntry(model.ItemId);
             else
-                SpellEntry  = GameTableManager.Spell4Base.GetEntry(model.ItemId);
+                SpellEntry  = GameTableManager.Instance.Spell4Base.GetEntry(model.ItemId);
             saveMask    = ItemSaveMask.None;
         }
 
         /// <summary>
         /// Create a new <see cref="Item"/> from an <see cref="Item2Entry"/> template.
         /// </summary>
-        public Item(ulong owner, Item2Entry entry, uint count = 1u)
+        public Item(ulong? owner, Item2Entry entry, uint count = 1u, uint initialCharges = 0)
         {
-            Guid        = AssetManager.NextItemId;
+            Guid        = AssetManager.Instance.NextItemId;
             characterId = owner;
             location    = InventoryLocation.None;
             bagIndex    = 0u;
             stackCount  = count;
-            charges     = 0u;
+            charges     = initialCharges;
             durability  = 1.0f;
 
             Entry       = entry;
@@ -185,7 +198,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public Item(ulong owner, Spell4BaseEntry entry, uint count = 1u)
         {
-            Guid        = AssetManager.NextItemId;
+            Guid        = AssetManager.Instance.NextItemId;
             characterId = owner;
             location    = InventoryLocation.None;
             bagIndex    = 0u;
@@ -212,7 +225,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
             if ((saveMask & ItemSaveMask.Create) != 0)
             {
-                // item doesn't exist in database, all infomation must be saved
+                // item doesn't exist in database, all information must be saved
                 context.Add(new ItemModel
                 {
                     Id                 = Guid,
@@ -240,7 +253,7 @@ namespace NexusForever.WorldServer.Game.Entity
                 // item already exists in database, save only data that has been modified
                 var model = new ItemModel
                 {
-                    Id = Guid,
+                    Id = Guid
                 };
 
                 // could probably clean this up with reflection, works for the time being
@@ -310,6 +323,37 @@ namespace NexusForever.WorldServer.Game.Entity
             };
 
             return networkItem;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="CurrencyType"/> this <see cref="Item"/> sells for at a vendor.
+        /// </summary>
+        public CurrencyType GetVendorSellCurrency(byte index)
+        {
+            if (Entry.CurrencyTypeIdSellToVendor[index] != 0u)
+                return (CurrencyType)Entry.CurrencyTypeIdSellToVendor[index];
+
+            return CurrencyType.None;
+        }
+
+        /// <summary>
+        /// Returns the amount of <see cref="CurrencyType"/> this <see cref="Item"/> sells for at a vendor.
+        /// </summary>
+        public uint GetVendorSellAmount(byte index)
+        {
+            if (Entry.CurrencyTypeIdSellToVendor[index] != 0u)
+                return Entry.CurrencyAmountSellToVendor[index];
+
+            // most items that sell for credits have their sell amount calculated and not stored in the tbl
+            return CalculateVendorSellAmount();
+        }
+
+        private uint CalculateVendorSellAmount()
+        {
+            // TODO: Rawaho was lazy and didn't finish this
+            // GameFormulaEntry entry = GameTableManager.Instance.GameFormula.GetEntry(559);
+            // uint cost = Entry.PowerLevel * entry.Dataint01;
+            return 0u;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using NexusForever.Shared.Configuration;
 
 namespace NexusForever.Shared
 {
@@ -19,18 +19,13 @@ namespace NexusForever.Shared
             return BitConverter.ToString(value).Replace("-", "");
         }
 
-        public static DbContextOptionsBuilder UseConfiguration(this DbContextOptionsBuilder optionsBuilder, IDatabaseConfiguration databaseConfiguration, DatabaseType databaseType)
+        public static IEnumerable<T> Dequeue<T>(this ConcurrentQueue<T> queue, uint count)
         {
-            var connectionString = databaseConfiguration.GetConnectionString(databaseType);
-            switch (connectionString.Provider)
+            for (uint i = 0u; i < count && queue.Count > 0; i++)
             {
-                case DatabaseProvider.MySql:
-                    optionsBuilder.UseMySql(connectionString.ConnectionString);
-                    break;
-                default:
-                    throw new NotSupportedException($"The requested database provider: {connectionString.Provider:G} is not supported.");
+                queue.TryDequeue(out T result);
+                yield return result;
             }
-            return optionsBuilder;
         }
     }
 }

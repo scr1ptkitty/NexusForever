@@ -1,28 +1,37 @@
 ﻿using System.IO;
 using Nexus.Archive;
+using NexusForever.Shared;
 using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 
 namespace NexusForever.MapGenerator.GameTable
 {
-    public static class GameTableManager
+    public sealed class GameTableManager : Singleton<GameTableManager>
     {
-        public static GameTable<WorldEntry> World { get; private set; }
+        public GameTable<WorldEntry> World { get; private set; }
 
-        public static void Initialise(Archive archive)
+        private GameTableManager()
         {
-            World = LoadGameTable<WorldEntry>(archive, "DB\\World.tbl");
         }
 
-        private static GameTable<T> LoadGameTable<T>(Archive archive, string path) where T : class, new()
+        public void Initialise()
         {
-            if (!(archive.IndexFile.FindEntry(path) is IArchiveFileEntry file))
+            World = LoadGameTable<WorldEntry>("World.tbl");
+        }
+
+        /// <summary>
+        /// Return <see cref="GameTable{T}"/> for supplied table name found in the main client archive.
+        /// </summary>
+        private GameTable<T> LoadGameTable<T>(string name) where T : class, new()
+        {
+            string filePath = Path.Combine("DB", name);
+            if (!(ArchiveManager.Instance.MainArchive.IndexFile.FindEntry(filePath) is IArchiveFileEntry file))
                 throw new FileNotFoundException();
 
-            using (Stream stream = archive.OpenFileStream(file))
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (Stream archiveStream = ArchiveManager.Instance.MainArchive.OpenFileStream(file))
+            using (var memoryStream = new MemoryStream())
             {
-                stream.CopyTo(memoryStream);
+                archiveStream.CopyTo(memoryStream);
                 memoryStream.Position = 0;
                 return new GameTable<T>(memoryStream);
             }

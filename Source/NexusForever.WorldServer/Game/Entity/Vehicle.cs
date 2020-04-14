@@ -32,16 +32,16 @@ namespace NexusForever.WorldServer.Game.Entity
         protected Vehicle(EntityType type, uint creatureId, uint vehicleId, uint spell4Id)
             : base(type)
         {
-            CreatureEntry = GameTableManager.Creature2.GetEntry(creatureId);
-            VehicleEntry  = GameTableManager.UnitVehicle.GetEntry(vehicleId != 0u ? vehicleId : CreatureEntry.UnitVehicleId);
-            SpellEntry    = GameTableManager.Spell4.GetEntry(spell4Id);
+            CreatureEntry = GameTableManager.Instance.Creature2.GetEntry(creatureId);
+            VehicleEntry  = GameTableManager.Instance.UnitVehicle.GetEntry(vehicleId != 0u ? vehicleId : CreatureEntry.UnitVehicleId);
+            SpellEntry    = GameTableManager.Instance.Spell4.GetEntry(spell4Id);
 
             // temp
             SetProperty(Property.BaseHealth, 800.0f, 800.0f);
 
-            Stats.Add(Stat.Health, new StatValue(Stat.Health, 800));
-            Stats.Add(Stat.Level, new StatValue(Stat.Level, 3));
-            Stats.Add((Stat)15, new StatValue((Stat)15, 0));
+            SetStat(Stat.Health, 800u);
+            SetStat(Stat.Level, 3u);
+            SetStat(Stat.Sheathed, 800u);
         }
 
         protected override IEntityModel BuildEntityModel()
@@ -165,39 +165,6 @@ namespace NexusForever.WorldServer.Game.Entity
             {
             });
 
-            EnqueueToVisible(new ServerEntityCommand
-            {
-                Guid     = passenger.Guid,
-                Time     = 1,
-                Unknown2 = true,
-                Commands = new List<(EntityCommand, IEntityCommand)>
-                {
-                    (
-                        EntityCommand.SetPlatform,
-                        new SetPlatformCommand
-                        {
-                            Platform = Guid
-                        }
-                    ),
-                    (
-                        EntityCommand.SetPosition,
-                        new SetPositionCommand
-                        {
-                            Position = new Position(new Vector3(0f,0f,0f)),
-                            Unknown3 = false
-                        }
-                    ),
-                    (
-                        EntityCommand.SetRotation,
-                        new SetRotationCommand
-                        {
-                            Position = new Position(new Vector3(0f,0f,0f)),
-                            Unknown3 = false
-                        }
-                    )
-                }
-            }, true);
-
             // sets vehicle guid, seat type and seat position to local self entity at client
             // might not be correct as ServerVehiclePassengerAdd does this too, used for changing seats instead?
             player.Session.EnqueueMessageEncrypted(new Server089B
@@ -231,6 +198,9 @@ namespace NexusForever.WorldServer.Game.Entity
             }
 
             player.VehicleGuid = Guid;
+            player.MovementManager.SetPosition(Vector3.Zero);
+            player.MovementManager.SetRotation(Vector3.Zero);
+            player.MovementManager.BroadcastCommands();
 
             passengers.Add(passenger);
             OnPassengerAdd(player, passenger.SeatType, passenger.SeatPosition);
@@ -258,35 +228,10 @@ namespace NexusForever.WorldServer.Game.Entity
 
         private void PassengerRemove(Player player, VehiclePassenger passenger)
         {
-            EnqueueToVisible(new ServerEntityCommand
-            {
-                Guid     = passenger.Guid,
-                Time     = 1,
-                Unknown2 = true,
-                Commands = new List<(EntityCommand, IEntityCommand)>
-                {
-                    (
-                        EntityCommand.SetPlatform,
-                        new SetPlatformCommand()
-                    ),
-                    (
-                        EntityCommand.SetPosition,
-                        new SetPositionCommand
-                        {
-                            Position = new Position(Position),
-                            Unknown3 = false
-                        }
-                    ),
-                    (
-                        EntityCommand.SetRotation,
-                        new SetRotationCommand
-                        {
-                            Position = new Position(Rotation),
-                            Unknown3 = false
-                        }
-                    )
-                }
-            }, true);
+            player.VehicleGuid = 0;
+            player.MovementManager.SetPosition(Position);
+            player.MovementManager.SetRotation(Rotation);
+            player.MovementManager.BroadcastCommands();
 
             EnqueueToVisible(new ServerVehiclePassengerRemove
             {
@@ -296,8 +241,6 @@ namespace NexusForever.WorldServer.Game.Entity
 
             if (passenger.SeatType == VehicleSeatType.Pilot)
                 player.SetControl(player);
-
-            player.VehicleGuid = 0;
 
             passengers.Remove(passenger);
             OnPassengerRemove(player, passenger.SeatType, passenger.SeatPosition);

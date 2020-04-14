@@ -5,10 +5,10 @@ using NexusForever.WorldServer.Network.Message.Model.Shared;
 
 namespace NexusForever.WorldServer.Network.Message.Model
 {
-    [Message(GameMessageOpcode.ServerPetCustomizationList, MessageDirection.Server)]
+    [Message(GameMessageOpcode.ServerPetCustomizationList)]
     public class ServerPetCustomisationList : IWritable
     {
-        public NetworkBitArray UnlockedFlair { get; set; } = new NetworkBitArray(512);
+        public NetworkBitArray UnlockedFlair { get; set; } = new NetworkBitArray(512, NetworkBitArray.BitOrder.MostSignificantBit);
         public List<PetCustomisation> PetCustomisations { get; set; } = new List<PetCustomisation>();
 
         public void Write(GamePacketWriter writer)

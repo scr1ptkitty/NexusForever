@@ -5,7 +5,7 @@ using NexusForever.WorldServer.Game.Housing.Static;
 
 namespace NexusForever.WorldServer.Network.Message.Model
 {
-    [Message(GameMessageOpcode.ServerHousingProperties, MessageDirection.Server)]
+    [Message(GameMessageOpcode.ServerHousingProperties)]
     public class ServerHousingProperties : IWritable
     {
         public class Residence : IWritable
@@ -45,13 +45,13 @@ namespace NexusForever.WorldServer.Network.Message.Model
                 writer.WriteStringWide(Name);
                 writer.Write(PropertyInfoId);
                 writer.Write(ResidenceInfoId);
-                writer.Write(0);
-                writer.Write(0);
-                writer.Write(0);
-                writer.Write(0);
-                writer.Write(0);
-                writer.Write(Ground);
+                writer.Write(Roof);
+                writer.Write(WallpaperExterior);
+                writer.Write(Entryway);
+                writer.Write(Door);
                 writer.Write(Sky);
+                writer.Write(Music);
+                writer.Write(Ground);
                 writer.Write(Flags, 32u);
                 writer.Write(ResourceSharing);
                 writer.Write(GardenSharing);
