@@ -53,10 +53,21 @@ namespace NexusForever.WorldServer.Command.Handler
             if (displayGroupEntry == null)
                 return Task.CompletedTask;
 
-            context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId);
+            Creature2OutfitGroupEntryEntry outfitGroupEntry = GameTableManager.Creature2OutfitGroupEntry.Entries.FirstOrDefault(d => d.Creature2OutfitGroupId == creature2.Creature2OutfitGroupId);
+
+            if (outfitGroupEntry != null) // check if the creature has an outfit
+            {
+                context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId, outfitGroupEntry.Creature2OutfitInfoId); // if there is outfit information, use outfit info parameter
+            }
+            else
+            {
+                context.Session.Player.SetDisplayInfo(displayGroupEntry.Creature2DisplayInfoId); 
+            }
             return Task.CompletedTask;
         }
 
+        // deprecated - use !morph demorph
+        /*
         [SubCommandHandler("clear", "clears player disguise", Permission.CommandSummonClear)]
         public Task ClearSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
@@ -64,5 +75,6 @@ namespace NexusForever.WorldServer.Command.Handler
             context.Session.Player.ResetAppearance();
             return Task.CompletedTask;
         }
+        */
     }
 }

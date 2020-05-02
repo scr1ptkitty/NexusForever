@@ -89,7 +89,8 @@ namespace NexusForever.WorldServer.Game.Spell
                 return;
 
             if (target is Player player)
-                player.TeleportTo((ushort)locationEntry.WorldId, locationEntry.Position0, locationEntry.Position1, locationEntry.Position2);
+                if (player.CanTeleport())
+                    player.TeleportTo((ushort)locationEntry.WorldId, locationEntry.Position0, locationEntry.Position1, locationEntry.Position2);
         }
 
         [SpellEffectHandler(SpellEffectType.FullScreenEffect)]
@@ -111,6 +112,9 @@ namespace NexusForever.WorldServer.Game.Spell
                 return;
 
             if (!(target is Player player))
+                return;
+
+            if (!player.CanTeleport())
                 return;
 
             var rotation = new Quaternion(worldLocation.Facing0, worldLocation.Facing0, worldLocation.Facing2, worldLocation.Facing3);

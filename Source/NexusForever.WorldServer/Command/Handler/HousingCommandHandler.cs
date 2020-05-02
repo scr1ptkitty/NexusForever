@@ -27,6 +27,12 @@ namespace NexusForever.WorldServer.Command.Handler
         [SubCommandHandler("teleport", "[name] - Teleport to a residence, optionally specifying a character", Permission.CommandHouseTeleport)]
         public Task TeleportSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
+            if (!context.Session.Player.CanTeleport())
+            {
+                context.SendErrorAsync("You have a pending teleport! Please wait to use this command.");
+                return Task.CompletedTask;
+            }
+
             string name;
 
             if (parameters.Length == 1)
@@ -65,6 +71,12 @@ namespace NexusForever.WorldServer.Command.Handler
         [SubCommandHandler("teleportinside", "[name] - Teleport to a residence, optionally specifying a character", Permission.CommandHouseTeleportInside)]
         public Task TeleportInsideSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
+            if (!context.Session.Player.CanTeleport())
+            {
+                context.SendErrorAsync("You have a pending teleport! Please wait to use this command.");
+                return Task.CompletedTask;
+            }
+
             WorldLocation2Entry entry = GameTableManager.WorldLocation2.GetEntry(uint.Parse(parameters[0]));
             if (entry == null)
                 return Task.CompletedTask;

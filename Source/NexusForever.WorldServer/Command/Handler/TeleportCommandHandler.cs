@@ -39,6 +39,12 @@ namespace NexusForever.WorldServer.Command.Handler
                 return;
             }
 
+            if (!context.Session.Player.CanTeleport())
+            {
+                await context.SendErrorAsync("You have a pending teleport! Please wait to use this command.");
+                return;
+            }
+
             if (parameters.Length == 4)
             {
                 // optional world parameter is supplied, make sure it is valid too
@@ -90,6 +96,12 @@ namespace NexusForever.WorldServer.Command.Handler
                 return;
             }
 
+            if (!context.Session.Player.CanTeleport())
+            {
+                await context.SendErrorAsync("You have a pending teleport! Please wait to use this command.");
+                return;
+            }
+
             WorldLocation2Entry entry = GameTableManager.WorldLocation2.GetEntry(worldLocation2Id);
             if (entry == null)
             {
@@ -106,6 +118,12 @@ namespace NexusForever.WorldServer.Command.Handler
         [SubCommandHandler("to", "playername - teleport to another player's location.", Permission.CommandTeleportCoords)]
         public async Task TeleportToSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
+            if (!context.Session.Player.CanTeleport())
+            {
+                await context.SendErrorAsync("You have a pending teleport! Please wait to use this command.");
+                return;
+            }
+
             //find online players to teleport to
             List<WorldSession> allSessions = NetworkManager<WorldSession>.GetSessions().ToList();
             string name = string.Join(" ", parameters);
