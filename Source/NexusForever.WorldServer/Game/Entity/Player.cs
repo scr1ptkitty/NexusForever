@@ -583,7 +583,8 @@ namespace NexusForever.WorldServer.Game.Entity
         public override void OnRemoveFromMap()
         {
 
-            DestroyDependents();
+            DestroyVehicle();
+            DestroyPet();
 
             base.OnRemoveFromMap();
 
@@ -799,7 +800,7 @@ namespace NexusForever.WorldServer.Game.Entity
         /// <summary>
         /// Remove all entities associated with the <see cref="Player"/>
         /// </summary>
-        private void DestroyDependents()
+        public void DestroyVehicle()
         {
             // TODO: Enqueue re-creation of necessary entities
             if (VehicleGuid != 0u)
@@ -809,7 +810,10 @@ namespace NexusForever.WorldServer.Game.Entity
                     vehicle.Destroy();
                 VehicleGuid = 0u;
             }
+        }
 
+        public void DestroyPet()
+        {
             // enqueue removal of existing vanity pet if summoned
             if (VanityPetGuid != null)
             {

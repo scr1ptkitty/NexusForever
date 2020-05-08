@@ -13,13 +13,21 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        [SubCommandHandler("unlockflair", "petFlairId - Unlock a pet flair", Permission.CommandPetUnlockFlair)]
+        [SubCommandHandler("unlockflair", "petFlairId - Unlock a pet flair", Permission.CommandPet)]
         public Task AddFlairSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
                 return Task.CompletedTask;
 
             context.Session.Player.PetCustomisationManager.UnlockFlair(ushort.Parse(parameters[0]));
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("dismiss", "dismiss the current pet", Permission.CommandPet)]
+        public Task DismissSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            context.Session.Player.DestroyPet();
+
             return Task.CompletedTask;
         }
     }

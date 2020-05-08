@@ -25,15 +25,22 @@ namespace NexusForever.WorldServer.Command.Handler
         {
             if (parameters.Length != 1)
                 return Task.CompletedTask;
+            
+            if (context.Session.Player.VanityPetGuid != null)
+            {
+                return context.SendErrorAsync("You already have a pet - please dismiss it before summoning another.");
+            }
+            else
+            {
+                uint creatureId;
+                uint.TryParse(parameters[0], out creatureId);
 
-            uint creatureId;
-            uint.TryParse(parameters[0], out creatureId);
+                log.Info($"Summoning entity {creatureId} to {context.Session.Player.Position}");
 
-            log.Info($"Summoning entity {creatureId} to {context.Session.Player.Position}");
-
-            var tempEntity = new VanityPet(context.Session.Player, creatureId);
-            context.Session.Player.Map.EnqueueAdd(tempEntity, context.Session.Player.Position);
-            return Task.CompletedTask;
+                var tempEntity = new VanityPet(context.Session.Player, creatureId);
+                context.Session.Player.Map.EnqueueAdd(tempEntity, context.Session.Player.Position);
+                return Task.CompletedTask;
+            }
         }
 
         [SubCommandHandler("disguise", "creature2Id - changes player disguise", Permission.CommandSummonDisguise)]

@@ -61,7 +61,7 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandPathAddXp = 16,
         CommandPathUnlock = 13,
         //
-        CommandPetUnlockFlair = 17,
+        CommandPet = 17,
         //
         CommandRealmMotd = 41,
         //
