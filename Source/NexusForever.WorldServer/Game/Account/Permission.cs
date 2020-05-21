@@ -31,6 +31,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandDoor = 50,
         //
+        CommandEmoteId = 52,
+        //
         CommandGenericUnlock = 4,
         CommandGenericUnlockAll = 5,
         CommandGenericList = 6,
