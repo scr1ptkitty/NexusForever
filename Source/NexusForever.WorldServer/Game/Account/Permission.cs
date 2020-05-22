@@ -80,6 +80,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandTeleportCoords = 21,
         CommandTeleportLoc = 34,
         //
+        CommandChron = 53,
+        //
         CommandTitleAdd = 22,
         CommandTitleAll = 24,
         CommandTitleNone = 25,
