@@ -823,6 +823,47 @@ namespace NexusForever.WorldServer.Game.Entity
             }
         }
 
+        public void SetPetFollowing(bool isPetFollowing)
+        {
+            if (VanityPetGuid != null)
+            {
+                VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+                pet?.SetIsFollowingPlayer(isPetFollowing);
+            }
+        }
+
+        public void SetPetFollowingOnSide(bool isPetFollowingOnSide)
+        {
+            if (VanityPetGuid != null)
+            {
+                VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+                pet?.SetFollowingOnSide(isPetFollowingOnSide);
+            }
+        }
+
+        public void SetPetFollowDistance(float dist)
+        {
+            if (VanityPetGuid != null)
+            {
+                VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+                pet?.SetFollowDistance(dist);
+            }
+        }
+        public void SetPetFollowRecalculateDistance(float dist)
+        {
+            if (VanityPetGuid != null)
+            {
+                VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+                pet?.SetFollowFollowMinRecalculateDistance(dist);
+            }
+        }
+
+        public Creature2Entry VanityPetCreatureEntry()
+        {
+            VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+            return pet?.Creature;
+        }
+
         /// <summary>
         /// Used to send the current in game time to this player
         /// </summary>

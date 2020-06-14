@@ -16,8 +16,11 @@ namespace NexusForever.WorldServer.Game.Entity
 {
     public class VanityPet : WorldEntity
     {
-        private const float FollowDistance = 3f;
-        private const float FollowMinRecalculateDistance = 5f;
+        private float FollowDistance { get; set; } = 3f;
+        private float FollowMinRecalculateDistance = 4f;
+        
+        private bool FollowingPlayer { get; set; } = true;
+        private bool FollowingOnSide { get; set; } = false;
 
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
@@ -82,10 +85,14 @@ namespace NexusForever.WorldServer.Game.Entity
         public override void Update(double lastTick)
         {
             base.Update(lastTick);
-            Follow(lastTick);
+
+            if (IsFollowingPlayer())
+            {
+                Follow(lastTick, FollowingOnSide);
+            }
         }
 
-        private void Follow(double lastTick)
+        private void Follow(double lastTick, bool sideAngle)
         {
             followTimer.Update(lastTick);
             if (!followTimer.HasElapsed)
@@ -105,9 +112,40 @@ namespace NexusForever.WorldServer.Game.Entity
             if (distance < FollowMinRecalculateDistance)
                 return;
 
-            MovementManager.Follow(owner, FollowDistance);
+            MovementManager.Follow(owner, FollowDistance, sideAngle);
 
             followTimer.Reset();
+        }
+
+        public bool IsFollowingPlayer()
+        {
+            return this.FollowingPlayer;
+        }
+        public void SetIsFollowingPlayer(bool isFollowing)
+        {
+            this.FollowingPlayer = isFollowing;
+        }
+
+        public float GetFollowDistance()
+        {
+            return this.FollowDistance;
+        }
+        public void SetFollowDistance(float dist)
+        {
+            this.FollowDistance = dist;
+        }
+        public void SetFollowFollowMinRecalculateDistance(float mindist)
+        {
+            this.FollowMinRecalculateDistance = mindist;
+        }
+
+        public bool IsFollowingOnSide()
+        {
+            return this.FollowingOnSide;
+        }
+        public void SetFollowingOnSide(bool isFollowingOnSide)
+        {
+            this.FollowingOnSide = isFollowingOnSide;
         }
     }
 }

@@ -300,16 +300,29 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             LaunchSpline(nodes, SplineType.Linear, mode, speed);
         }
 
-        public void Follow(WorldEntity entity, float distance)
+        public void Follow(WorldEntity entity, float distance, bool sideAngle)
         {
-            AddCommand(new SetRotationFaceUnitCommand
-            {
-                UnitId = entity.Guid
-            });
-
-            // angle is directly behind entity being followed
             float angle = -entity.Rotation.X;
-            angle += MathF.PI / 2;
+            if (sideAngle)
+            {
+                Position followRot = new Position(entity.Rotation);
+
+                AddCommand(new SetRotationCommand
+                {
+                    Position = followRot
+                });
+
+                angle += MathF.PI; // angle is directly left of the entity being followed
+            }
+            else
+            {
+                AddCommand(new SetRotationFaceUnitCommand
+                {
+                    UnitId = entity.Guid
+                });
+                
+                angle += MathF.PI / 2; // angle is directly behind entity being followed
+            }
 
             var generator = new DirectMovementGenerator
             {
