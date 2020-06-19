@@ -20,7 +20,7 @@ namespace NexusForever.WorldServer.Command.Handler
         {
         }
 
-        public Task changePlayerDisguise(CommandContext context, uint creatureId)
+        public Task ChangePlayerDisguise(CommandContext context, uint creatureId)
         {
             // get the creature id from the creature2 table
             Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
@@ -92,7 +92,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
             
             // change the player's display information to the creature's display information
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -136,7 +136,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
             
             // change the player's display information to the creature's display information
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -173,7 +173,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -207,7 +207,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -274,7 +274,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -320,7 +320,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -348,7 +348,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
 
         }
@@ -391,7 +391,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -418,7 +418,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -484,7 +484,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -511,7 +511,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -580,7 +580,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -622,7 +622,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -673,7 +673,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -754,7 +754,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -793,7 +793,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -829,7 +829,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -883,7 +883,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -952,7 +952,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1021,7 +1021,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1087,7 +1087,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1127,7 +1127,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1152,7 +1152,7 @@ namespace NexusForever.WorldServer.Command.Handler
             */
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1203,7 +1203,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1254,7 +1254,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1282,7 +1282,7 @@ namespace NexusForever.WorldServer.Command.Handler
             */
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1312,7 +1312,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1348,7 +1348,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1381,7 +1381,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1408,7 +1408,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1438,7 +1438,7 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1481,7 +1481,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1515,7 +1515,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1558,7 +1558,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1595,7 +1595,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1662,7 +1662,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1696,7 +1696,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1751,7 +1751,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1785,7 +1785,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1873,7 +1873,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
@@ -1937,7 +1937,7 @@ namespace NexusForever.WorldServer.Command.Handler
 
 
 
-            changePlayerDisguise(context, creatureId);
+            ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
 
