@@ -55,10 +55,17 @@ namespace NexusForever.WorldServer.Game.CharacterCache
         public static void RemovePlayer(ulong characterId)
         {
             if (characters.TryGetValue(characterId, out ICharacter character))
+            {
                 characters.Remove(characterId);
+                log.Info($"Character removed ID: {characterId}");
+            }
+                
 
             if (characterNameToId.TryGetValue(character.Name.ToLower(), out ulong characterNameLookupId))
+            {
                 characterNameToId.Remove(character.Name.ToLower());
+                log.Info($"Removed character {character.Name} from the cache due to character delete.");
+            }
         }
 
         /// <summary>

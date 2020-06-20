@@ -168,7 +168,7 @@ namespace NexusForever.WorldServer.Database.Character
             {
                 return context.Residence
                     .Include(r => r.Owner)
-                    .Where(r => r.PrivacyLevel == 0)
+                    .Where(r => r.PrivacyLevel == 0 && r.Owner.OriginalName == null)
                     .ToList();
             }
         }

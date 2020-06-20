@@ -114,6 +114,19 @@ namespace NexusForever.WorldServer.Game.Housing
         }
 
         /// <summary>
+        /// Remove an existing <see cref="Residence"/> from the 
+        /// </summary>
+        public static void RemoveResidence(string name)
+        {
+            if (ownerCache.TryRemove(name, out ulong residenceId))
+                DeregisterResidenceVists(residenceId);
+
+            log.Info($"Removed residence {name} (ID: {residenceId}) from the cache due to character delete.");
+
+            // TODO: Kick any players out of the ResidenceMap and close the Instance.
+        }
+
+        /// <summary>
         /// Return cached <see cref="Residence"/> by supplied residence id.
         /// </summary>
         public static Residence GetCachedResidence(ulong residenceId)
