@@ -1789,7 +1789,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("iconic", "variantName - ", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("iconic", "variantName - 22 variants", Permission.CommandMorphStoryteller)]
         public Task IconicSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -1877,7 +1877,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("boss", "variantName - ", Permission.CommandMorphStoryteller)]
+        [SubCommandHandler("boss", "variantName - 14 variants", Permission.CommandMorphStoryteller)]
         public Task BossSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -1931,6 +1931,338 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 default:
                     creatureId = 24489;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("equivar", "variantName - 11 variants", Permission.CommandMorph)]
+        public Task EquivarSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "brown":
+                    creatureId = 8725;
+                    break;
+                case "luminous":
+                    creatureId = 61693;
+                    break;
+                case "purple":
+                    creatureId = 71475;
+                    break;
+                case "blue":
+                    creatureId = 71476;
+                    break;
+                case "green":
+                    creatureId = 71477;
+                    break;
+                case "black":
+                    creatureId = 71481;
+                    break;
+                case "floral":
+                    creatureId = 72621;
+                    break;
+                case "augmented":
+                    creatureId = 73269;
+                    break;
+                case "verdant":
+                    creatureId = 74855;
+                    break;
+                case "ice":
+                    creatureId = 75683;
+                    break;
+                case "technophage":
+                    creatureId = 75907;
+                    break;
+                default:
+                    creatureId = 8725;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("velocirex", "variantName - 10 variants", Permission.CommandMorph)]
+        public Task VelocirexSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "green":
+                    creatureId = 54261;
+                    break;
+                case "alien":
+                    creatureId = 61390;
+                    break;
+                case "badlands":
+                    creatureId = 71419;
+                    break;
+                case "ascendant":
+                    creatureId = 71464;
+                    break;
+                case "contagion":
+                    creatureId = 75109;
+                    break;
+                case "skeletal":
+                    creatureId = 75204;
+                    break;
+                case "electric":
+                    creatureId = 75205;
+                    break;
+                case "ebon":
+                    creatureId = 75906;
+                    break;
+                case "mecha":
+                    creatureId = 75844;
+                    break;
+                case "ice":
+                    creatureId = 71038;
+                    break;
+                default:
+                    creatureId = 54261;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("trask", "variantName - 10 variants", Permission.CommandMorph)]
+        public Task TraskSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "purple":
+                    creatureId = 5212;
+                    break;
+                case "dreg":
+                    creatureId = 61762;
+                    break;
+                case "ice":
+                    creatureId = 71429;
+                    break;
+                case "jungle":
+                    creatureId = 71484;
+                    break;
+                case "toxic":
+                    creatureId = 71486;
+                    break;
+                case "blurple":
+                    creatureId = 71485;
+                    break;
+                case "pinkbelly":
+                    creatureId = 71487;
+                    break;
+                case "strain":
+                    creatureId = 73555;
+                    break;
+                case "darkspur":
+                    creatureId = 75293;
+                    break;
+                case "hardlight":
+                    creatureId = 75366;
+                    break;
+                default:
+                    creatureId = 5212;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("warpig", "variantName - 6 variants", Permission.CommandMorph)]
+        public Task WarpigSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "red":
+                    creatureId = 22297;
+                    break;
+                case "savage":
+                    creatureId = 61428;
+                    break;
+                case "reptile":
+                    creatureId = 71483;
+                    break;
+                case "skeletal":
+                    creatureId = 72355;
+                    break;
+                case "armoredred":
+                    creatureId = 73076;
+                    break;
+                case "ice":
+                    creatureId = 73305;
+                    break;
+                default:
+                    creatureId = 22297;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("woolie", "variantName - 8 variants", Permission.CommandMorph)]
+        public Task WoolieSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "purple":
+                    creatureId = 56827;
+                    break;
+                case "war":
+                    creatureId = 61823;
+                    break;
+                case "green":
+                    creatureId = 71478;
+                    break;
+                case "yellow":
+                    creatureId = 71479;
+                    break;
+                case "blue":
+                    creatureId = 71480;
+                    break;
+                case "bandit":
+                    creatureId = 71482;
+                    break;
+                case "empyrean":
+                    creatureId = 75107;
+                    break;
+                case "dream":
+                    creatureId = 75218;
+                    break;
+                default:
+                    creatureId = 56827;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("uniblade", "variantName - 3 variants", Permission.CommandMorph)]
+        public Task UnibladeSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "basic":
+                    creatureId = 33071;
+                    break;
+                case "retro":
+                    creatureId = 61392;
+                    break;
+                case "hotrod":
+                    creatureId = 61393;
+                    break;
+                default:
+                    creatureId = 33071;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("grinder", "variantName - 2 variants", Permission.CommandMorph)]
+        public Task GrinderSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "basic":
+                    creatureId = 11085;
+                    break;
+                case "rally":
+                    creatureId = 61833;
+                    break;
+                default:
+                    creatureId = 11085;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("orbitron", "variantName - 2 variants", Permission.CommandMorph)]
+        public Task OrbitronSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "basic":
+                    creatureId = 52319;
+                    break;
+                case "marauder":
+                    creatureId = 61391;
+                    break;
+                default:
+                    creatureId = 52319;
                     context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
