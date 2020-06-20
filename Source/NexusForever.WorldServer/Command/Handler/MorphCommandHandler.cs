@@ -2197,7 +2197,7 @@ namespace NexusForever.WorldServer.Command.Handler
             switch (variant)
             {
                 case "basic":
-                    creatureId = 33071;
+                    creatureId = 48178;
                     break;
                 case "retro":
                     creatureId = 61392;
@@ -2206,7 +2206,7 @@ namespace NexusForever.WorldServer.Command.Handler
                     creatureId = 61393;
                     break;
                 default:
-                    creatureId = 33071;
+                    creatureId = 48178;
                     context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }
