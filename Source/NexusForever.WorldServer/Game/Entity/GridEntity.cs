@@ -7,6 +7,7 @@ using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.WorldServer.Game.Map;
 using NexusForever.WorldServer.Game.Map.Search;
+using NLog;
 
 namespace NexusForever.WorldServer.Game.Entity
 {
@@ -24,13 +25,18 @@ namespace NexusForever.WorldServer.Game.Entity
 
         protected readonly Dictionary<uint, GridEntity> visibleEntities = new Dictionary<uint, GridEntity>();
 
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Enqueue for removal from the map.
         /// </summary>
         public void RemoveFromMap()
         {
-            Debug.Assert(Map != null);
-            Map.EnqueueRemove(this);
+            //Debug.Assert(Map != null);
+            if (Map != null)
+                Map.EnqueueRemove(this);
+            else
+                log.Fatal($"Failed to enqueue removal of GridEntity : Map is null!");
         }
 
         /// <summary>
