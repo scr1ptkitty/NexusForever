@@ -2143,6 +2143,12 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "red":
                     creatureId = 22297;
                     break;
+                case "redbase":
+                    creatureId = 9622;
+                    break;
+                case "greybase":
+                    creatureId = 44457;
+                    break;
                 case "savage":
                     creatureId = 61428;
                     break;
