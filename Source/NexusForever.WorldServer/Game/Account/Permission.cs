@@ -26,6 +26,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandCharacterProperties = 44,
         CommandCharacterXp = 46,
         //
+        CommandChron = 53,
+        //
         CommandCurrencyAdd = 47,
         CommandCurrencyList = 48,
         //
@@ -33,7 +35,7 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandDoor = 50,
         //
-        CommandEmoteId = 52,
+        CommandEmoteId = 54,
         //
         CommandGenericUnlock = 4,
         CommandGenericUnlockAll = 5,
@@ -81,8 +83,6 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandTeleportCoords = 21,
         CommandTeleportLoc = 34,
-        //
-        CommandChron = 53,
         //
         CommandTitleAdd = 22,
         CommandTitleAll = 24,
