@@ -7,11 +7,14 @@ using NexusForever.Shared.GameTable;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.WorldServer.Game.Map;
 using NexusForever.WorldServer.Game.Map.Search;
+using NLog;
 
 namespace NexusForever.WorldServer.Game.Entity
 {
     public abstract class GridEntity : IUpdate
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         public uint Guid { get; protected set; }
         public BaseMap Map { get; private set; }
         public WorldZoneEntry Zone { get; private set; }
@@ -29,8 +32,11 @@ namespace NexusForever.WorldServer.Game.Entity
         /// </summary>
         public void RemoveFromMap()
         {
-            Debug.Assert(Map != null);
-            Map.EnqueueRemove(this);
+            //Debug.Assert(Map != null);
+            if (Map != null)
+                Map.EnqueueRemove(this);
+            else
+                log.Fatal($"Failed to enqueue removal of GridEntity : Map is null!");
         }
 
         /// <summary>
