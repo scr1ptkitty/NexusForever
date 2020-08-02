@@ -16,6 +16,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandAccountCurrency = 42, 
         CommandAccountDelete = 2,
         //
+        CommandBlink = 52,
+        //
         CommandBoostAll = 33,
         //
         CommandBroadcast = 3,
