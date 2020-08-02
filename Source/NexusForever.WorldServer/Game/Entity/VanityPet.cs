@@ -16,8 +16,11 @@ namespace NexusForever.WorldServer.Game.Entity
 {
     public class VanityPet : WorldEntity
     {
-        private const float FollowDistance = 3f;
-        private const float FollowMinRecalculateDistance = 5f;
+        private float FollowDistance { get; set; } = 3f;
+        private float FollowMinRecalculateDistance = 4f;
+
+        private bool FollowingPlayer { get; set; } = true;
+        private bool FollowingOnSide { get; set; } = false;
 
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
@@ -82,7 +85,11 @@ namespace NexusForever.WorldServer.Game.Entity
         public override void Update(double lastTick)
         {
             base.Update(lastTick);
-            Follow(lastTick);
+            
+            if (IsFollowingPlayer())
+            {
+                Follow(lastTick, FollowingOnSide);
+            }
         }
 
         private void Follow(double lastTick)
@@ -108,6 +115,62 @@ namespace NexusForever.WorldServer.Game.Entity
             MovementManager.Follow(owner, FollowDistance);
 
             followTimer.Reset();
+        }
+
+        private void Follow(double lastTick, bool sideAngle)
+        {
+            followTimer.Update(lastTick);
+            if (!followTimer.HasElapsed)
+                return;
+
+            Player owner = GetVisible<Player>(OwnerGuid);
+            if (owner == null)
+            {
+                // this shouldn't happen, log it anyway
+                log.Error($"VanityPet {Guid} has lost it's owner {OwnerGuid}!");
+                RemoveFromMap();
+                return;
+            }
+
+            // only recalculate the path to owner if distance is significant
+            float distance = owner.Position.GetDistance(Position);
+            if (distance < FollowMinRecalculateDistance)
+                return;
+
+            MovementManager.Follow(owner, FollowDistance, sideAngle);
+
+            followTimer.Reset();
+        }
+
+        public bool IsFollowingPlayer()
+        {
+            return this.FollowingPlayer;
+        }
+        public void SetIsFollowingPlayer(bool isFollowing)
+        {
+            this.FollowingPlayer = isFollowing;
+        }
+
+        public float GetFollowDistance()
+        {
+            return this.FollowDistance;
+        }
+        public void SetFollowDistance(float dist)
+        {
+            this.FollowDistance = dist;
+        }
+        public void SetFollowFollowMinRecalculateDistance(float mindist)
+        {
+            this.FollowMinRecalculateDistance = mindist;
+        }
+
+        public bool IsFollowingOnSide()
+        {
+            return this.FollowingOnSide;
+        }
+        public void SetFollowingOnSide(bool isFollowingOnSide)
+        {
+            this.FollowingOnSide = isFollowingOnSide;
         }
     }
 }

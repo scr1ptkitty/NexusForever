@@ -34,8 +34,9 @@ namespace NexusForever.WorldServer.Command.Handler
             {
                 uint creatureId;
                 uint.TryParse(parameters[0], out creatureId);
+                Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
 
-                log.Info($"Summoning entity {creatureId} to {context.Session.Player.Position}");
+                log.Info($"Summoning entity {creature2.Id}: '{creature2.Description}' to {context.Session.Player.Position}");
 
                 var tempEntity = new VanityPet(context.Session.Player, creatureId);
                 context.Session.Player.Map.EnqueueAdd(tempEntity, context.Session.Player.Position);
