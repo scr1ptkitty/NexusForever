@@ -211,7 +211,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("pumera", "variantName - 15 variants", Permission.CommandMorph)]
+        [SubCommandHandler("pumera", "variantName - 21 variants", Permission.CommandMorph)]
         public Task PumeraSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -266,6 +266,24 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "whitevale":
                     creatureId = 69425;
+                    break;
+                case "riding":
+                    creatureId = 73213;
+                    break;
+                case "pridelord":
+                    creatureId = 73717;
+                    break;
+                case "redpridelord":
+                    creatureId = 75569;
+                    break;
+                case "hardlight":
+                    creatureId = 75340;
+                    break;
+                case "frostbite":
+                    creatureId = 75648;
+                    break;
+                case "exotic":
+                    creatureId = 75872;
                     break;
                 default:
                     creatureId = 69417;
@@ -1156,7 +1174,7 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        [SubCommandHandler("girrok", "variantName - 10 variants", Permission.CommandMorph)]
+        [SubCommandHandler("girrok", "variantName - 14 variants", Permission.CommandMorph)]
         public Task GirrokSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length != 1)
@@ -1195,6 +1213,18 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 case "purplestripe":
                     creatureId = 45505;
+                    break;
+                case "riding":
+                    creatureId = 73222;
+                    break;
+                case "polar":
+                    creatureId = 73225;
+                    break;
+                case "nightmare":
+                    creatureId = 75208;
+                    break;
+                case "loftite":
+                    creatureId = 75568;
                     break;
                 default:
                     creatureId = 1753;
@@ -2272,6 +2302,84 @@ namespace NexusForever.WorldServer.Command.Handler
             ChangePlayerDisguise(context, creatureId);
             return Task.CompletedTask;
         }
+
+        [SubCommandHandler("speeder", "variantName - 6 variants", Permission.CommandMorph)]
+        public Task SpeederSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "krogg":
+                    creatureId = 75649;
+                    break;
+                case "goldkrogg":
+                    creatureId = 75724;
+                    break;
+                case "blackkrogg":
+                    creatureId = 75725;
+                    break;
+                case "whitekrogg":
+                    creatureId = 75726;
+                    break;
+                case "osun":
+                    creatureId = 71531;
+                    break;
+                case "arctic":
+                    creatureId = 73037;
+                    break;
+                default:
+                    creatureId = 75649;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("spiderbot", "variantName - 5 variants", Permission.CommandMorph)]
+        public Task SpiderbotSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "protostar":
+                    creatureId = 70020;
+                    break;
+                case "goldprotostar":
+                    creatureId = 73342;
+                    break;
+                case "phage":
+                    creatureId = 75590;
+                    break;
+                case "crystal":
+                    creatureId = 75905;
+                    break;
+                case "lava":
+                    creatureId = 75917;
+                    break;
+                default:
+                    creatureId = 70020;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
 
         [SubCommandHandler("demorph", "removes the player's current morph", Permission.CommandMorph)]
         public Task DemorphSubCommandHandler(CommandContext context, string command, string[] parameters)
