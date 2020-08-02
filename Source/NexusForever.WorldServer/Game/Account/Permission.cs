@@ -27,6 +27,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandCurrencyAdd = 47,
         CommandCurrencyList = 48,
         //
+        CommandChron = 52,
+        //
         CommandEntitlement = 49,
         //
         CommandDoor = 50,
