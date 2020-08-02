@@ -17,6 +17,7 @@ namespace NexusForever.WorldServer.Game.Housing
         public ulong Id { get; }
         public ulong OwnerId { get; }
         public string OwnerName { get; }
+        public string OwnerOriginalName { get; }
         public byte PropertyInfoId { get; }
 
         public string Name
@@ -215,6 +216,7 @@ namespace NexusForever.WorldServer.Game.Housing
             Id = model.Id;
             OwnerId = model.OwnerId;
             OwnerName = model.Owner.Name;
+            OwnerOriginalName = model.Owner.OriginalName;
             PropertyInfoId = model.PropertyInfoId;
             name = model.Name;
             privacyLevel = (ResidencePrivacyLevel)model.PrivacyLevel;

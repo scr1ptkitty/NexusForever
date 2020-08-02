@@ -7,6 +7,8 @@ using NexusForever.WorldServer.Command.Contexts;
 using NexusForever.WorldServer.Game.Social;
 using NexusForever.WorldServer.Network;
 using NexusForever.WorldServer.Game.Account.Static;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
@@ -35,6 +37,39 @@ namespace NexusForever.WorldServer.Command.Handler
                 SocialManager.SendMessage(session, "MOTD: " + motd, channel: ChatChannel.Realm);
 
             await context.SendMessageAsync($"MOTD Updated!");
+        }
+
+        [SubCommandHandler("online", "Displays the users online", Permission.CommandRealmMotd)]
+        public async Task HandleOnlineCheck(CommandContext context, string subCommand, string[] parameters)
+        {
+            List<WorldSession> allSessions = NetworkManager<WorldSession>.GetSessions().ToList();
+
+            int index = 0;
+            foreach (WorldSession session in allSessions)
+            {
+                string infoString = "";
+                infoString += $"[{index++}] {session.Account?.Email} id:{session.Account?.Id}";
+
+                if (session.Player != null)
+                    infoString += $" | {session.Player?.Name}";
+
+                infoString += $" | {session.Uptime:%d}d {session.Uptime:%h}h {session.Uptime:%m}m";
+
+                await context.SendMessageAsync(infoString);
+            }
+
+            if (allSessions.Count == 0)
+                await context.SendMessageAsync($"No sessions connected.");
+
+            await Task.CompletedTask;
+        }
+
+        [SubCommandHandler("uptime", "Display the current uptime of the server.")]
+        public async Task HandleUptimeCheck(CommandContext context, string subCommand, string[] parameters)
+        {
+            await context.SendMessageAsync($"Currently up for {WorldServer.Uptime:%d}d {WorldServer.Uptime:%h}h {WorldServer.Uptime:%m}m {WorldServer.Uptime:%s}s");
+
+            await Task.CompletedTask;
         }
     }
 }

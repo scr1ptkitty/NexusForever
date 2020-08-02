@@ -94,7 +94,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
             if (randomRoll.MaxRandom > 1000000u)
                 throw new InvalidPacketValueException();
 
-            int RandomRollResult = new Random().Next((int)randomRoll.MinRandom, (int)randomRoll.MaxRandom);
+            int RandomRollResult = new Random().Next((int)randomRoll.MinRandom, (int)randomRoll.MaxRandom+1);
             ServerChat serverChat = new ServerChat
             {
                 Guid = session.Player.Guid,

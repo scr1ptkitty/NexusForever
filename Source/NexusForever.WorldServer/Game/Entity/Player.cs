@@ -774,6 +774,7 @@ namespace NexusForever.WorldServer.Game.Entity
 
             var info = new MapInfo(entry, instanceId, residenceId);
             pendingTeleport = new PendingTeleport(info, vector, vanityPetId);
+            log.Info($"{this.Name} : player teleport : remove from map");
             RemoveFromMap();
         }
 
@@ -818,6 +819,7 @@ namespace NexusForever.WorldServer.Game.Entity
             if (VanityPetGuid != null)
             {
                 VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+                log.Info($"{this.Name} : destroy pet : remove from map");
                 pet?.RemoveFromMap();
                 VanityPetGuid = null;
             }

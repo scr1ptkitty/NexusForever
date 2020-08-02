@@ -460,6 +460,8 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                     {
                         session.CanProcessPackets = true;
 
+                        ResidenceManager.RemoveResidence(characterToDelete.Name);
+
                         // TODO: De-register from any character cache
                         CharacterManager.RemovePlayer(characterToDelete.Id);
 
