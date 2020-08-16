@@ -89,6 +89,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandTitleNone = 25,
         CommandTitleRevoke = 23,
         //
+        CommandXRoll = 55,
+        //
         GMFlag = 100,
     }
 }
