@@ -52,6 +52,31 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
+        [SubCommandHandler("invisible", "base variant", Permission.CommandMorph)]
+        public Task InvisibleSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            // there's only one variant for invisible
+
+            /*
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+            */
+            uint creatureId = 5609;
+            /*
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "":
+                    creatureId = 0;
+                    break;
+            }
+            */
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
         [SubCommandHandler("dagun", "variantName - 7 variants", Permission.CommandMorph)]
         public Task DagunSubCommandHandler(CommandContext context, string command, string[] parameters)
         {

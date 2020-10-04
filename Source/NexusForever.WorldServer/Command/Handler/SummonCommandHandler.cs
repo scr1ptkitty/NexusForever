@@ -35,10 +35,12 @@ namespace NexusForever.WorldServer.Command.Handler
                 uint creatureId;
                 uint.TryParse(parameters[0], out creatureId);
                 Creature2Entry creature2 = GameTableManager.Creature2.GetEntry(creatureId);
+                Creature2OutfitGroupEntryEntry outfitGroupEntry = GameTableManager.Creature2OutfitGroupEntry.Entries.FirstOrDefault(d => d.Creature2OutfitGroupId == creature2.Creature2OutfitGroupId);
 
                 log.Info($"Summoning entity {creature2.Id}: '{creature2.Description}' to {context.Session.Player.Position}");
 
                 var tempEntity = new VanityPet(context.Session.Player, creatureId);
+                tempEntity.SetDisplayInfo(tempEntity.DisplayInfo, outfitGroupEntry.Creature2OutfitInfoId);
                 context.Session.Player.Map.EnqueueAdd(tempEntity, context.Session.Player.Position);
                 return Task.CompletedTask;
             }
