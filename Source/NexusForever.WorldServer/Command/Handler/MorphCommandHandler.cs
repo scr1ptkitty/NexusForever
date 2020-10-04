@@ -2143,6 +2143,12 @@ namespace NexusForever.WorldServer.Command.Handler
                 case "red":
                     creatureId = 22297;
                     break;
+                case "redbase":
+                    creatureId = 9622;
+                    break;
+                case "greybase":
+                    creatureId = 44457;
+                    break;
                 case "savage":
                     creatureId = 61428;
                     break;
@@ -2370,6 +2376,74 @@ namespace NexusForever.WorldServer.Command.Handler
                     break;
                 default:
                     creatureId = 70020;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("mech", "variantName - 4 variants", Permission.CommandMorph)]
+        public Task MechSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "red":
+                    creatureId = 75918;
+                    break;
+                case "blue":
+                    creatureId = 75919;
+                    break;
+                case "gold":
+                    creatureId = 75920;
+                    break;
+                case "yellow":
+                    creatureId = 75921;
+                    break;
+                default:
+                    creatureId = 75918;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("hellhound", "variantName - 4 variants", Permission.CommandMorph)]
+        public Task HellhoundSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "red":
+                    creatureId = 75743;
+                    break;
+                case "blue":
+                    creatureId = 75744;
+                    break;
+                case "green":
+                    creatureId = 75745;
+                    break;
+                case "gold":
+                    creatureId = 75746;
+                    break;
+                default:
+                    creatureId = 75743;
                     context.SendMessageAsync($"Variant invalid - morphing into default variant...");
                     break;
             }

@@ -322,6 +322,41 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             LaunchGenerator(generator, 8f);
         }
 
+        public void Follow(WorldEntity entity, float distance, bool sideAngle)
+        {
+            float angle = -entity.Rotation.X;
+            if (sideAngle)
+            {
+                Position followRot = new Position(entity.Rotation);
+
+                AddCommand(new SetRotationCommand
+                {
+                    Position = followRot
+                });
+
+                angle += MathF.PI; // angle is directly left of the entity being followed
+            }
+            else
+            {
+                AddCommand(new SetRotationFaceUnitCommand
+                {
+                    UnitId = entity.Guid
+                });
+
+                angle += MathF.PI / 2; // angle is directly behind entity being followed
+            }
+
+            var generator = new DirectMovementGenerator
+            {
+                Begin = splinePath?.GetPosition() ?? owner.Position,
+                Final = entity.Position.GetPoint2D(angle, distance),
+                Map = entity.Map
+            };
+
+            // TODO: calculate speed based on entity being followed.
+            LaunchGenerator(generator, 8f);
+        }
+
         private T GetCommand<T>() where T : IEntityCommandModel
         {
             EntityCommand? command = EntityCommandManager.GetCommand(typeof(T));
