@@ -2479,6 +2479,58 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
+        [SubCommandHandler("skeledroid", "base variant", Permission.CommandMorph)]
+        public Task SkeledroidSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            uint creatureId = 26193;
+            
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
+        [SubCommandHandler("gorganoth", "variantName - 3 variants", Permission.CommandMorphStoryteller)]
+        public Task GorganothSubCommandHandler(CommandContext context, string command, string[] parameters)
+        {
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint creatureId = 0;
+            string variant = parameters[0].ToLower();
+            switch (variant)
+            {
+                case "brown":
+                    creatureId = 1743;
+                    break;
+                case "skeledroid":
+                    creatureId = 48065;
+                    break;
+                case "augmented":
+                    creatureId = 22539;
+                    break;
+                case "dreg":
+                    creatureId = 24244;
+                    break;
+                case "undead":
+                    creatureId = 28077;
+                    break;
+                case "squirg":
+                    creatureId = 62010;
+                    break;
+                case "white":
+                    creatureId = 63122;
+                    break;
+                default:
+                    creatureId = 1743;
+                    context.SendMessageAsync($"Variant invalid - morphing into default variant...");
+                    break;
+            }
+
+
+
+            ChangePlayerDisguise(context, creatureId);
+            return Task.CompletedTask;
+        }
+
 
         [SubCommandHandler("demorph", "removes the player's current morph", Permission.CommandMorph)]
         public Task DemorphSubCommandHandler(CommandContext context, string command, string[] parameters)
