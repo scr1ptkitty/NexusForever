@@ -1,14 +1,19 @@
-﻿using NLog;
+﻿using NexusForever.WorldServer.Command.Contexts;
+using NLog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NexusForever.WorldServer.Command.Helper
 {
     /// <summary>
     /// (GENESIS PRIME) Helper class for morph/summon commands.
     /// </summary>
-    static class SummonedCreatureHelper
+    public abstract class SummonedCreatureHelper
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
+        public static uint SelectedCreatureId { get; set; }
+        public static bool IsSelectedTypeStorytellerOnly { get; set; }
 
         /// <summary>
         /// (GENESIS PRIME) 2D Dictionary of legal creature type/variant combinations.
@@ -335,112 +340,297 @@ namespace NexusForever.WorldServer.Command.Helper
 
             // Type: Osun (Storyteller Only)
             { "osun", new Dictionary<string, uint>(){
-
+                { "warlord", 13021 },
+                { "icewarlord", 75614 },
+                { "icewarlord2", 75459 },
+                { "redwarlord", 70444 },
+                { "warrior", 13019 },
+                { "icewarrior", 75615 },
+                { "redwarrior", 73099 },
+                { "warrior2", 14342 },
+                { "icewarrior2", 71367 },
+                { "warrior3", 14343 },
+                { "redwarrior3", 48177 },
+                { "strainwarrior", 55016 },
+                { "witch", 15202 },
+                { "witch2", 71767 },
+                { "blueghostwitch", 75621 },
+                { "redghostwitch", 75617 },
+                { "redwitch2", 48295 },
+                { "icewitch", 71250 },
+                { "icewitch2", 70373 },
+                { "strainwitch", 52969 }
             }},
 
             // Type: Pell
             { "pell", new Dictionary<string, uint>(){
-
+                { "augmented", 8257 },
+                { "brown", 14397 },
+                { "brown2", 21615 },
+                { "brown3", 43195 },
+                { "brown4", 41703 },
+                { "brownarmored", 70873 },
+                { "brownarmored2", 20706 },
+                { "brownarmored3", 20708 },
+                { "greybase", 30464 },
+                { "grey", 26603 },
+                { "grey2", 30507 },
+                { "grey3", 75458 },
+                { "greyarmored", 30450 },
+                { "greyarmored2", 30462 },
+                { "greyarmored3", 49352 },
+                { "greyarmored4", 49346 }
             }},
 
             // Type: Protostar
             { "protostar", new Dictionary<string, uint>(){
-
+                { "employee", 7301 },
+                { "phineas", 26454 },
+                { "phineas2", 65788 },
+                { "papaphineas", 72565 }
             }},
 
             // Type: Pumera
             { "pumera", new Dictionary<string, uint>(){
-
+                { "chua", 69430 },
+                { "frosted", 69421 },
+                { "golden", 69424 },
+                { "grey", 69417 },
+                { "magenta", 69423 },
+                { "maroon", 69420 },
+                { "sabertooth", 69427 },
+                { "sienna", 69422 },
+                { "snowy", 69418 },
+                { "snowstripe", 69428 },
+                { "steely", 69426 },
+                { "strain", 69432 },
+                { "tawny", 69419 },
+                { "torine", 69429 },
+                { "riding", 73213 },
+                { "pridelord", 73717 },
+                { "redpridelord", 75569 },
+                { "hardlight", 75340 },
+                { "frostbite", 75648 },
+                { "exotic", 75872 },
+                { "whitevale", 69425 }
             }},
 
             // Type: Ravenok
             { "ravenok", new Dictionary<string, uint>(){
-
+                { "purple", 69449 },
+                { "steelblue", 69450 },
+                { "teal", 69453 },
+                { "golden", 69454 },
+                { "augmented", 69455 },
+                { "snowy", 69456 },
+                { "strain", 69457 }
             }},
 
             // Type: Roan
             { "roan", new Dictionary<string, uint>(){
-
+                { "brownbull", 1741 },
+                { "browncow", 2065 },
+                { "greybull", 15640 }
             }},
 
             // Type: Rowsdower
             { "rowsdower", new Dictionary<string, uint>(){
-
+                { "white", 12921 },
+                { "demonic", 48437 },
+                { "augmented", 69474 },
+                { "pink", 69475 },
+                { "party", 70316 },
             }},
 
             // Type: Slank
             { "slank", new Dictionary<string, uint>(){
-
+                { "", 27250 },
             }},
 
             // Type: Strain (Storyteller Only)
             { "strain", new Dictionary<string, uint>(){
-
+                { "brute", 55050 },
+                { "technobrute", 52970 },
+                { "corruptor", 30208 },
+                { "technocorruptor", 52963 },
+                { "crawler", 48146 },
+                { "mauler", 55010 },
+                { "technomauler", 52964 },
+                { "peep", 37962 },
+                { "ravager", 30210 },
+                { "technoravager", 52968 }
             }},
 
             // Type: Tank (Storyteller Only)
             { "tank", new Dictionary<string, uint>(){
-
+                { "dominion", 47567 },
+                { "exile", 41168 }
             }},
 
             // Type: Triton (Storyteller Only)
             { "triton", new Dictionary<string, uint>(){
-
+                { "armored", 34094 },
+                { "armored2", 48592 },
+                { "armored3", 61635 },
+                { "base", 34093 },
+                { "strain", 55018 },
             }},
 
             // Type: Vind
             { "vind", new Dictionary<string, uint>(){
-
+                { "", 2410 },
             }},
 
             // Type: Warbot (Storyteller Only)
             { "warbot", new Dictionary<string, uint>(){
-
+                { "dominion", 20998 },
+                { "exile", 21544 },
+                { "osun", 32519 },
+                { "ikthian", 34644 }
             }},
 
             // Type: Witch Giant (Storyteller Only)
             { "witchgiant", new Dictionary<string, uint>(){
-
+                { "life", 21804 },
+                { "ice", 20857 },
+                { "strain", 49391 },
             }},
 
             // Type: Equivar
             { "equivar", new Dictionary<string, uint>(){
-
+                { "brown", 8725 },
+                { "luminous", 61693 },
+                { "purple", 71475 },
+                { "blue", 71476 },
+                { "green", 71477 },
+                { "black", 71481 },
+                { "floral", 72621 },
+                { "augmented", 73269 },
+                { "verdant", 74855 },
+                { "ice", 75683 },
+                { "technophage", 75907 },
             }},
 
             // Type: Velocirex
             { "velocirex", new Dictionary<string, uint>(){
-
+                { "green", 54261 },
+                { "alien", 61390 },
+                { "badlands", 71419 },
+                { "ascendant", 71464 },
+                { "contagion", 75109 },
+                { "skeletal", 75204 },
+                { "electric", 75205 },
+                { "ebon", 75906 },
+                { "mecha", 75844 },
+                { "ice", 71038 },
             }},
 
             // Type: Trask
             { "trask", new Dictionary<string, uint>(){
-
+                { "purple", 5212 },
+                { "dreg", 61762 },
+                { "ice", 71429 },
+                { "jungle", 71484 },
+                { "toxic", 71485 },
+                { "blurple", 71486 },
+                { "pinkbelly", 71487 },
+                { "strain", 73555 },
+                { "darkspur", 75293 },
+                { "hardlight", 75366 },
             }},
 
             // Type: Warpig
-            { "equivar", new Dictionary<string, uint>(){
-
+            { "warpig", new Dictionary<string, uint>(){
+                { "red", 22297 },
+                { "redbase", 9622 },
+                { "savage", 61428 },
+                { "reptile", 71483 },
+                { "skeletal", 72355 },
+                { "armoredred", 73076 },
+                { "greybase", 44457 },
+                { "ice", 73305 }
             }},
 
             // Type: Woolie
             { "woolie", new Dictionary<string, uint>(){
-
+                { "purple", 56827 },
+                { "war", 61823 },
+                { "green", 71478 },
+                { "yellow", 71479 },
+                { "blue", 71480 },
+                { "bandit", 71482 },
+                { "empyrean", 75107 },
+                { "dream", 75218 }
             }},
 
             // Type: Uniblade
             { "uniblade", new Dictionary<string, uint>(){
-
+                { "basic", 48178 },
+                { "retro", 61392 },
+                { "hotrod", 61393 }
             }},
 
             // Type: Grinder
             { "grinder", new Dictionary<string, uint>(){
-
+                { "basic", 11085 },
+                { "rally", 61833 }
             }},
 
             // Type: Orbitron
             { "orbitron", new Dictionary<string, uint>(){
+                { "basic", 52319 },
+                { "marauder", 61391 }
+            }},
 
+            // Type: Speeder
+            { "speeder", new Dictionary<string, uint>(){
+                { "krogg", 75649 },
+                { "goldkrogg", 75724 },
+                { "blackkrogg", 75725 },
+                { "whitekrogg", 75726 },
+                { "osun", 71531 },
+                { "arctic", 73037 }
+            }},
+
+            // Type: Hellhound
+            { "hellhound", new Dictionary<string, uint>(){
+                { "red", 75743 },
+                { "blue", 75744 },
+                { "green", 75745 },
+                { "gold", 75746 }
+            }},
+
+            // Type: Mech
+            { "mech", new Dictionary<string, uint>(){
+                { "red", 75918 },
+                { "blue", 75919 },
+                { "gold", 75920 },
+                { "yellow", 75921 }
+            }},
+
+            // Type: Spiderbot
+            { "spiderbot", new Dictionary<string, uint>(){
+                { "protostar", 70020 },
+                { "goldprotostar", 73342 },
+                { "phage", 75590 },
+                { "crystal", 75905 },
+                { "lava", 75917 }
+            }},
+
+            // Type: Skeledroid
+            { "skeledroid", new Dictionary<string, uint>(){
+                { "", 26193 }
+            }},
+
+            // Type: Gorganoth (Storyteller Only)
+            { "gorganoth", new Dictionary<string, uint>(){
+                { "skeledroid", 48065 },
+                { "brown", 1743 },
+                { "augmented", 22539 },
+                { "dreg", 24244 },
+                { "undead", 28077 },
+                { "squirg", 62010 },
+                { "white", 63122 }
             }}
         };
 
@@ -457,30 +647,32 @@ namespace NexusForever.WorldServer.Command.Helper
             "tank",
             "triton",
             "warbot",
-            "witchgiant"
+            "witchgiant",
+            "gorganoth"
         };
 
         /// <summary>
         /// (GENESIS PRIME) Returns whether a given creature type is privileged to Storytellers.
         /// </summary>
-        public static bool IsStorytellerOnly(string creatureType)
+        public static async Task IsStorytellerOnly(string creatureType, CommandContext context)
         {
             if (StorytellerOnly.Contains(creatureType))
             {
+                await context.SendMessageAsync($"{creatureType} is Storyteller Only.");
                 log.Info($"{creatureType} is Storyteller Only!");
-                return true;
+                IsSelectedTypeStorytellerOnly = true;
             }
             else
             {
                 log.Info($"{creatureType} is not Storyteller Only.");
-                return false;
+                IsSelectedTypeStorytellerOnly = false;
             }
         }
 
         /// <summary>
         /// (GENESIS PRIME) Get the ID of a legal creature type/variant combination for morph/summon commands.
         /// </summary>
-        public static uint GetLegalCreatureIdForSummon(string creatureType, string creatureVariant)
+        public static async Task GetLegalCreatureIdForSummon(string creatureType, string creatureVariant, CommandContext context)
         {
             Dictionary<string, uint> creatureSubLibrary;
             // get the creature type-specific dictionary
@@ -488,15 +680,20 @@ namespace NexusForever.WorldServer.Command.Helper
             if (CreatureLibrary.TryGetValue(creatureType, out creatureSubLibrary))
             {
                 log.Info($"{creatureType} found as a creature type!");
-                uint creatureId;
                 // get the creature ID corresponding to the variant
-                if (creatureSubLibrary.TryGetValue(creatureVariant, out creatureId))
+                if (creatureSubLibrary.TryGetValue(creatureVariant, out uint returnCreatureId))
                 {
-                    log.Info($"Creature type {creatureType} and variant {creatureVariant} resolved to ID: {creatureId}");
-                    return creatureId;
+                    log.Info($"Creature type {creatureType} and variant {creatureVariant} resolved to ID: {returnCreatureId}");
+                    SelectedCreatureId = returnCreatureId;
+                    return;
+                }
+                else
+                {
+                    await context.SendErrorAsync("A Creature ID for the given type and variant could not be found!");
+                    log.Info($"Creature type {creatureType} and variant {creatureVariant} could not be resolved to a known ID");
                 }
             }
-            return 0;
+            return;
         }
     }
 }

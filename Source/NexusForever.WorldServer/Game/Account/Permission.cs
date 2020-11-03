@@ -16,6 +16,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandAccountCurrency = 42, 
         CommandAccountDelete = 2,
         //
+        CommandBlink = 52,
+        //
         CommandBoostAll = 33,
         //
         CommandBroadcast = 3,
@@ -26,6 +28,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandCurrencyAdd = 47,
         CommandCurrencyList = 48,
+        //
+        CommandChron = 52,
         //
         CommandEntitlement = 49,
         //
@@ -82,6 +86,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandTitleAll = 24,
         CommandTitleNone = 25,
         CommandTitleRevoke = 23,
+        //
+        CommandXRoll = 53,
         //
         GMFlag = 100,
     }

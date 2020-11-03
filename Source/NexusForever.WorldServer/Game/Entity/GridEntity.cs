@@ -13,6 +13,8 @@ namespace NexusForever.WorldServer.Game.Entity
 {
     public abstract class GridEntity : IUpdate
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         public uint Guid { get; protected set; }
         public BaseMap Map { get; private set; }
         public WorldZoneEntry Zone { get; private set; }
@@ -24,8 +26,6 @@ namespace NexusForever.WorldServer.Game.Entity
         public float ActivationRange { get; protected set; }
 
         protected readonly Dictionary<uint, GridEntity> visibleEntities = new Dictionary<uint, GridEntity>();
-
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Enqueue for removal from the map.

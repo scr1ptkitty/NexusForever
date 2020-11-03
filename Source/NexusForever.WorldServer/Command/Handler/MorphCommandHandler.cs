@@ -8,6 +8,7 @@ using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.GameTable;
 using System.Linq;
 using NexusForever.Shared.Database.Auth.Model;
+using System;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
@@ -20,6 +21,7 @@ namespace NexusForever.WorldServer.Command.Handler
             : base(true, "morph")
         {
         }
+
         protected override async Task HandleCommandAsync(CommandContext context, string command, string[] parameters)
         {
             if (parameters.Length < 1 || parameters.Length > 2 || parameters == null)
@@ -27,8 +29,8 @@ namespace NexusForever.WorldServer.Command.Handler
                 await context.SendErrorAsync("Invalid number of parameters.");
                 return;
             }
-            
-            string subCommand = parameters[0].ToLower();
+
+                string subCommand = parameters[0].ToLower();
             if (subCommand.Equals("") || subCommand.Equals(null))
             {
                 await context.SendErrorAsync("Invalid morph type or subcommand.");
@@ -53,23 +55,41 @@ namespace NexusForever.WorldServer.Command.Handler
             else
             {
                 log.Info($"MorphCommand : Attempt to morph");
-                
+
                 log.Info($"MorphCommand : Variant lookup");
-                string creatureVariant = parameters[1].ToLower();
+                string creatureVariant;
+                if (parameters.Length == 1)
+                {
+                    creatureVariant = "";
+                }
+                else
+                {
+                    creatureVariant = parameters[1].ToLower();
+                }
                 await context.SendMessageAsync($"Getting {subCommand.ToUpper()} variant: {creatureVariant}");
 
-                uint creatureId = await Task.Run(() => SummonedCreatureHelper.GetLegalCreatureIdForSummon(subCommand, creatureVariant));
-                log.Info($"MorphCommand : CreatureID: {creatureId}");
-
-                if (await Task.Run(() => SummonedCreatureHelper.IsStorytellerOnly(subCommand)) && isStoryteller == false)
+                try
                 {
-                    log.Info($"MorphCommand : Player is not Storyteller");
-                    await context.SendErrorAsync($"Your account lacks permission to use this Storyteller Only morph: {subCommand}");
-                    return;
+                    await SummonedCreatureHelper.GetLegalCreatureIdForSummon(subCommand, creatureVariant, context);
+                    log.Info($"MorphCommand : CreatureID: {SummonedCreatureHelper.SelectedCreatureId}");
+
+                    bool isStorytellerType = false;
+                    await SummonedCreatureHelper.IsStorytellerOnly(subCommand, context);
+                    if (isStorytellerType && isStoryteller == false)
+                    {
+                        log.Info($"MorphCommand : Player is not Storyteller");
+                        await context.SendErrorAsync($"Your account lacks permission to use this Storyteller Only morph: {subCommand}");
+                        return;
+                    }
+                }
+                catch (TypeInitializationException tie)
+                {
+                    log.Error(tie.ToString());
                 }
 
+
                 log.Info($"MorphCommand : Player is morphing");
-                await ChangePlayerDisguise(context, creatureId);
+                await ChangePlayerDisguise(context, SummonedCreatureHelper.SelectedCreatureId);
                 return;
             }
         }
