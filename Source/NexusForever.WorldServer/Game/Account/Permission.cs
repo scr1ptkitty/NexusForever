@@ -68,6 +68,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandPet = 17,
         //
         CommandRealmMotd = 41,
+        CommandRealmUptime = 54,
+        CommandRealmOnline = 55,
         //
         CommandSave = 35,
         //

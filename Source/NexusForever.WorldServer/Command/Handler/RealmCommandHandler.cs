@@ -39,7 +39,7 @@ namespace NexusForever.WorldServer.Command.Handler
             await context.SendMessageAsync($"MOTD Updated!");
         }
 
-        [SubCommandHandler("online", "Displays the users online", Permission.CommandRealmMotd)]
+        [SubCommandHandler("online", "Displays the users online", Permission.CommandRealmOnline)]
         public async Task HandleOnlineCheck(CommandContext context, string subCommand, string[] parameters)
         {
             List<WorldSession> allSessions = NetworkManager<WorldSession>.GetSessions().ToList();
@@ -64,7 +64,7 @@ namespace NexusForever.WorldServer.Command.Handler
             await Task.CompletedTask;
         }
 
-        [SubCommandHandler("uptime", "Display the current uptime of the server.")]
+        [SubCommandHandler("uptime", "Display the current uptime of the server.", Permission.CommandRealmUptime)]
         public async Task HandleUptimeCheck(CommandContext context, string subCommand, string[] parameters)
         {
             await context.SendMessageAsync($"Currently up for {WorldServer.Uptime:%d}d {WorldServer.Uptime:%h}h {WorldServer.Uptime:%m}m {WorldServer.Uptime:%s}s");
