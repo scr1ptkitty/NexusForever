@@ -31,7 +31,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 return;
             }
 
-                string subCommand = parameters[0].ToLower();
+            string subCommand = parameters[0].ToLower();
             if (subCommand.Equals("") || subCommand.Equals(null))
             {
                 await context.SendErrorAsync("Invalid morph type or subcommand.");
