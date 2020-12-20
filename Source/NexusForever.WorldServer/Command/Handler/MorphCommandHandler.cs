@@ -9,6 +9,7 @@ using NexusForever.Shared.GameTable;
 using System.Linq;
 using NexusForever.Shared.Database.Auth.Model;
 using System;
+using NexusForever.WorldServer.Game.Account;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
@@ -38,10 +39,11 @@ namespace NexusForever.WorldServer.Command.Handler
             }
 
             bool isStoryteller = false;
-            foreach (AccountPermission permission in context.Session.Account.AccountPermission)
+            if (RoleManager.HasPermission(context.Session, Permission.CommandMorphStoryteller) || 
+                RoleManager.HasPermission(context.Session, Permission.GMFlag) ||
+                RoleManager.HasPermission(context.Session, Permission.Everything))
             {
-                if (permission.PermissionId == 43)
-                    isStoryteller = true;
+                isStoryteller = true;
             }
             log.Info($"MorphCommand : Player is Storyteller: {isStoryteller}");
 
@@ -73,9 +75,8 @@ namespace NexusForever.WorldServer.Command.Handler
                     await SummonedCreatureHelper.GetLegalCreatureIdForSummon(subCommand, creatureVariant, context);
                     log.Info($"MorphCommand : CreatureID: {SummonedCreatureHelper.SelectedCreatureId}");
 
-                    bool isStorytellerType = false;
                     await SummonedCreatureHelper.IsStorytellerOnly(subCommand, context);
-                    if (isStorytellerType && isStoryteller == false)
+                    if (SummonedCreatureHelper.IsSelectedTypeStorytellerOnly && isStoryteller == false)
                     {
                         log.Info($"MorphCommand : Player is not Storyteller");
                         await context.SendErrorAsync($"Your account lacks permission to use this Storyteller Only morph: {subCommand}");
