@@ -631,6 +631,11 @@ namespace NexusForever.WorldServer.Command.Helper
                 { "undead", 28077 },
                 { "squirg", 62010 },
                 { "white", 63122 }
+            }},
+
+            // Type: Invisible
+            { "invisible", new Dictionary<string, uint>(){
+                { "", 5609 },
             }}
         };
 

@@ -48,7 +48,7 @@ namespace NexusForever.WorldServer.Game.Guild
         private static readonly Dictionary<GuildType, uint> maxGuildSize = new Dictionary<GuildType, uint>
         {
             { GuildType.Guild, 200u },
-            { GuildType.Circle, 100u },
+            { GuildType.Circle, 1000u },
             { GuildType.ArenaTeam5v5, 9u },
             { GuildType.ArenaTeam3v3, 5u },
             { GuildType.ArenaTeam2v2, 3u },
