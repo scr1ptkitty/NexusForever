@@ -7,6 +7,8 @@ using NexusForever.WorldServer.Game.Account.Static;
 using NexusForever.Shared.GameTable.Model;
 using NexusForever.Shared.GameTable;
 using System.Linq;
+using NexusForever.WorldServer.Network.Message.Model;
+using NexusForever.WorldServer.Network.Message.Handler;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
@@ -76,15 +78,24 @@ namespace NexusForever.WorldServer.Command.Handler
             return Task.CompletedTask;
         }
 
-        // deprecated - use !morph demorph
-        /*
-        [SubCommandHandler("clear", "clears player disguise", Permission.CommandSummonClear)]
-        public Task ClearSubCommandHandler(CommandContext context, string command, string[] parameters)
+        [SubCommandHandler("emote", "emoteId - change animation state to given ID", Permission.CommandSummonEmote)]
+        public Task EmoteSubCommandHandler(CommandContext context, string command, string[] parameters)
         {
-            //clear disguise
-            context.Session.Player.ResetAppearance();
+            if (parameters.Length != 1)
+                return Task.CompletedTask;
+
+            uint emoteId = uint.Parse(parameters[0]);
+            ClientEmote clientEmote = new ClientEmote
+            {
+                EmoteId = emoteId,
+                Targeted = false,
+                Silent = false
+            };
+
+            context.SendMessageAsync($"Setting animation state to ID: {emoteId}");
+            SocialHandler.HandleEmote(context.Session, clientEmote);
+
             return Task.CompletedTask;
         }
-        */
     }
 }

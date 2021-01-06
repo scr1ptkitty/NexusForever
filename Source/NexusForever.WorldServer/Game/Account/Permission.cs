@@ -77,8 +77,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         CommandSpellCast = 19,
         CommandSpellResetCooldowns = 20,
         //
-        //CommandSummonClear = 39,  deprecated - use !morph demorph
         CommandSummonDisguise = 38,
+        CommandSummonEmote = 56,
         CommandSummonEntity = 37,
         //
         CommandTeleportCoords = 21,

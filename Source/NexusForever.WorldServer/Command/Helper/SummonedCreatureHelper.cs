@@ -661,6 +661,7 @@ namespace NexusForever.WorldServer.Command.Helper
         /// </summary>
         public static async Task IsStorytellerOnly(string creatureType, CommandContext context)
         {
+            IsSelectedTypeStorytellerOnly = false;
             if (StorytellerOnly.Contains(creatureType))
             {
                 await context.SendMessageAsync($"{creatureType} is Storyteller Only.");
@@ -679,6 +680,7 @@ namespace NexusForever.WorldServer.Command.Helper
         /// </summary>
         public static async Task GetLegalCreatureIdForSummon(string creatureType, string creatureVariant, CommandContext context)
         {
+            SelectedCreatureId = 0;
             Dictionary<string, uint> creatureSubLibrary;
             // get the creature type-specific dictionary
             log.Info($"Looking up {creatureType} in the Creature Library...");
