@@ -26,6 +26,7 @@ namespace NexusForever.WorldServer.Command.Helper
         {
             { "channeling", 280 },
             { "channeling2", 231 },
+            { "channeling3", 417 },
             { "combatloop", 199 },
             { "dazedfloat", 259 },
             { "dazedloop", 59 },
@@ -45,6 +46,7 @@ namespace NexusForever.WorldServer.Command.Helper
             { "knockdown", 158 },
             { "lounge", 425 },
             { "mount", 267 },
+            { "pistolfire", 371 },
             { "readylauncher", 266 },
             { "readyrifle", 39 },
             { "readypistols", 54 },
@@ -99,6 +101,16 @@ namespace NexusForever.WorldServer.Command.Helper
             { "stealth", new List<uint>()
                 {
                     3, 13
+                }
+            },
+            { "pistolfire", new List<uint>()
+                {
+                    3, 12
+                }
+            },
+            { "channeling3", new List<uint>()
+                {
+                    3, 12
                 }
             }
         };
