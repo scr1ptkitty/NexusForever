@@ -834,6 +834,15 @@ namespace NexusForever.WorldServer.Game.Entity
             }
         }
 
+        public void SetPetFacingPlayer(bool isPetFacingPlayer)
+        {
+            if (VanityPetGuid != null)
+            {
+                VanityPet pet = GetVisible<VanityPet>(VanityPetGuid.Value);
+                pet?.SetIsFacingPlayer(isPetFacingPlayer);
+            }
+        }
+
         public void SetPetFollowingOnSide(bool isPetFollowingOnSide)
         {
             if (VanityPetGuid != null)

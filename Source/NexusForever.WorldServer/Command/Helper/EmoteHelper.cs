@@ -24,14 +24,16 @@ namespace NexusForever.WorldServer.Command.Helper
         /// </summary>
         private static readonly Dictionary<String, uint> EmoteLibrary = new Dictionary<String, uint>()
         {
+            { "chairsit", 289 },
+            { "chairsit2", 288 },
             { "channeling", 280 },
             { "channeling2", 231 },
             { "channeling3", 417 },
             { "combatloop", 199 },
+            { "dazed", 59 },
             { "dazedfloat", 259 },
-            { "dazedloop", 59 },
             { "deadfloat", 134 },
-            { "deadfloat2", 251 },
+            { "deadfloat2", 261 },
             { "dead", 46 },
             { "dead2", 184 },
             { "dead3", 185 },
@@ -40,29 +42,27 @@ namespace NexusForever.WorldServer.Command.Helper
             { "dominionpose", 291 },
             { "exilepose", 290 },
             { "falling", 214 },
-            { "laser", 96 },
             { "floating", 216 },
             { "holdobject", 83 },
             { "knockdown", 158 },
+            { "laser", 96 },
             { "lounge", 425 },
             { "mount", 267 },
             { "pistolfire", 371 },
-            { "readylauncher", 266 },
-            { "readyrifle", 39 },
-            { "readypistols", 54 },
             { "readyclaws", 86 },
             { "readycombat", 43 },
             { "readycombatfloat", 269 },
+            { "readylauncher", 266 },
+            { "readypistols", 54 },
+            { "readyrifle", 39 },
             { "readysword", 85 },
             { "shiver", 427 },
-            { "chairsit", 289 },
-            { "chairsit2", 288 },
-            { "taxisit", 263 },
             { "staffchannel", 249 },
             { "staffraise", 155 },
             { "stealth", 156 },
             { "swordblock", 232 },
             { "talking", 97 },
+            { "taxisit", 263 },
             { "tiedup", 102 },
             { "tpose", 203 },
             { "use", 42 },
@@ -111,6 +111,21 @@ namespace NexusForever.WorldServer.Command.Helper
             { "channeling3", new List<uint>()
                 {
                     3, 12
+                }
+            },
+            { "channeling3", new List<uint>()
+                {
+                    4
+                }
+            },
+            { "swordblock", new List<uint>()
+                {
+                    4
+                }
+            },
+            { "dead5", new List<uint>()
+                {
+                    5
                 }
             }
         };

@@ -322,26 +322,32 @@ namespace NexusForever.WorldServer.Game.Entity.Movement
             LaunchGenerator(generator, 8f);
         }
 
-        public void Follow(WorldEntity entity, float distance, bool sideAngle)
+        public void Follow(WorldEntity entity, float distance, bool sideAngle, bool faceEntity)
         {
             float angle = -entity.Rotation.X;
             if (sideAngle)
             {
                 Position followRot = new Position(entity.Rotation);
 
-                AddCommand(new SetRotationCommand
+                if (faceEntity)
                 {
-                    Position = followRot
-                });
-
+                    AddCommand(new SetRotationCommand
+                    {
+                        Position = followRot
+                    });
+                }
+                
                 angle += MathF.PI; // angle is directly left of the entity being followed
             }
             else
             {
-                AddCommand(new SetRotationFaceUnitCommand
+                if (faceEntity)
                 {
-                    UnitId = entity.Guid
-                });
+                    AddCommand(new SetRotationFaceUnitCommand
+                    {
+                        UnitId = entity.Guid
+                    });
+                }
 
                 angle += MathF.PI / 2; // angle is directly behind entity being followed
             }

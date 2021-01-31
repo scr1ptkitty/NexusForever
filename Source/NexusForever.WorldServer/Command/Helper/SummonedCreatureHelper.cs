@@ -200,7 +200,11 @@ namespace NexusForever.WorldServer.Command.Helper
                 { "scarred", 26846 },
                 { "skeledroid", 26201 },
                 { "strain", 38289 },
-                { "white", 19742 }
+                { "white", 19742 },
+                { "riding", 73222 },
+                { "polar", 73225 },
+                { "nightmare", 75208 },
+                { "loftite", 75568 }
             }},
             
             // Type: Grumpel

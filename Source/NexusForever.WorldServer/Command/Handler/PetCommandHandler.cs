@@ -67,6 +67,7 @@ namespace NexusForever.WorldServer.Command.Handler
             else if (subCommand.Equals("stay"))
             {
                 context.Session.Player.SetPetFollowing(false);
+                context.Session.Player.SetPetFacingPlayer(false);
                 await context.SendMessageAsync($"Vanity pet set to stay.");
 
                 return;
@@ -74,12 +75,14 @@ namespace NexusForever.WorldServer.Command.Handler
             else if (subCommand.Equals("side"))
             {
                 context.Session.Player.SetPetFollowingOnSide(true);
+                context.Session.Player.SetPetFacingPlayer(false);
                 await context.SendMessageAsync($"Vanity pet set to walk on the player's side.");
                 return;
             }
             else if (subCommand.Equals("behind"))
             {
                 context.Session.Player.SetPetFollowingOnSide(false);
+                context.Session.Player.SetPetFacingPlayer(true);
                 await context.SendMessageAsync($"Vanity pet set to walk behind the player.");
                 return;
             }
@@ -89,11 +92,11 @@ namespace NexusForever.WorldServer.Command.Handler
                 float recalcDistance = 5f;
 
                 string distanceParameter = "";
-                if (parameters.Length != 1)
+                if (parameters.Length != 2)
                 {
                     distanceParameter = "medium";
                 }
-                distanceParameter = parameters[0].ToLower();
+                distanceParameter = parameters[1].ToLower();
 
                 switch (distanceParameter)
                 {
@@ -112,6 +115,7 @@ namespace NexusForever.WorldServer.Command.Handler
                 }
 
                 context.Session.Player.SetPetFollowing(true);
+                context.Session.Player.SetPetFacingPlayer(true);
                 context.Session.Player.SetPetFollowDistance(followDistance);
                 context.Session.Player.SetPetFollowRecalculateDistance(recalcDistance);
                 await context.SendMessageAsync($"Vanity pet set to follow player. Follow distance: {distanceParameter}");

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -20,6 +21,7 @@ namespace NexusForever.WorldServer.Game.Entity
         private float FollowMinRecalculateDistance = 4f;
 
         private bool FollowingPlayer { get; set; } = true;
+        private bool FacingPlayer { get; set; } = true;
         private bool FollowingOnSide { get; set; } = false;
 
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
@@ -88,7 +90,7 @@ namespace NexusForever.WorldServer.Game.Entity
             
             if (IsFollowingPlayer())
             {
-                Follow(lastTick, FollowingOnSide);
+                Follow(lastTick, FollowingOnSide, FacingPlayer);
             }
         }
 
@@ -117,7 +119,7 @@ namespace NexusForever.WorldServer.Game.Entity
             followTimer.Reset();
         }
 
-        private void Follow(double lastTick, bool sideAngle)
+        private void Follow(double lastTick, bool sideAngle, bool facePlayer)
         {
             followTimer.Update(lastTick);
             if (!followTimer.HasElapsed)
@@ -137,7 +139,7 @@ namespace NexusForever.WorldServer.Game.Entity
             if (distance < FollowMinRecalculateDistance)
                 return;
 
-            MovementManager.Follow(owner, FollowDistance, sideAngle);
+            MovementManager.Follow(owner, FollowDistance, sideAngle, facePlayer);
 
             followTimer.Reset();
         }
@@ -149,6 +151,15 @@ namespace NexusForever.WorldServer.Game.Entity
         public void SetIsFollowingPlayer(bool isFollowing)
         {
             this.FollowingPlayer = isFollowing;
+        }
+
+        public bool IsFacingPlayer()
+        {
+            return this.FacingPlayer;
+        }
+        public void SetIsFacingPlayer(bool isFacing)
+        {
+            this.FacingPlayer = isFacing;
         }
 
         public float GetFollowDistance()
