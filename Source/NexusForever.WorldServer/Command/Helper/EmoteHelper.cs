@@ -113,7 +113,7 @@ namespace NexusForever.WorldServer.Command.Helper
                     3, 12
                 }
             },
-            { "channeling3", new List<uint>()
+            { "channeling2", new List<uint>()
                 {
                     4
                 }

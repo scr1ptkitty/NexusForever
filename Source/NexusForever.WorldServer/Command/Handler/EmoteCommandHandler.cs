@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NexusForever.WorldServer.Command.Handler
 {
-    [Name("Emote", Permission.None)]
+    [Name("Emote", Permission.CommandEmote)]
     public class EmoteCommandHandler : NamedCommand
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();

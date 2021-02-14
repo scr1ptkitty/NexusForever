@@ -31,6 +31,8 @@ namespace NexusForever.WorldServer.Game.Account.Static
         //
         CommandChron = 52,
         //
+        CommandEmote = 57,
+        //
         CommandEntitlement = 49,
         //
         CommandDoor = 50,
